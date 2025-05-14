@@ -25,10 +25,6 @@ Desktop.ini
 logs/
 *.log
 
-# Local configuration file
-application-local.properties
-application-local.yml
-
 # Build files
 target/
 *.jar
