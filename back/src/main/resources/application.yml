@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: giju
+
+  profiles:
+    active: local
+    group:
+      "prod": "prod, secret"
+      "local": "local, secret"
