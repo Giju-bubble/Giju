@@ -7,3 +7,7 @@ spring:
     group:
       "prod": "prod, secret"
       "local": "local, secret"
+
+logging:
+  level:
+    org.springframework.security: DEBUG

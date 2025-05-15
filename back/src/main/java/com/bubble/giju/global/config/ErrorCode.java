@@ -26,6 +26,12 @@ public enum ErrorCode {
     USER_UNAUTHORIZED("사용자가 권한이없음",HttpStatus.UNAUTHORIZED),
 
     /**
+     * Auth
+     */
+    // Json파싱 실패
+    INVALID_LOGIN_JSON("적절하지 않은 로그인 요청입니다", HttpStatus.BAD_REQUEST),
+
+    /**
      * JWT
      */
     EXPIRED_JWT("JWT의 유효기간이 만료되었습니다.", HttpStatus.UNAUTHORIZED);

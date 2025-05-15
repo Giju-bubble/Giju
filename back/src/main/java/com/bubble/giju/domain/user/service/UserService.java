@@ -4,4 +4,5 @@ import com.bubble.giju.domain.user.dto.UserCreateRequest;
 
 public interface UserService {
     void save(UserCreateRequest userCreateRequest);
+    void findByLoginId(String loginId);
 }

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -20,8 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(UserCreateRequest userCreateRequest) {
-        userRepository.findByLoginId(userCreateRequest.getLoginId())
-                .orElseThrow(() -> new CustomException(ErrorCode.DUPLICATE_USER_LoginId));
+        if (userRepository.findByLoginId(userCreateRequest.getLoginId()).isPresent()) {
+            throw new CustomException(ErrorCode.DUPLICATE_USER_LoginId);
+        }
 
         User user = User.builder()
                 .loginId(userCreateRequest.getLoginId())
@@ -35,5 +37,10 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userRepository.save(user);
+    }
+
+    @Override
+    public void findByLoginId(String loginId) {
+        Optional<User> byLoginId = userRepository.findByLoginId(loginId);
     }
 }
