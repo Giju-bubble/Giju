@@ -10,7 +10,7 @@ public enum ErrorCode {
      * USER
      */
     // 아이디
-    DUPLICATE_USER_USERNAME("이미 사용 중인 아이디입니다", HttpStatus.CONFLICT),
+    DUPLICATE_USER_LoginId("이미 사용 중인 아이디입니다", HttpStatus.CONFLICT),
     INVALID_USERID("적절하지 않은 사용자 아이디입니다.",HttpStatus.BAD_REQUEST),
 
     // 이미 사용중인 이메일
