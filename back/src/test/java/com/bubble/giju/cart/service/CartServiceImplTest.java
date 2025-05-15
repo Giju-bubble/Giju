@@ -1,7 +1,7 @@
 package com.bubble.giju.cart.service;
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
-import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
+import com.bubble.giju.domain.cart.dto.response.AddToCartResponseDto;
 import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.repository.CartRepository;
 import com.bubble.giju.domain.cart.service.serviceImpl.CartServiceImpl;
@@ -9,6 +9,7 @@ import com.bubble.giju.domain.drink.entity.Drink;
 import com.bubble.giju.domain.drink.repository.DrinkRepository;
 import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,12 +19,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class) //Mock 사용
 public class CartServiceImplTest {
 
@@ -63,23 +66,34 @@ public class CartServiceImplTest {
     @Test
     @DisplayName("장바구니 생성, 새로운 물건을 담을 때")
     void newItemAddToCart() {
+        int count = 2;
+
         // given
         AddToCartRequestDto requestDto = AddToCartRequestDto.builder()
                 .drinkId(1L)
-                .quantity(2)
+                .quantity(count)
                 .build();
 
         when(userRepository.findByLoginId("test")).thenReturn(Optional.of(testUser));
         when(drinkRepository.findById(1L)).thenReturn(Optional.of(testDrink));
         when(cartRepository.findByUserAndDrink(testUser, testDrink)).thenReturn(Optional.empty());
         when(cartRepository.save(any(Cart.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(cartRepository.findAllByUser(testUser)).thenReturn(
+                List.of(Cart.builder()
+                        .user(testUser)
+                        .drink(testDrink)
+                        .quantity(count)
+                        .build())
+                );
 
         // when
-        CartItemResponseDto response = cartService.addToCart(requestDto);
+        AddToCartResponseDto response = cartService.addToCart(requestDto);
 
         // then
-        assertThat(response.getDrinkId()).isEqualTo(1L);
-        assertThat(response.getQuantity()).isEqualTo(2);
+        assertThat(response.getCartItem().getDrinkId()).isEqualTo(1L);
+        assertThat(response.getCartItem().getQuantity()).isEqualTo(2);
+        assertThat(response.getCartItem().getTotalPrice()).isEqualTo(16000); // 8000 * 2
+        assertThat(response.getCartTotalPrice()).isEqualTo(16000);
         verify(cartRepository).save(any(Cart.class));
     }
 
@@ -98,17 +112,69 @@ public class CartServiceImplTest {
                 .quantity(1) // 기존 수량
                 .build();
 
+
         when(userRepository.findByLoginId("test")).thenReturn(Optional.of(testUser));
         when(drinkRepository.findById(1L)).thenReturn(Optional.of(testDrink));
         when(cartRepository.findByUserAndDrink(testUser, testDrink)).thenReturn(Optional.of(existingCart));
         when(cartRepository.save(any(Cart.class))).thenAnswer(invocation -> invocation.getArgument(0)); //save()에 전달된 첫 번째 인자(=0번 인덱스)를 그대로 반환
+        when(cartRepository.findAllByUser(testUser)).thenReturn(
+                List.of(Cart.builder().user(testUser).drink(testDrink).quantity(2).build())
+        );
+
+        log.info("기존 수량: {}", existingCart.getQuantity());
 
         // when
-        CartItemResponseDto response = cartService.addToCart(requestDto);
+        AddToCartResponseDto response = cartService.addToCart(requestDto);
 
         // then
-        assertThat(response.getDrinkId()).isEqualTo(1L);
-        assertThat(response.getQuantity()).isEqualTo(2); // 1 + 1
+        assertThat(response.getCartItem().getDrinkId()).isEqualTo(1L);
+        assertThat(response.getCartItem().getQuantity()).isEqualTo(2); // 1 + 1
+        log.info("최종 응답 수량: {}", response.getCartItem().getQuantity());
+        assertThat(response.getCartItem().getTotalPrice()).isEqualTo(16000); // 8000 * 2
+        assertThat(response.getCartTotalPrice()).isEqualTo(16000);
         verify(cartRepository).save(any(Cart.class));
+    }
+
+    @Test
+    @DisplayName("상품이 여러개 일 때, 개별 상품 값 및 모든상품 총 가격")
+    void Item_uniPrice_Cart_totalPrice() {
+        //given
+        Drink drinkA = Drink.builder()
+                .id(1L)
+                .name("홍주")
+                .price(15000)
+                .build();
+
+        Drink drinkB = Drink.builder()
+                .id(2L)
+                .name("막걸리")
+                .price(7000)
+                .build();
+
+        Cart cart1 = Cart.builder().user(testUser).drink(drinkA).quantity(2).build(); // 15000 * 2 = 30000
+        Cart cart2 = Cart.builder().user(testUser).drink(drinkB).quantity(1).build();
+
+
+        when(userRepository.findByLoginId("test")).thenReturn(Optional.of(testUser));
+        when(drinkRepository.findById(1L)).thenReturn(Optional.of(drinkA));
+        when(cartRepository.findByUserAndDrink(testUser, drinkA)).thenReturn(Optional.of(cart1));
+        when(cartRepository.save(any(Cart.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(cartRepository.findAllByUser(testUser)).thenReturn(List.of(cart1, cart2));
+
+
+        // when
+        AddToCartRequestDto requestDto = AddToCartRequestDto.builder()
+                .drinkId(1L)
+                .quantity(0)
+                .build();
+
+        AddToCartResponseDto response = cartService.addToCart(requestDto);
+
+        // then
+        assertThat(response.getCartItem().getDrinkId()).isEqualTo(1L);
+        assertThat(response.getCartItem().getQuantity()).isEqualTo(2);
+        assertThat(response.getCartItem().getTotalPrice()).isEqualTo(30000);
+        assertThat(response.getCartTotalPrice()).isEqualTo(37000); // 30,000 + 7,000
+
     }
 }

@@ -1,6 +1,7 @@
 package com.bubble.giju.domain.cart.service.serviceImpl;
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
+import com.bubble.giju.domain.cart.dto.response.AddToCartResponseDto;
 import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
 import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.repository.CartRepository;
@@ -28,9 +29,9 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
 
     @Override
-    public CartItemResponseDto addToCart(AddToCartRequestDto requestDto) {
+    public AddToCartResponseDto addToCart(AddToCartRequestDto requestDto) {
 
-        // todo 로그인한 유저 정보 조회
+        // todo  추후 CustomPrincipal 로그인한 유저 정보 조회 변경
         User user = userRepository.findByLoginId("test")
                 .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
 
@@ -54,10 +55,21 @@ public class CartServiceImpl implements CartService {
         }
         cartRepository.save(cart);
 
-        return CartItemResponseDto.builder()
+        int cartTotalPrice = cartRepository.findAllByUser(user).stream()
+                .mapToInt(c -> c.getDrink().getPrice() * c.getQuantity())
+                .sum();
+
+        CartItemResponseDto cartItemResponseDto = CartItemResponseDto.builder()
                 .cartId(cart.getId())
                 .drinkId(drink.getId())
                 .quantity(cart.getQuantity())
+                .unitPrice(drink.getPrice()) // 단가
+                .totalPrice(drink.getPrice() * cart.getQuantity()) //총 합
+                .build();
+
+        return AddToCartResponseDto.builder()
+                .cartItem(cartItemResponseDto)
+                .cartTotalPrice(cartTotalPrice)
                 .build();
     }
 

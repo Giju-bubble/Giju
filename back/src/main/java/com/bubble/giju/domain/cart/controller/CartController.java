@@ -2,6 +2,7 @@ package com.bubble.giju.domain.cart.controller;
 
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
+import com.bubble.giju.domain.cart.dto.response.AddToCartResponseDto;
 import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
 import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.service.CartService;
@@ -27,9 +28,9 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<CartItemResponseDto>> addItem(@RequestBody @Valid AddToCartRequestDto addToCartRequestDto) {
-        CartItemResponseDto addedCartItem =  cartService.addToCart(addToCartRequestDto);
-        ApiResponse< CartItemResponseDto> response = ApiResponse.success("장바구니에 상품이 추가되었습니다", HttpStatus.OK,addedCartItem);
+    public ResponseEntity<ApiResponse<AddToCartResponseDto>> addItem(@RequestBody @Valid AddToCartRequestDto addToCartRequestDto) {
+        AddToCartResponseDto addedCartItem =  cartService.addToCart(addToCartRequestDto);
+        ApiResponse< AddToCartResponseDto> response = ApiResponse.success("장바구니에 상품이 추가되었습니다", HttpStatus.OK,addedCartItem);
         return ResponseEntity.ok(response);
     }
 
