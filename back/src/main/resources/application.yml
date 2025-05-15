@@ -11,3 +11,8 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+
+jwt:
+  expirationtime:
+    refresh: 216000
+    access: 216000
