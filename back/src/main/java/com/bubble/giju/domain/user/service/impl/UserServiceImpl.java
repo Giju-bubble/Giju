@@ -5,11 +5,11 @@ import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.enums.Role;
 import com.bubble.giju.domain.user.repository.UserRepository;
 import com.bubble.giju.domain.user.service.UserService;
+import com.bubble.giju.global.config.CustomException;
+import com.bubble.giju.global.config.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -20,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(UserCreateRequest userCreateRequest) {
+        userRepository.findByLoginId(userCreateRequest.getLoginId())
+                .orElseThrow(() -> new CustomException(ErrorCode.DUPLICATE_USER_LoginId));
+
         User user = User.builder()
                 .loginId(userCreateRequest.getLoginId())
                 .password(userCreateRequest.getPassword())
