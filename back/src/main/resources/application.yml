@@ -16,3 +16,4 @@ jwt:
   expirationtime:
     refresh: 216000
     access: 216000
+  secret: ${JWT_SECRET:default-for-dev}
