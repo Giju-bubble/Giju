@@ -51,7 +51,7 @@ public class CartController {
 
     @Operation(summary = "장바구니 삭제", description = "선택된 장바구니 삭제합니다")
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse<String>> deleteCartItem(@PathVariable DeleteCartRequestDto deleteCartRequestDto) {
+    public ResponseEntity<ApiResponse<String>> deleteCartItem(@PathVariable @Valid DeleteCartRequestDto deleteCartRequestDto) {
         cartService.deleteCartItem(deleteCartRequestDto.getCartIds());
         ApiResponse<String> response = ApiResponse.success("장바구니 항목 삭제 완료", HttpStatus.OK, null);
         return ResponseEntity.ok(response);
