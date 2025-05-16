@@ -268,4 +268,41 @@ public class CartServiceImplTest {
         assertThat(response.getCartItem().getTotalPrice()).isEqualTo(16000);
         assertThat(response.getCartTotalPrice()).isEqualTo(16000);
     }
+
+    @Test
+    @DisplayName("선택된 장바구니를 삭제")
+    void deleteCartItem() {
+        // given
+        List<Long> cartIds = List.of(1L,2L);
+
+        Cart cart1 = Cart.builder()
+                .id(1L)
+                .user(testUser)
+                .drink(testDrink)
+                .quantity(2)
+                .build();
+
+        Cart cart2 = Cart.builder()
+                .id(2L)
+                .user(testUser)
+                .drink(testDrink)
+                .quantity(1)
+                .build();
+
+        List<Cart> mockCartList = List.of(cart1, cart2);
+
+
+        when(userRepository.findByLoginId("test")).thenReturn(Optional.of(testUser));
+        when(cartRepository.findAllByUser(testUser)).thenReturn(mockCartList);
+        when(cartRepository.findAllByUserAndIdIn(testUser, cartIds)).thenReturn(mockCartList);
+
+        // when
+        log.info("삭제 전 장바구니 개수: {}", cartRepository.findAllByUser(testUser).size());
+        cartService.deleteCartItem(cartIds);
+        when(cartRepository.findAllByUser(testUser)).thenReturn(List.of());
+        log.info("삭제 후 장바구니 개수: {}", cartRepository.findAllByUser(testUser).size());
+
+        // then
+        verify(cartRepository, times(1)).deleteAll(mockCartList);
+    }
 }

@@ -2,6 +2,7 @@ package com.bubble.giju.domain.cart.controller;
 
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
+import com.bubble.giju.domain.cart.dto.request.DeleteCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.UpdateQuantityRequestDto;
 import com.bubble.giju.domain.cart.dto.response.AddToCartResponseDto;
 import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
@@ -48,4 +49,11 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "장바구니 삭제", description = "선택된 장바구니 삭제합니다")
+    @DeleteMapping("/delete")
+    public ResponseEntity<ApiResponse<String>> deleteCartItem(@PathVariable DeleteCartRequestDto deleteCartRequestDto) {
+        cartService.deleteCartItem(deleteCartRequestDto.getCartIds());
+        ApiResponse<String> response = ApiResponse.success("장바구니 항목 삭제 완료", HttpStatus.OK, null);
+        return ResponseEntity.ok(response);
+    }
 }

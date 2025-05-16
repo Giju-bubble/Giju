@@ -18,8 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +77,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public AddToCartResponseDto updateQuantity(Long id, UpdateQuantityRequestDto updateQuantityRequestDto) {
 
+        //추후 변경예정
         User user = userRepository.findByLoginId("test")
                 .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
 
@@ -120,4 +122,14 @@ public class CartServiceImpl implements CartService {
                 .build();
     }
 
+    @Override
+    public void deleteCartItem(List<Long> cartId) {
+        //추후 변경예정
+        User user = userRepository.findByLoginId("test")
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+
+        // 유저정보 + 장바구니id  -> 장바구니 객체 찾기
+        List<Cart> cart = cartRepository.findAllByUserAndIdIn(user, cartId);
+        cartRepository.deleteAll(cart);
+    }
 }
