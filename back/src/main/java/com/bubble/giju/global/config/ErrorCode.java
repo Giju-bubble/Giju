@@ -33,7 +33,12 @@ public enum ErrorCode {
     /**
      * Category
      */
-    EXISTENT_CATEGORY("이미 존재하는 카테고리입니다.",HttpStatus.CONFLICT);
+    EXISTENT_CATEGORY("이미 존재하는 카테고리입니다.",HttpStatus.CONFLICT),
+
+    /**
+     * util
+     */
+    INVALID_IMAGE_FORMAT("잘못된 이미지 포맷입니다.", HttpStatus.BAD_REQUEST);
 
     private final String msg;
     private final HttpStatus status;
