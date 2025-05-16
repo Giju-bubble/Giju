@@ -1,6 +1,7 @@
 package com.bubble.giju.domain.cart.service.serviceImpl;
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
+import com.bubble.giju.domain.cart.dto.request.UpdateQuantityRequestDto;
 import com.bubble.giju.domain.cart.dto.response.AddToCartResponseDto;
 import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
 import com.bubble.giju.domain.cart.entity.Cart;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +34,11 @@ public class CartServiceImpl implements CartService {
     public AddToCartResponseDto addToCart(AddToCartRequestDto requestDto) {
 
         // todo  추후 CustomPrincipal 로그인한 유저 정보 조회 변경
+        /*User user = getUserByPrincipal(principal);
+        private User getUserByPrincipal(CustomPrincipal principal) {
+            return userRepository.findById(UUID.fromString(principal.getUserId()))
+                    .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
+        }*/
         User user = userRepository.findByLoginId("test")
                 .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
 
@@ -55,21 +62,61 @@ public class CartServiceImpl implements CartService {
         }
         cartRepository.save(cart);
 
-        int cartTotalPrice = cartRepository.findAllByUser(user).stream()
+        int cartTotalPrice = calculateCartTotalPrice(user);
+
+        CartItemResponseDto cartItemDto = toCartItemDto(cart);
+
+
+        return AddToCartResponseDto.builder()
+                .cartItem(cartItemDto)
+                .cartTotalPrice(cartTotalPrice)
+                .build();
+    }
+
+    @Override
+    public AddToCartResponseDto updateQuantity(Long id, UpdateQuantityRequestDto updateQuantityRequestDto) {
+
+        User user = userRepository.findByLoginId("test")
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_CART));
+
+        // 상품 수량 1개 이하가 될수 없게 막음
+        if (updateQuantityRequestDto.getQuantity() < 1){
+            throw new CustomException(ErrorCode.INVALID_QUANTITY);
+        }
+
+        cart.updateQuantity(updateQuantityRequestDto.getQuantity());
+        cartRepository.save(cart);
+
+        int cartTotalPrice = calculateCartTotalPrice(user);
+
+        CartItemResponseDto cartItemDto = toCartItemDto(cart);
+
+
+        return AddToCartResponseDto.builder()
+                .cartItem(cartItemDto)
+                .cartTotalPrice(cartTotalPrice)
+                .build();
+    }
+
+    // 유저의 모든 상품 총값
+    private int calculateCartTotalPrice(User user) {
+        return cartRepository.findAllByUser(user).stream()
                 .mapToInt(c -> c.getDrink().getPrice() * c.getQuantity())
                 .sum();
+    }
 
-        CartItemResponseDto cartItemResponseDto = CartItemResponseDto.builder()
+    // 각 상품의 값
+    private CartItemResponseDto toCartItemDto(Cart cart) {
+        Drink drink = cart.getDrink();
+        return CartItemResponseDto.builder()
                 .cartId(cart.getId())
                 .drinkId(drink.getId())
                 .quantity(cart.getQuantity())
-                .unitPrice(drink.getPrice()) // 단가
-                .totalPrice(drink.getPrice() * cart.getQuantity()) //총 합
-                .build();
-
-        return AddToCartResponseDto.builder()
-                .cartItem(cartItemResponseDto)
-                .cartTotalPrice(cartTotalPrice)
+                .unitPrice(drink.getPrice())
+                .totalPrice(drink.getPrice() * cart.getQuantity())
                 .build();
     }
 

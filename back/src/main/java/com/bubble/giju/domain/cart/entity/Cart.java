@@ -2,6 +2,8 @@ package com.bubble.giju.domain.cart.entity;
 
 import com.bubble.giju.domain.drink.entity.Drink;
 import com.bubble.giju.domain.user.entity.User;
+import com.bubble.giju.global.config.CustomException;
+import com.bubble.giju.global.config.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,7 +30,8 @@ public class Cart {
     private User user;
 
     @Builder
-    public Cart(int quantity, Drink drink, User user) {
+    public Cart(Long id, int quantity, Drink drink, User user) {
+        this.id = id;
         this.quantity = quantity;
         this.drink = drink;
         this.user = user;
@@ -36,6 +39,13 @@ public class Cart {
 
     public void increaseQuantity(int amount) {
         this.quantity += amount;
+    }
+
+    public void updateQuantity(int quantity) {
+        if (quantity < 1) {
+            throw new CustomException(ErrorCode.INVALID_QUANTITY);
+        }
+        this.quantity = quantity;
     }
 
 }
