@@ -28,7 +28,12 @@ public enum ErrorCode {
     /**
      * JWT
      */
-    EXPIRED_JWT("JWT의 유효기간이 만료되었습니다.", HttpStatus.UNAUTHORIZED);
+    EXPIRED_JWT("JWT의 유효기간이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
+
+    /**
+     * Category
+     */
+    EXISTENT_CATEGORY("이미 존재하는 카테고리입니다.",HttpStatus.CONFLICT);
 
     private final String msg;
     private final HttpStatus status;
