@@ -16,7 +16,7 @@ public class AuthController {
 
     private final UserService userService;
 
-    @PostMapping("/login")
+    @PostMapping("/register")
     public String createUser(@RequestBody UserCreateRequest userCreateRequest) {
         System.out.println(userCreateRequest);
 

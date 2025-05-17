@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder
 @Entity(name = "users")
@@ -18,8 +19,9 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String userId;
+    UUID userId;
 
+    @Column(unique = true)
     String loginId;
     String password;
     String name;

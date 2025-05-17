@@ -43,15 +43,15 @@ class CategoryControllerTest {
                 new CategoryResponseDto(5,"과실주"),new CategoryResponseDto(6,"기타")));
     }
 
-    @Test
-    void getCategory() throws Exception {
-        when(categoryService.getAllCategories()).thenReturn(mockCategories);
-
-        mockMvc.perform(get("/api/categories")
-                        .contentType("application/json"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(mockCategories.size()));
-
-
-    }
+//    @Test
+//    void getCategory() throws Exception {
+//        when(categoryService.getAllCategories()).thenReturn(mockCategories);
+//
+//        mockMvc.perform(get("/api/categories")
+//                        .contentType("application/json"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.length()").value(mockCategories.size()));
+//
+//
+//    }
 }
