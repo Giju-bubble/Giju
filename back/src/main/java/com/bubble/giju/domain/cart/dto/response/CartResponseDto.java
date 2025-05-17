@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class AddToCartResponseDto {
+public class CartResponseDto {
     private CartItemResponseDto cartItem;
     private int cartTotalPrice;
 
     @Builder
-    public AddToCartResponseDto(CartItemResponseDto cartItem, int cartTotalPrice) {
+    public CartResponseDto(CartItemResponseDto cartItem, int cartTotalPrice) {
         this.cartItem = cartItem;
         this.cartTotalPrice = cartTotalPrice;
     }

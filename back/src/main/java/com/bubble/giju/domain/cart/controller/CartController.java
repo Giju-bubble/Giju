@@ -4,9 +4,8 @@ package com.bubble.giju.domain.cart.controller;
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.DeleteCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.UpdateQuantityRequestDto;
-import com.bubble.giju.domain.cart.dto.response.AddToCartResponseDto;
-import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
-import com.bubble.giju.domain.cart.entity.Cart;
+import com.bubble.giju.domain.cart.dto.response.CartResponseDto;
+import com.bubble.giju.domain.cart.dto.response.CartListResponseDto;
 import com.bubble.giju.domain.cart.service.CartService;
 import com.bubble.giju.global.config.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,9 +28,9 @@ public class CartController {
 
     @Operation(summary = "장바구니에 상품 추가", description = "사용자가 선택한 상품을 장바구니에 추가합니다")
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse<AddToCartResponseDto>> addItem(@RequestBody @Valid AddToCartRequestDto addToCartRequestDto) {
-        AddToCartResponseDto addedCartItem =  cartService.addToCart(addToCartRequestDto);
-        ApiResponse< AddToCartResponseDto> response = ApiResponse.success("장바구니에 상품이 추가되었습니다", HttpStatus.OK, addedCartItem);
+    public ResponseEntity<ApiResponse<CartResponseDto>> addItem(@RequestBody @Valid AddToCartRequestDto addToCartRequestDto) {
+        CartResponseDto addedCartItem =  cartService.addToCart(addToCartRequestDto);
+        ApiResponse<CartResponseDto> response = ApiResponse.success("장바구니에 상품이 추가되었습니다", HttpStatus.OK, addedCartItem);
         return ResponseEntity.ok(response);
     }
 
@@ -40,12 +39,12 @@ public class CartController {
     */
     @Operation(summary = "상품 수량 변동", description = "변동 된 값 만큼 업데이트 진행")
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<AddToCartResponseDto>> updateQuantity(
+    public ResponseEntity<ApiResponse<CartResponseDto>> updateQuantity(
             @PathVariable Long id,
             @RequestBody @Valid UpdateQuantityRequestDto updateQuantityRequestDto) {
 
-        AddToCartResponseDto updateCount = cartService.updateQuantity(id, updateQuantityRequestDto);
-        ApiResponse<AddToCartResponseDto> response = ApiResponse.success("상품의 수량이 변경되었습니다", HttpStatus.OK, updateCount);
+        CartResponseDto updateCount = cartService.updateQuantity(id, updateQuantityRequestDto);
+        ApiResponse<CartResponseDto> response = ApiResponse.success("상품의 수량이 변경되었습니다", HttpStatus.OK, updateCount);
         return ResponseEntity.ok(response);
     }
 
@@ -54,6 +53,14 @@ public class CartController {
     public ResponseEntity<ApiResponse<String>> deleteCartItem(@PathVariable @Valid DeleteCartRequestDto deleteCartRequestDto) {
         cartService.deleteCartItem(deleteCartRequestDto.getCartIds());
         ApiResponse<String> response = ApiResponse.success("장바구니 항목 삭제 완료", HttpStatus.OK, null);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "장바구니 조회", description = "장바구니 조회합니다")
+    @GetMapping
+    public ResponseEntity<ApiResponse<CartListResponseDto>> getCartList() {
+        CartListResponseDto cartList = cartService.getCartList();
+        ApiResponse<CartListResponseDto> response = ApiResponse.success("장바구니 상품을 조회합니다", HttpStatus.OK, cartList);
         return ResponseEntity.ok(response);
     }
 }

@@ -2,7 +2,8 @@ package com.bubble.giju.domain.cart.service.serviceImpl;
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.UpdateQuantityRequestDto;
-import com.bubble.giju.domain.cart.dto.response.AddToCartResponseDto;
+import com.bubble.giju.domain.cart.dto.response.CartListResponseDto;
+import com.bubble.giju.domain.cart.dto.response.CartResponseDto;
 import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
 import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.repository.CartRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,7 +34,7 @@ public class CartServiceImpl implements CartService {
     private final UserRepository userRepository;
 
     @Override
-    public AddToCartResponseDto addToCart(AddToCartRequestDto requestDto) {
+    public CartResponseDto addToCart(AddToCartRequestDto requestDto) {
 
         // todo  추후 CustomPrincipal 로그인한 유저 정보 조회 변경
         /*User user = getUserByPrincipal(principal);
@@ -68,14 +70,14 @@ public class CartServiceImpl implements CartService {
         CartItemResponseDto cartItemDto = toCartItemDto(cart);
 
 
-        return AddToCartResponseDto.builder()
+        return CartResponseDto.builder()
                 .cartItem(cartItemDto)
                 .cartTotalPrice(cartTotalPrice)
                 .build();
     }
 
     @Override
-    public AddToCartResponseDto updateQuantity(Long id, UpdateQuantityRequestDto updateQuantityRequestDto) {
+    public CartResponseDto updateQuantity(Long id, UpdateQuantityRequestDto updateQuantityRequestDto) {
 
         //추후 변경예정
         User user = userRepository.findByLoginId("test")
@@ -97,7 +99,7 @@ public class CartServiceImpl implements CartService {
         CartItemResponseDto cartItemDto = toCartItemDto(cart);
 
 
-        return AddToCartResponseDto.builder()
+        return CartResponseDto.builder()
                 .cartItem(cartItemDto)
                 .cartTotalPrice(cartTotalPrice)
                 .build();
@@ -116,6 +118,7 @@ public class CartServiceImpl implements CartService {
         return CartItemResponseDto.builder()
                 .cartId(cart.getId())
                 .drinkId(drink.getId())
+                .drinkName(drink.getName())
                 .quantity(cart.getQuantity())
                 .unitPrice(drink.getPrice())
                 .totalPrice(drink.getPrice() * cart.getQuantity())
@@ -131,5 +134,24 @@ public class CartServiceImpl implements CartService {
         // 유저정보 + 장바구니id  -> 장바구니 객체 찾기
         List<Cart> cart = cartRepository.findAllByUserAndIdIn(user, cartId);
         cartRepository.deleteAll(cart);
+    }
+
+    @Override
+    public CartListResponseDto getCartList() {
+        User user = userRepository.findByLoginId("test")
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+
+        List<Cart> carts = cartRepository.findAllByUser(user);
+
+        List<CartItemResponseDto> items = carts.stream()
+                .map(this::toCartItemDto)
+                .collect(Collectors.toList());
+
+        int totalPrice = calculateCartTotalPrice(user);
+
+        return CartListResponseDto.builder()
+                .items(items)
+                .totalPrice(totalPrice)
+                .build();
     }
 }

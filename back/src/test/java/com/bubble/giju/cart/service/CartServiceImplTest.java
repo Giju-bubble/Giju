@@ -2,7 +2,9 @@ package com.bubble.giju.cart.service;
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.UpdateQuantityRequestDto;
-import com.bubble.giju.domain.cart.dto.response.AddToCartResponseDto;
+import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
+import com.bubble.giju.domain.cart.dto.response.CartListResponseDto;
+import com.bubble.giju.domain.cart.dto.response.CartResponseDto;
 import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.repository.CartRepository;
 import com.bubble.giju.domain.cart.service.serviceImpl.CartServiceImpl;
@@ -88,7 +90,7 @@ public class CartServiceImplTest {
                 );
 
         // when
-        AddToCartResponseDto response = cartService.addToCart(requestDto);
+        CartResponseDto response = cartService.addToCart(requestDto);
 
         // then
         assertThat(response.getCartItem().getDrinkId()).isEqualTo(1L);
@@ -125,7 +127,7 @@ public class CartServiceImplTest {
         log.info("기존 수량: {}", existingCart.getQuantity());
 
         // when
-        AddToCartResponseDto response = cartService.addToCart(requestDto);
+        CartResponseDto response = cartService.addToCart(requestDto);
 
         // then
         assertThat(response.getCartItem().getDrinkId()).isEqualTo(1L);
@@ -169,7 +171,7 @@ public class CartServiceImplTest {
                 .quantity(0)
                 .build();
 
-        AddToCartResponseDto response = cartService.addToCart(requestDto);
+        CartResponseDto response = cartService.addToCart(requestDto);
 
         // then
         assertThat(response.getCartItem().getDrinkId()).isEqualTo(1L);
@@ -215,7 +217,7 @@ public class CartServiceImplTest {
 
 
         // when
-        AddToCartResponseDto response = cartService.updateQuantity(cartId, updateQuantityRequestDto);
+        CartResponseDto response = cartService.updateQuantity(cartId, updateQuantityRequestDto);
 
         // then
         assertThat(response).isNotNull();
@@ -260,7 +262,7 @@ public class CartServiceImplTest {
 
 
         // when
-        AddToCartResponseDto response = cartService.updateQuantity(cartId, updateQuantityRequestDto);
+        CartResponseDto response = cartService.updateQuantity(cartId, updateQuantityRequestDto);
 
         // then
         assertThat(response).isNotNull();
@@ -299,10 +301,85 @@ public class CartServiceImplTest {
         // when
         log.info("삭제 전 장바구니 개수: {}", cartRepository.findAllByUser(testUser).size());
         cartService.deleteCartItem(cartIds);
-        when(cartRepository.findAllByUser(testUser)).thenReturn(List.of());
+       // when(cartRepository.findAllByUser(testUser)).thenReturn(List.of());
         log.info("삭제 후 장바구니 개수: {}", cartRepository.findAllByUser(testUser).size());
 
         // then
         verify(cartRepository, times(1)).deleteAll(mockCartList);
     }
+
+    @Test
+    @DisplayName("장바구니에 들어있는 상품들 조회")
+    void getCartItems() {
+        // given
+        List<Long> cartIds = List.of(1L,2L,3L);
+
+        Drink drink1 = Drink.builder()
+                .id(5L)
+                .name("서울의밤")
+                .price(15000)
+                .build();
+
+        Drink drink2 = Drink.builder()
+                .id(6L)
+                .name("홍주")
+                .price(15000)
+                .build();
+
+
+        Cart cart1 = Cart.builder()
+                .id(1L)
+                .user(testUser)
+                .drink(drink1)
+                .quantity(2)
+                .build();
+
+        Cart cart2 = Cart.builder()
+                .id(2L)
+                .user(testUser)
+                .drink(drink2)
+                .quantity(1)
+                .build();
+
+        Cart cart3= Cart.builder()
+                .id(3L)
+                .user(testUser)
+                .drink(testDrink)
+                .quantity(1)
+                .build();
+
+        List<Cart> mockCartList = List.of(cart1, cart2, cart3);
+
+        when(userRepository.findByLoginId("test")).thenReturn(Optional.of(testUser));
+        when(cartRepository.findAllByUser(testUser)).thenReturn(mockCartList);
+
+        // when
+        CartListResponseDto result = cartService.getCartList();
+
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getItems()).hasSize(3);
+        assertThat(result.getItems())
+                .extracting("drinkName")
+                .containsExactlyInAnyOrder("서울의밤","홍주","막걸리");
+
+        int expectedTotal = (15000 * 2) + (15000 * 1) + (8000 * 1);
+        assertThat(result.getTotalPrice()).isEqualTo(expectedTotal);
+
+        for (CartItemResponseDto item : result.getItems()) {
+            log.info("카트 ID: {}, 상품명: {}, 수량: {}, 단가: {}, 총합: {}",
+                    item.getCartId(),
+                    item.getDrinkName(),
+                    item.getQuantity(),
+                    item.getUnitPrice(),
+                    item.getTotalPrice());
+        }
+
+        log.info("총 금액: {}", result.getTotalPrice());
+
+    }
+
+
+
 }

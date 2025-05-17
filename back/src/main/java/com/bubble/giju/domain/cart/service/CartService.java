@@ -1,16 +1,16 @@
 package com.bubble.giju.domain.cart.service;
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
-import com.bubble.giju.domain.cart.dto.request.DeleteCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.UpdateQuantityRequestDto;
-import com.bubble.giju.domain.cart.dto.response.AddToCartResponseDto;
-import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
+import com.bubble.giju.domain.cart.dto.response.CartListResponseDto;
+import com.bubble.giju.domain.cart.dto.response.CartResponseDto;
 
 import java.util.List;
 
 
 public interface CartService {
-    AddToCartResponseDto addToCart(AddToCartRequestDto requestDto);
-    AddToCartResponseDto updateQuantity(Long id, UpdateQuantityRequestDto updateQuantityRequestDto);
+    CartResponseDto addToCart(AddToCartRequestDto requestDto);
+    CartResponseDto updateQuantity(Long id, UpdateQuantityRequestDto updateQuantityRequestDto);
     void deleteCartItem(List<Long> cartIds);
+    CartListResponseDto getCartList();
 }
