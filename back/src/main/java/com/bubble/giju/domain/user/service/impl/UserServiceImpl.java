@@ -1,6 +1,7 @@
 package com.bubble.giju.domain.user.service.impl;
 
 import com.bubble.giju.domain.user.dto.UserCreateRequest;
+import com.bubble.giju.domain.user.dto.UserDto;
 import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.enums.Role;
 import com.bubble.giju.domain.user.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -42,7 +44,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void findByLoginId(String loginId) {
-        Optional<User> byLoginId = userRepository.findByLoginId(loginId);
+    public UserDto.Response find(String userId) {
+        User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(
+                () -> new CustomException(ErrorCode.NON_EXISTENT_USER)
+        );
+
+        return UserDto.Response.fromEntity(user);
+    }
+
+    @Override
+    public void update(String userId, UserDto.Request request) {
+        if (!userId.equals(request.getUserId()) || !userRepository.existsByLoginId((userId))) {
+            // Todo: 질문. 어느정도까지 자세히 에러를 분류할 것 인가? 프론트를 위한 에러?
+            throw new CustomException(ErrorCode.NON_EXISTENT_USER);
+        }
+
+
+
     }
 }
