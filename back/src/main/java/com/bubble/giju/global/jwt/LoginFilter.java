@@ -19,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -27,10 +28,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, CookieUtil cookieUtil) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.cookieUtil = cookieUtil;
 
         setFilterProcessesUrl("/api/auth/login");
     }
@@ -70,17 +73,27 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = jwtUtil.createAccessToken(username, role, userId);
         String refreshToken = jwtUtil.createRefreshToken(username, role, userId);
 
-        // 토큰 db 저장
+        // TODO: 토큰 db 저장
 //        refreshTokenService.addRefreshToken(username, refreshToken, jwtUtil.getRefreshExpiration());
 
         // 응답 설정
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.addHeader("access", accessToken);
-//        response.addCookie(cookieUtil.createCookie("refresh", refreshToken));
+        response.addCookie(cookieUtil.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
+
+        String jsonResponse = "{\"success\": \"true\"," +
+                "\"message\": \"로그인 성공\"," +
+                "\"data\": \"null\"," +
+                "\"timestamp\": \"" + LocalDateTime.now() + "\"" +
+                "}";
+        response.getWriter().write(jsonResponse);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        System.out.println("unsuccessfulAuthentication 실패");
+        // 응답 설정
+        throw new CustomException(ErrorCode.LOGIN_UNAUTHORIZED);
     }
 }

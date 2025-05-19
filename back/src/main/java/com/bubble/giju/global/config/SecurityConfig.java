@@ -1,19 +1,12 @@
 package com.bubble.giju.global.config;
 
-import com.bubble.giju.global.jwt.JWTFilter;
-import com.bubble.giju.global.jwt.JWTUtil;
-import com.bubble.giju.global.jwt.LoginFilter;
-import jakarta.servlet.http.HttpServletRequest;
+import com.bubble.giju.global.jwt.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -31,6 +24,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
     // CORS Configuration을 Bean으로 등록
     @Bean
@@ -52,7 +46,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CORS 설정 적용 - Bean으로 등록한 corsConfigurationSource 사용
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-
 
         http
                 .csrf(auth -> {
@@ -78,7 +71,12 @@ public class SecurityConfig {
 
         // login filter 등록
         http
-                .addFilterAt(new LoginFilter(authenticationConfiguration.getAuthenticationManager(), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationConfiguration.getAuthenticationManager(), jwtUtil, cookieUtil), UsernamePasswordAuthenticationFilter.class);
+
+        // JWT Filter 등록
+        http
+                .addFilterAfter(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTExceptionHandler(), LoginFilter.class); // JWTFilter 앞에 예외 처리 필터 추가
 
         return http.build();
     }
