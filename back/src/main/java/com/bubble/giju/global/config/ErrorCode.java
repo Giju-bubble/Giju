@@ -30,6 +30,8 @@ public enum ErrorCode {
      */
     // Json파싱 실패
     INVALID_LOGIN_JSON("적절하지 않은 로그인 요청입니다", HttpStatus.BAD_REQUEST),
+    // 로그인 실패
+    LOGIN_UNAUTHORIZED("로그인 실패", HttpStatus.UNAUTHORIZED),
 
     /**
      * JWT

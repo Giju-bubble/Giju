@@ -76,7 +76,7 @@ public class SecurityConfig {
         // JWT Filter 등록
         http
                 .addFilterAfter(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTExceptionHandler(), JWTFilter.class); // JWTFilter 앞에 예외 처리 필터 추가
+                .addFilterBefore(new JWTExceptionHandler(), LoginFilter.class); // JWTFilter 앞에 예외 처리 필터 추가
 
         return http.build();
     }
