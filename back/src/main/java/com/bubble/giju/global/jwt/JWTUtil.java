@@ -13,11 +13,11 @@ import java.util.Date;
 public class JWTUtil {
 
     private SecretKey secretKey;
-//    private final JWTExpirationProperties jwtExpirationProperties;
+    private final JWTExpirationProperties jwtExpirationProperties;
 
-    public JWTUtil(@Value("${jwt.secret}") String secret) {
+    public JWTUtil(@Value("${jwt.secret}") String secret, JWTExpirationProperties jwtExpirationProperties) {
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
-//        this.jwtExpirationProperties = jwtExpirationProperties;
+        this.jwtExpirationProperties = jwtExpirationProperties;
     }
 
     // 검증
@@ -54,11 +54,11 @@ public class JWTUtil {
     }
 
     public String createAccessToken(String username, String role, String userId) {
-        return createJwt("access", username, role, userId, 60000L); // jwtExpirationProperties.getAccess());
+        return createJwt("access", username, role, userId, jwtExpirationProperties.getAccessTime()); // jwtExpirationProperties.getAccess());
     }
 
     public String createRefreshToken(String username, String role, String userId) {
-        return createJwt("refresh", username, role, userId, 60000L); // jwtExpirationProperties.getRefresh());
+        return createJwt("refresh", username, role, userId, jwtExpirationProperties.getRefreshTime()); // jwtExpirationProperties.getRefresh());
     }
 }
 

@@ -1,5 +1,6 @@
 package com.bubble.giju.global.config;
 
+import com.bubble.giju.global.jwt.CookieUtil;
 import com.bubble.giju.global.jwt.JWTFilter;
 import com.bubble.giju.global.jwt.JWTUtil;
 import com.bubble.giju.global.jwt.LoginFilter;
@@ -31,6 +32,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
     // CORS Configuration을 Bean으로 등록
     @Bean
@@ -78,7 +80,7 @@ public class SecurityConfig {
 
         // login filter 등록
         http
-                .addFilterAt(new LoginFilter(authenticationConfiguration.getAuthenticationManager(), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationConfiguration.getAuthenticationManager(), jwtUtil, cookieUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

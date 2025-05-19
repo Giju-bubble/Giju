@@ -27,10 +27,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, CookieUtil cookieUtil) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.cookieUtil = cookieUtil;
 
         setFilterProcessesUrl("/api/auth/login");
     }
@@ -70,12 +72,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken = jwtUtil.createAccessToken(username, role, userId);
         String refreshToken = jwtUtil.createRefreshToken(username, role, userId);
 
-        // 토큰 db 저장
+        // TODO: 토큰 db 저장
 //        refreshTokenService.addRefreshToken(username, refreshToken, jwtUtil.getRefreshExpiration());
 
         // 응답 설정
         response.addHeader("access", accessToken);
-//        response.addCookie(cookieUtil.createCookie("refresh", refreshToken));
+        response.addCookie(cookieUtil.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
     }
 
