@@ -19,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -76,13 +77,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 //        refreshTokenService.addRefreshToken(username, refreshToken, jwtUtil.getRefreshExpiration());
 
         // 응답 설정
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.addHeader("access", accessToken);
         response.addCookie(cookieUtil.createCookie("refresh", refreshToken));
         response.setStatus(HttpStatus.OK.value());
+
+        String jsonResponse = "{\"success\": \"true\"," +
+                "\"message\": \"로그인 성공\"," +
+                "\"data\": \"null\"," +
+                "\"timestamp\": \"" + LocalDateTime.now() + "\"" +
+                "}";
+        response.getWriter().write(jsonResponse);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        System.out.println("unsuccessfulAuthentication 실패");
+        // 응답 설정
+        throw new CustomException(ErrorCode.LOGIN_UNAUTHORIZED);
     }
 }
