@@ -7,3 +7,6 @@ spring:
     group:
       "prod": "prod, secret"
       "local": "local, secret"
+vercel:
+  blob:
+    token: ${BLOB_READ_WRITE_TOKEN}   # 환경변수에서 읽어옵니다
