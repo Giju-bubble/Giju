@@ -10,3 +10,13 @@ spring:
 vercel:
   blob:
     token: ${BLOB_READ_WRITE_TOKEN}   # 환경변수에서 읽어옵니다
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+jwt:
+  expirationtime:
+    accessTime: 216000
+    refreshTime: 216000
+  secret: ${JWT_SECRET:defaultfordevalsjfielsjfinaajfowinblxiejfwoihbya}
