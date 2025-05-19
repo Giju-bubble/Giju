@@ -42,6 +42,8 @@ jobs:
       
     - name: Build with Gradle Wrapper
       working-directory: ./back
+      env:
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
       run: ./gradlew build
 
     - name: Check build results
