@@ -154,4 +154,30 @@ public class CartServiceImpl implements CartService {
                 .totalPrice(totalPrice)
                 .build();
     }
+
+    @Override
+    public CartListResponseDto getBuyCartList(List<Long> cartIds) {
+        User user = userRepository.findByLoginId("test")
+                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+
+        List<Cart> carts = cartRepository.findAllById(cartIds);
+
+        List<Cart> ownedCarts = carts.stream()
+                .filter(cart -> cart.getUser().equals(user))
+                .toList();
+
+        List<CartItemResponseDto> items = ownedCarts.stream()
+                .map(this::toCartItemDto)
+                .toList();
+
+        int totalPrice = items.stream().mapToInt(CartItemResponseDto::getTotalPrice).sum();
+
+        return CartListResponseDto.builder()
+                .items(items)
+                .totalPrice(totalPrice)
+                .build();
+    }
+
+
+
 }

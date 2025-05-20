@@ -2,8 +2,10 @@ package com.bubble.giju.domain.cart.controller;
 
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
+import com.bubble.giju.domain.cart.dto.request.CartSelectedRequestDto;
 import com.bubble.giju.domain.cart.dto.request.DeleteCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.UpdateQuantityRequestDto;
+import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
 import com.bubble.giju.domain.cart.dto.response.CartResponseDto;
 import com.bubble.giju.domain.cart.dto.response.CartListResponseDto;
 import com.bubble.giju.domain.cart.service.CartService;
@@ -50,16 +52,23 @@ public class CartController {
 
     @Operation(summary = "장바구니 삭제", description = "선택된 장바구니 삭제합니다")
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse<String>> deleteCartItem(@PathVariable @Valid DeleteCartRequestDto deleteCartRequestDto) {
+    public ResponseEntity<ApiResponse<String>> deleteCartItem(@RequestBody @Valid DeleteCartRequestDto deleteCartRequestDto) {
         cartService.deleteCartItem(deleteCartRequestDto.getCartIds());
         ApiResponse<String> response = ApiResponse.success("장바구니 항목 삭제 완료", HttpStatus.OK, null);
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "장바구니 조회", description = "장바구니 조회합니다")
+    @Operation(summary = "장바구니 조회", description = "사용자가 물건을 담은 상품 장바구니 전체 조회합니다")
     @GetMapping
     public ResponseEntity<CartListResponseDto> getCartList() {
         CartListResponseDto cartList = cartService.getCartList();
         return ResponseEntity.ok(cartList);
+    }
+
+    @Operation(summary = "구매할 상품들 및 총값 조회", description = "구매하기 위해 선택된 상품들과 총 값을 조회")
+    @GetMapping("/buy")
+    public ResponseEntity<CartListResponseDto> seletedforBuyCartList(@RequestBody CartSelectedRequestDto cartSelectedRequestDto) {
+        CartListResponseDto buyCartList = cartService.getBuyCartList(cartSelectedRequestDto.getCartIds());
+        return ResponseEntity.ok(buyCartList);
     }
 }
