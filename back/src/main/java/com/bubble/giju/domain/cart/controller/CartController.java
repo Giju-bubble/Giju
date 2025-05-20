@@ -58,9 +58,8 @@ public class CartController {
 
     @Operation(summary = "장바구니 조회", description = "장바구니 조회합니다")
     @GetMapping
-    public ResponseEntity<ApiResponse<CartListResponseDto>> getCartList() {
+    public ResponseEntity<CartListResponseDto> getCartList() {
         CartListResponseDto cartList = cartService.getCartList();
-        ApiResponse<CartListResponseDto> response = ApiResponse.success("장바구니 상품을 조회합니다", HttpStatus.OK, cartList);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(cartList);
     }
 }
