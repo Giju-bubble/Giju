@@ -2,7 +2,6 @@ package com.bubble.giju.domain.user.controller;
 
 import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.domain.user.dto.UserDto;
-import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.service.UserService;
 import com.bubble.giju.global.config.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,23 +12,24 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@RestController("/api")
+@RequestMapping("/api")
+@RestController
 public class UserController {
 
     private final UserService userService;
 
     // read
     @GetMapping("/users")
-    public ResponseEntity<ApiResponse> getUser(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
+    public ResponseEntity<ApiResponse<UserDto.Response>> getUser(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
         UserDto.Response response = userService.find(customPrincipal.getUserId());
-        ApiResponse<UserDto.Response> apiResponse = ApiResponse.success("회원가입 성공", response);
+        ApiResponse<UserDto.Response> apiResponse = ApiResponse.success("회원불러오기 성공", response);
 
         return ResponseEntity.ok(apiResponse);
     }
 
     // update
     @PatchMapping("/users")
-    public ResponseEntity<ApiResponse> updateUser(@AuthenticationPrincipal CustomPrincipal customPrincipal, @RequestBody UserDto.Request request) {
+    public ResponseEntity<ApiResponse<UserDto.Response>> updateUser(@AuthenticationPrincipal CustomPrincipal customPrincipal, @RequestBody UserDto.Request request) {
         log.info(request.toString());
 
         ApiResponse<UserDto.Response> apiResponse = ApiResponse.success(
@@ -40,7 +40,7 @@ public class UserController {
 
     // delete
     @DeleteMapping("/users")
-    public ResponseEntity<ApiResponse> deleteUser(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
+    public ResponseEntity<ApiResponse<String>> deleteUser(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
         ApiResponse<String> apiResponse = ApiResponse.success(
                 "회원삭제 성공", userService.delete(customPrincipal.getUserId()));
 

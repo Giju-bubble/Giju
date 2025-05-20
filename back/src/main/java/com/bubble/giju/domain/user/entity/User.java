@@ -33,12 +33,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     Role role;
 
-    public User update(UserDto.Request request) {
-        this.name = request != null ? request.getName() : this.name;
-        this.email = request != null ? request.getEmail() : this.email;
-        this.phoneNumber = request != null ? request.getPhoneNumber() : this.phoneNumber;
-        this.birthday = request != null ? request.getBirthday() : this.birthday;
+    public void update(UserDto.Request request) {
+        this.name = request.getName() != null ? request.getName() : this.name;
+        this.email = request.getEmail() != null ? request.getEmail() : this.email;
+        this.phoneNumber = request.getPhoneNumber() != null ? request.getPhoneNumber() : this.phoneNumber;
+        this.birthday = request.getBirthday() != null ? request.getBirthday() : this.birthday;
+    }
 
-        return this;
+    @Override
+    public String toString() {
+        return "userId=" + userId + ", loginId=" + loginId + ", password=" + password + ", name=" + name + ", email=" + email + ", phoneNumber=" + phoneNumber;
     }
 }

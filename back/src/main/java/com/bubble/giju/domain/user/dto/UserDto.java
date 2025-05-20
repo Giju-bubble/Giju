@@ -2,7 +2,6 @@ package com.bubble.giju.domain.user.dto;
 
 import com.bubble.giju.domain.user.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +20,7 @@ public class UserDto {
         LocalDate birthday;
     }
 
+    @Getter
     @AllArgsConstructor
     public static class Response {
         String userId;
