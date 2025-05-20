@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public void save(UserCreateRequest userCreateRequest) {
+    public UserDto.Response save(UserCreateRequest userCreateRequest) {
         if (userRepository.findByLoginId(userCreateRequest.getLoginId()).isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE_USER_LoginId);
         }
@@ -41,6 +41,8 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userRepository.save(user);
+
+        return UserDto.Response.fromEntity(user);
     }
 
     @Override
@@ -53,13 +55,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(String userId, UserDto.Request request) {
-        if (!userId.equals(request.getUserId()) || !userRepository.existsByLoginId((userId))) {
+    public UserDto.Response update(String userId, UserDto.Request request) {
+        if (!userId.equals(request.getUserId())) {
             // Todo: 질문. 어느정도까지 자세히 에러를 분류할 것 인가? 프론트를 위한 에러?
             throw new CustomException(ErrorCode.NON_EXISTENT_USER);
         }
 
+        User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(
+                () -> new CustomException(ErrorCode.NON_EXISTENT_USER)
+        );
 
+        user.update(request);
 
+        return UserDto.Response.fromEntity(user);
     }
 }

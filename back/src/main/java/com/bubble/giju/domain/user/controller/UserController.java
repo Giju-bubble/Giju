@@ -32,8 +32,10 @@ public class UserController {
     public ResponseEntity<ApiResponse> updateUser(@AuthenticationPrincipal CustomPrincipal customPrincipal, @RequestBody UserDto.Request request) {
         log.info(request.toString());
 
-        userService.update(customPrincipal.getUserId(), request);
+        ApiResponse<UserDto.Response> apiResponse = ApiResponse.success(
+                "회원수정 성공", userService.update(customPrincipal.getUserId(), request));
 
+        return ResponseEntity.ok(apiResponse);
     }
 
 }
