@@ -1,7 +1,7 @@
 package com.bubble.giju.domain.user.controller;
 
 import com.bubble.giju.domain.user.dto.UserCreateRequest;
-import com.bubble.giju.domain.user.entity.User;
+import com.bubble.giju.domain.user.dto.UserDto;
 import com.bubble.giju.domain.user.service.UserService;
 import com.bubble.giju.global.config.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,12 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+    public ResponseEntity<ApiResponse<UserDto.Response>> createUser(@RequestBody UserCreateRequest userCreateRequest) {
         System.out.println(userCreateRequest);
 
-        userService.save(userCreateRequest);
+        UserDto.Response response = userService.save(userCreateRequest);
 
-        ApiResponse<String> apiResponse = ApiResponse.success("회원가입 성공", null);
+        ApiResponse<UserDto.Response> apiResponse = ApiResponse.success("회원가입 성공", response);
         return ResponseEntity.ok(apiResponse);
     }
 }
