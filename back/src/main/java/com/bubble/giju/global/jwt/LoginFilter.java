@@ -86,6 +86,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String jsonResponse = "{\"success\": \"true\"," +
                 "\"message\": \"로그인 성공\"," +
                 "\"data\": \"null\"," +
+                "\"access\": " + accessToken + "," +
+                "\"refresh\": " + refreshToken + "," +
                 "\"timestamp\": \"" + LocalDateTime.now() + "\"" +
                 "}";
         response.getWriter().write(jsonResponse);
