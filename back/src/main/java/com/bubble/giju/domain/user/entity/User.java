@@ -38,5 +38,7 @@ public class User {
         this.email = request != null ? request.getEmail() : this.email;
         this.phoneNumber = request != null ? request.getPhoneNumber() : this.phoneNumber;
         this.birthday = request != null ? request.getBirthday() : this.birthday;
+
+        return this;
     }
 }
