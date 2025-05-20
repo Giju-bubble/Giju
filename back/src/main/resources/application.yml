@@ -7,3 +7,7 @@ spring:
     group:
       "prod": "prod, secret"
       "local": "local, secret"
+
+
+order:
+  delivery-charge: 3000

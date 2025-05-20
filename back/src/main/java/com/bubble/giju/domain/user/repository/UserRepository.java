@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     // 테스트용 추후 스프링 로그인 구현시 제거 예정
     Optional<User> findByLoginId(String loginId);
+
+    Optional<User> findById(UUID userId);
 }
