@@ -7,4 +7,5 @@ public interface UserService {
     UserDto.Response save(UserCreateRequest userCreateRequest);
     UserDto.Response find(String userId);
     UserDto.Response update(String userId, UserDto.Request request);
+    String delete(String userId);
 }

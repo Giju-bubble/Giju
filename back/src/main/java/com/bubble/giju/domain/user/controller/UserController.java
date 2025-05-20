@@ -38,4 +38,12 @@ public class UserController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    // delete
+    @DeleteMapping("/users")
+    public ResponseEntity<ApiResponse> deleteUser(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
+        ApiResponse<String> apiResponse = ApiResponse.success(
+                "회원삭제 성공", userService.delete(customPrincipal.getUserId()));
+
+        return ResponseEntity.ok(apiResponse);
+    }
 }

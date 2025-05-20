@@ -69,4 +69,15 @@ public class UserServiceImpl implements UserService {
 
         return UserDto.Response.fromEntity(user);
     }
+
+    @Override
+    public String delete(String userId) {
+        userRepository.findById(UUID.fromString(userId)).orElseThrow(
+                () -> new CustomException(ErrorCode.NON_EXISTENT_USER)
+        );
+
+        userRepository.deleteById(UUID.fromString(userId));
+
+        return userId;
+    }
 }
