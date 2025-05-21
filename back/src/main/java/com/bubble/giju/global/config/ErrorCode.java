@@ -46,16 +46,24 @@ public enum ErrorCode {
      * JWT
      */
     EXPIRED_JWT("JWT의 유효기간이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
+    INVALID_refresh("refresh token이 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_access("access token이 없습니다.", HttpStatus.BAD_REQUEST),
 
     /**
      * Category
      */
     EXISTENT_CATEGORY("이미 존재하는 카테고리입니다.",HttpStatus.CONFLICT),
+    NONEXISTENT_CATEGORY("존재하지 않는 카테고리입니다.",HttpStatus.BAD_REQUEST),
 
     /**
      * util
      */
-    INVALID_IMAGE_FORMAT("잘못된 이미지 포맷입니다.", HttpStatus.BAD_REQUEST);
+    INVALID_IMAGE_FORMAT("잘못된 이미지 포맷입니다.", HttpStatus.BAD_REQUEST),
+
+    /**
+     * Error
+     */
+    INTERNAL_SERVER_ERROR("서버에러입니다. 백엔드 로그를 확인해주세요", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String msg;
     private final HttpStatus status;
