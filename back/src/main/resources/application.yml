@@ -12,6 +12,12 @@ logging:
   level:
     org.springframework.security: DEBUG
 
+order:
+  targetPrice: 30000
+  delivery-charge: 3000
+
+
+
 jwt:
   expirationtime:
     accessTime: 216000

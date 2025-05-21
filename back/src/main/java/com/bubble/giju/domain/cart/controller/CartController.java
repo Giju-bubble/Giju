@@ -75,7 +75,7 @@ public class CartController {
         return ResponseEntity.ok(cartList);
     }
 
-    @Operation(summary = "구매할 상품들 및 총값 조회", description = "구매하기 위해 선택된 상품들과 총 값을 조회")
+    @Operation(summary = "구매할 상품들 및 총값 조회", description = "구매하기 위해 선택된 각 상품의 정보(1개의 상품값, 상품값(상품*수량값), 갯수, 이름, 수량, cart아이디, 상품아이디), 선택된 상품 전체 총값, 배달비, 결제할 총값(총 상품값 + 배달비)")
     @GetMapping("/buy")
     public ResponseEntity<CartListResponseDto> seletedforBuyCartList(
             @AuthenticationPrincipal CustomPrincipal customPrincipal,

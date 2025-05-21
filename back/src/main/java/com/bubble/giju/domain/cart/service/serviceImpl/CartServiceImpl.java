@@ -17,7 +17,9 @@ import com.bubble.giju.global.config.CustomException;
 import com.bubble.giju.global.config.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -34,6 +36,12 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final DrinkRepository drinkRepository;
     private final UserRepository userRepository;
+
+    @Value("${order.delivery-charge}")
+    private int deliveryCharge;
+
+    @Value("${order.targetPrice}")
+    private int targetPrice;
 
     @Override
     public CartResponseDto addToCart(AddToCartRequestDto requestDto, CustomPrincipal principal) {
@@ -150,6 +158,7 @@ public class CartServiceImpl implements CartService {
     }
 
     // 결제 페이지에서 보여지는값
+    @Transactional
     @Override
     public CartListResponseDto getBuyCartList(List<Long> cartIds, CustomPrincipal principal) {
         User user = userRepository.findById(UUID.fromString(principal.getUserId()))
@@ -167,11 +176,16 @@ public class CartServiceImpl implements CartService {
 
         int totalPrice = items.stream().mapToInt(CartItemResponseDto::getTotalPrice).sum();
 
+        int appliedDeliveryCharge = totalPrice >= targetPrice ? 0 : deliveryCharge;
+
         return CartListResponseDto.builder()
                 .items(items)
                 .totalPrice(totalPrice)
+                .deliveryCharge(appliedDeliveryCharge)
+                .totalPriceWithDelivery(totalPrice + appliedDeliveryCharge)
                 .build();
     }
+
 
 
 

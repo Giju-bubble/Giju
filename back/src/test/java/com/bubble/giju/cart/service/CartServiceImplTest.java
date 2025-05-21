@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
@@ -526,6 +527,79 @@ public class CartServiceImplTest {
                 .containsExactlyInAnyOrder("막걸리", "청주");
 
         assertThat(result.getTotalPrice()).isEqualTo(40000); // 10000 + 30000
+    }
+
+    @Test
+    @DisplayName("장바구니 결제 조회 - 총액이 3만원 이상이면 배달비 0")
+    void getBuyCartList_freeDelivery() {
+        Cart cart1 = Cart.builder().user(testUser).drink(testDrink).quantity(3).build(); // 8000 * 3 = 24000
+        Cart cart2 = Cart.builder().user(testUser).drink(testDrink).quantity(2).build(); // 8000 * 2 = 16000
+
+        List<Cart> selectedCarts = List.of(cart1, cart2);
+        TestUtil.setIdList(selectedCarts, 1L);
+        List<Long> selectedCartIds = List.of(1L, 2L);
+
+        when(cartRepository.findAllById(selectedCartIds)).thenReturn(selectedCarts);
+
+        // @Value 배달비, 타켓 금액을 수동 주입
+        ReflectionTestUtils.setField(cartService, "deliveryCharge", 3000);
+        ReflectionTestUtils.setField(cartService, "targetPrice", 30000);
+
+        CartListResponseDto response = cartService.getBuyCartList(selectedCartIds, customPrincipal);
+
+        assertThat(response.getItems()).hasSize(2);
+        assertThat(response.getDeliveryCharge()).isEqualTo(0);
+        assertThat(response.getTotalPrice()).isEqualTo(40000); // 24000 + 16000
+        assertThat(response.getTotalPriceWithDelivery()).isEqualTo(40000);
+
+        for (CartItemResponseDto item : response.getItems()) {
+            log.info("카트 ID: {}, 상품명: {}, 수량: {}, 단가: {}, 총합: {}",
+                    item.getCartId(),
+                    item.getDrinkName(),
+                    item.getQuantity(),
+                    item.getUnitPrice(),
+                    item.getTotalPrice());
+        }
+        log.info("상품 총 값 = {}", response.getTotalPrice());
+        log.info("배달비 = {}", response.getDeliveryCharge());
+        log.info("상품총값 + 배달비= {}", response.getTotalPriceWithDelivery());
+    }
+
+    @Test
+    @DisplayName("장바구니 결제 조회 - 총액이 3만원 미만이면 배달비 3000")
+    void getBuyCartList_withDeliveryFee() {
+        Cart cart1 = Cart.builder().user(testUser).drink(testDrink).quantity(2).build(); // 8000 * 2 = 16000
+        Cart cart2 = Cart.builder().user(testUser).drink(testDrink).quantity(1).build(); // 8000
+
+        List<Cart> selectedCarts = List.of(cart1, cart2);
+        TestUtil.setIdList(selectedCarts, 1L);
+        List<Long> selectedCartIds = List.of(1L, 2L);
+
+        when(cartRepository.findAllById(selectedCartIds)).thenReturn(selectedCarts);
+
+        // @Value 배달비, 타켓 금액을 수동 주입
+        ReflectionTestUtils.setField(cartService, "deliveryCharge", 3000);
+        ReflectionTestUtils.setField(cartService, "targetPrice", 30000);
+
+        CartListResponseDto response = cartService.getBuyCartList(selectedCartIds, customPrincipal);
+
+        assertThat(response.getItems()).hasSize(2);
+        assertThat(response.getDeliveryCharge()).isEqualTo(3000);
+        assertThat(response.getTotalPrice()).isEqualTo(24000); // 16000 + 8000
+        assertThat(response.getTotalPriceWithDelivery()).isEqualTo(27000);
+
+
+        for (CartItemResponseDto item : response.getItems()) {
+            log.info("카트 ID: {}, 상품명: {}, 수량: {}, 단가: {}, 총합: {}",
+                    item.getCartId(),
+                    item.getDrinkName(),
+                    item.getQuantity(),
+                    item.getUnitPrice(),
+                    item.getTotalPrice());
+        }
+        log.info("상품 총 값 = {}", response.getTotalPrice());
+        log.info("배달비 = {}", response.getDeliveryCharge());
+        log.info("상품총값 + 배달비= {}", response.getTotalPriceWithDelivery());
     }
 
 
