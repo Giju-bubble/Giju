@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-@Transactional
+@Transactional(rollbackFor = IOException.class)
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
