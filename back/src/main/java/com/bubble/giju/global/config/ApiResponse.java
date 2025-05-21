@@ -21,6 +21,7 @@ public class ApiResponse <T> {
         this.timestamp = LocalDateTime.now();
     }
 
+
     public static <T> ApiResponse<T> success(String message, T data) {
         return new ApiResponse<>(true, message, HttpStatus.OK, data);
     }

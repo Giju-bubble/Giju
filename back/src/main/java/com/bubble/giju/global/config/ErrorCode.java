@@ -9,6 +9,7 @@ public enum ErrorCode {
     /**
      * USER
      */
+
     // 아이디
     DUPLICATE_USER_LoginId("이미 사용 중인 아이디입니다", HttpStatus.CONFLICT),
     INVALID_USERID("적절하지 않은 사용자 아이디입니다.",HttpStatus.BAD_REQUEST),
@@ -24,6 +25,14 @@ public enum ErrorCode {
 
     //권한 없음
     USER_UNAUTHORIZED("사용자가 권한이없음",HttpStatus.UNAUTHORIZED),
+
+
+    /**
+     * CART
+     * */
+    NON_EXISTENT_DRINK("해당 술은 존재 하지않음",HttpStatus.BAD_REQUEST),
+    NON_EXISTENT_CART("장바구니가 존재하지 않습니다", HttpStatus.BAD_REQUEST),
+    INVALID_QUANTITY("유요하지 않은 수량입니다",HttpStatus.BAD_REQUEST),
 
     /**
      * Auth
