@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -47,24 +48,30 @@ public class SecurityConfig {
         // CORS 설정 적용 - Bean으로 등록한 corsConfigurationSource 사용
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
+       // CSRF 비활성화 + H2 콘솔 허용
         http
-                .csrf(auth -> {
-                    auth.disable();
-                    System.out.println("Csrf enabled");
-                })
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/h2-console/**")
+                        .disable()
+                );
+
+        // 세션, 로그인 방식 비활성화
+        http
                 .formLogin(auth -> auth.disable())
                 .httpBasic(auth -> auth.disable())
-                // session 설정 -> stateless로 변경
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
 
-        // h2 console
-//                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+        http
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
+                );
 
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/auth/**", "/error").permitAll()
+                                .requestMatchers("/api/auth/**", "/error", "/h2-console/**").permitAll()
 //                              .requestMatchers(PathRequest.toH2Console()).permitAll()
                                 .anyRequest().authenticated()
                 );
