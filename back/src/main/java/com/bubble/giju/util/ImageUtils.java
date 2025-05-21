@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageUtils {
 
@@ -35,6 +37,24 @@ public class ImageUtils {
         ImageIO.write(resizedImage, format, outputFile);
 
         return outputFile;
+    }
+
+    /**
+     * 여러 MultipartFile을 처리하여 리사이징된 파일 리스트 반환
+     */
+    public static List<File> resizeAll(List<MultipartFile> files, int targetWidth, int targetHeight) throws IOException {
+        List<File> resizedFiles = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            if (file != null && !file.isEmpty()) {
+                File resized = resize(file, targetWidth, targetHeight);
+                resizedFiles.add(resized);
+            } else {
+                throw new CustomException(ErrorCode.INVALID_IMAGE_FORMAT);
+            }
+        }
+
+        return resizedFiles;
     }
 
     /**
@@ -67,7 +87,7 @@ public class ImageUtils {
     /**
      * 파일 확장자 추출
      */
-    private static String getFileExtension(String fileName) {
+    public static String getFileExtension(String fileName) {
         if (fileName == null) return null;
 
         int dotIndex = fileName.lastIndexOf(".");

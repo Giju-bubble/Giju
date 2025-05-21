@@ -3,6 +3,7 @@ package com.bubble.giju.domain.image.service.impl;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.bubble.giju.domain.image.service.S3UploadService;
+import com.bubble.giju.util.ImageUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -23,15 +27,29 @@ public class S3UploadServiceImpl implements S3UploadService {
     private String bucket;
 
     @Override
-    public String upload(MultipartFile file) throws IOException {
-        String originalFilename = file.getOriginalFilename();
+    public String upload(File file) throws IOException {
+        String fileName = file.getName(); // UUID + 확장자 조합 추천
+        String contentType = ImageUtils.getFileExtension(fileName);
 
         ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(file.getSize());
-        metadata.setContentType(file.getContentType());
+        metadata.setContentLength(file.length());
+        metadata.setContentType(contentType);
 
-        amazonS3.putObject(bucket, originalFilename, file.getInputStream(), metadata);
-        return amazonS3.getUrl(bucket, originalFilename).toString();
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            amazonS3.putObject(bucket, fileName, inputStream, metadata);
+        }
+
+        return amazonS3.getUrl(bucket, fileName).toString();
     }
+
+    @Override
+    public List<String> uploadAll(List<File> files) throws IOException {
+        List<String> urls = new ArrayList<>();
+        for (File file : files) {
+            urls.add(upload(file));
+        }
+        return urls;
+    }
+
 
 }

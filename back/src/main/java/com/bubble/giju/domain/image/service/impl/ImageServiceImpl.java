@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Transactional
 @Service
@@ -22,13 +23,24 @@ public class ImageServiceImpl implements ImageService {
     public final ImageRepository imageRepository;
     
     @Override
-    public String upload(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file) throws IOException {
 
         File resizeFile= ImageUtils.resize(file,800,800);
-        String url = s3UploadService.upload(file);
+        String url = s3UploadService.upload(resizeFile);
         imageRepository.save(new Image(url));
 
         return url;
+    }
+
+    @Override
+    public List<String> uploadFiles(List<MultipartFile> files) throws IOException {
+        List<File> resizeFiles = ImageUtils.resizeAll(files,800,800);
+        List<String> urlList = s3UploadService.uploadAll(resizeFiles);
+        for(String url : urlList){
+            imageRepository.save(new Image(url));
+        }
+
+        return urlList;
     }
 
 }
