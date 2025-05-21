@@ -1,6 +1,7 @@
 package com.bubble.giju.global.config;
 
 import com.bubble.giju.global.jwt.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +44,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, ObjectMapper objectMapper) throws Exception {
         // CORS 설정 적용 - Bean으로 등록한 corsConfigurationSource 사용
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
@@ -71,7 +72,7 @@ public class SecurityConfig {
 
         // login filter 등록
         http
-                .addFilterAt(new LoginFilter(authenticationConfiguration.getAuthenticationManager(), jwtUtil, cookieUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationConfiguration.getAuthenticationManager(), jwtUtil, cookieUtil, objectMapper), UsernamePasswordAuthenticationFilter.class);
 
         // JWT Filter 등록
         http
