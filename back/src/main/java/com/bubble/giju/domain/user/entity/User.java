@@ -24,17 +24,31 @@ public class User {
     UUID userId;
 
 
-
-    @Column(unique = true)
+    @Column(name = "login_id", unique = true)
     String loginId;
+
+    @Column(name = "password")
     String password;
+
+    @Column(name = "name")
     String name;
+
+    @Column(name = "email")
     String email;
+
+    @Column(name = "phone_number")
     String phoneNumber;
+
+    @Column(name = "birthday")
     LocalDate birthday;
+
+    @Column(name = "created_at")
     LocalDateTime createdAt;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     Role role;
+
 
     public void update(UserDto.Request request) {
         this.name = request.getName() != null ? request.getName() : this.name;

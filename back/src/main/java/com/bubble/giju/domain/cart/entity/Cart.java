@@ -47,4 +47,8 @@ public class Cart {
         this.quantity = quantity;
     }
 
+    public int getSubtotal() {
+        return this.getDrink().getPrice() * this.getQuantity();
+    }
+
 }
