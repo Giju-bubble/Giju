@@ -30,8 +30,7 @@ public class Cart {
     private User user;
 
     @Builder
-    public Cart(Long id, int quantity, Drink drink, User user) {
-        this.id = id;
+    public Cart(int quantity, Drink drink, User user) {
         this.quantity = quantity;
         this.drink = drink;
         this.user = user;

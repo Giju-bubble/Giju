@@ -34,3 +34,6 @@ target/
 *.zip
 *.tar.gz
 *.rar
+
+# secret
+/src/main/resources/application-secret.yml

@@ -10,17 +10,21 @@ import com.bubble.giju.domain.cart.repository.CartRepository;
 import com.bubble.giju.domain.cart.service.CartService;
 import com.bubble.giju.domain.drink.entity.Drink;
 import com.bubble.giju.domain.drink.repository.DrinkRepository;
+import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.repository.UserRepository;
 import com.bubble.giju.global.config.CustomException;
 import com.bubble.giju.global.config.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -33,17 +37,17 @@ public class CartServiceImpl implements CartService {
     private final DrinkRepository drinkRepository;
     private final UserRepository userRepository;
 
-    @Override
-    public CartResponseDto addToCart(AddToCartRequestDto requestDto) {
+    @Value("${order.delivery-charge}")
+    private int deliveryCharge;
 
-        // todo  추후 CustomPrincipal 로그인한 유저 정보 조회 변경
-        /*User user = getUserByPrincipal(principal);
-        private User getUserByPrincipal(CustomPrincipal principal) {
-            return userRepository.findById(UUID.fromString(principal.getUserId()))
-                    .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
-        }*/
-        User user = userRepository.findByLoginId("test")
-                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+    @Value("${order.targetPrice}")
+    private int targetPrice;
+
+    @Override
+    public CartResponseDto addToCart(AddToCartRequestDto requestDto, CustomPrincipal principal) {
+
+        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
 
         // 술 조회
         Drink drink = drinkRepository.findById(requestDto.getDrinkId())
@@ -77,11 +81,10 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartResponseDto updateQuantity(Long id, UpdateQuantityRequestDto updateQuantityRequestDto) {
+    public CartResponseDto updateQuantity(Long id, UpdateQuantityRequestDto updateQuantityRequestDto, CustomPrincipal principal) {
 
-        //추후 변경예정
-        User user = userRepository.findByLoginId("test")
-                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
 
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_CART));
@@ -126,10 +129,9 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCartItem(List<Long> cartId) {
-        //추후 변경예정
-        User user = userRepository.findByLoginId("test")
-                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+    public void deleteCartItem(List<Long> cartId, CustomPrincipal principal) {
+        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
 
         // 유저정보 + 장바구니id  -> 장바구니 객체 찾기
         List<Cart> cart = cartRepository.findAllByUserAndIdIn(user, cartId);
@@ -137,9 +139,9 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartListResponseDto getCartList() {
-        User user = userRepository.findByLoginId("test")
-                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+    public CartListResponseDto getCartList(CustomPrincipal principal) {
+        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
 
         List<Cart> carts = cartRepository.findAllByUser(user);
 
@@ -154,4 +156,37 @@ public class CartServiceImpl implements CartService {
                 .totalPrice(totalPrice)
                 .build();
     }
+
+    // 결제 페이지에서 보여지는값
+    @Transactional
+    @Override
+    public CartListResponseDto getBuyCartList(List<Long> cartIds, CustomPrincipal principal) {
+        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
+
+        List<Cart> carts = cartRepository.findAllById(cartIds);
+
+        List<Cart> ownedCarts = carts.stream()
+                .filter(cart -> cart.getUser().equals(user))
+                .toList();
+
+        List<CartItemResponseDto> items = ownedCarts.stream()
+                .map(this::toCartItemDto)
+                .toList();
+
+        int totalPrice = items.stream().mapToInt(CartItemResponseDto::getTotalPrice).sum();
+
+        int appliedDeliveryCharge = totalPrice >= targetPrice ? 0 : deliveryCharge;
+
+        return CartListResponseDto.builder()
+                .items(items)
+                .totalPrice(totalPrice)
+                .deliveryCharge(appliedDeliveryCharge)
+                .totalPriceWithDelivery(totalPrice + appliedDeliveryCharge)
+                .build();
+    }
+
+
+
+
 }

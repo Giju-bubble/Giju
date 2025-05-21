@@ -8,6 +8,18 @@ spring:
       "prod": "prod, secret"
       "local": "local, secret"
 
+logging:
+  level:
+    org.springframework.security: DEBUG
 
 order:
+  targetPrice: 30000
   delivery-charge: 3000
+
+
+
+jwt:
+  expirationtime:
+    accessTime: 216000
+    refreshTime: 216000
+  secret: ${JWT_SECRET:defaultfordevalsjfielsjfinaajfowinblxiejfwoihbya}
