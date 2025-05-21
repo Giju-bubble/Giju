@@ -14,13 +14,16 @@ INSERT INTO users (user_id, login_id, password, name, email, phone_number, birth
 VALUES ('22222222-2222-2222-2222-222222222224', 'testuser4', 'pass1234', '최종빈', 'choi@example.com', '01099908888', '2000-01-26', '2025-01-01T11:00:00', 'USER');
 
 
-INSERT INTO drink (drink_id, name, price) VALUES (1, '막걸리', 8000);
-INSERT INTO drink (drink_id, name, price) VALUES (2, '청주', 5000);
-INSERT INTO drink (drink_id, name, price) VALUES (3, '홍주', 6000);
-INSERT INTO drink (drink_id, name, price) VALUES (4, '한국주', 18000);
-INSERT INTO drink (drink_id, name, price) VALUES (5, '월량주', 10000);
-INSERT INTO drink (drink_id, name, price) VALUES (6, '서울의밤', 12000);
+INSERT INTO categories (category_name) VALUES ('탁주'), ('청주'), ('증류주'), ('약주'), ('과실주'), ('기타');
 
+INSERT INTO Drinks (drink_id, drink_name, drink_price, drink_stock, drink_alcohol_content, drink_volume, drink_is_delete, drink_region, category_id)
+VALUES
+    (1, '막걸리', 8000, 100, 6.5, 750, false, '전통', 1),
+    (2, '청주', 5000, 50, 13.0, 500, false, '전통', 2),
+    (3, '홍주', 6000, 30, 14.0, 700, false, '전통', 3),
+    (4, '한국주', 18000, 20, 15.0, 1000, false, '한국', 4),
+    (5, '월량주', 10000, 40, 16.5, 750, false, '중부', 5),
+    (6, '서울의밤', 12000, 25, 14.5, 600, false, '서울', 6);
 
 INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (1, 1, 1, '11111111-1111-1111-1111-111111111112');
 INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (2, 2, 3, '11111111-1111-1111-1111-111111111112');
