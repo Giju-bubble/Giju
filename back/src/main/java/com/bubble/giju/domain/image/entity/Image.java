@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name="images")
+@Table(name="Images")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
