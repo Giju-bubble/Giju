@@ -1,6 +1,5 @@
 package com.bubble.giju.domain.user.controller;
 
-import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.domain.user.dto.LoginDto;
 import com.bubble.giju.domain.user.dto.UserCreateRequest;
 import com.bubble.giju.domain.user.dto.UserDto;
@@ -15,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/auth")
@@ -37,7 +35,7 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<LoginDto.LoginResponse>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         // get refresh token
         String refresh = null;
@@ -48,7 +46,7 @@ public class AuthController {
             }
         }
 
-        if (refresh != null) {
+        if (refresh == null) {
             throw new CustomException(ErrorCode.INVALID_JWT);
         }
 
@@ -65,7 +63,7 @@ public class AuthController {
         String newRefreshToken = jwtUtil.createRefreshToken(username, role, userId);
 
         LoginDto.LoginResponse loginResponse = LoginDto.LoginResponse.of(newAccessToken, newRefreshToken);
-        ApiResponse<LoginDto.LoginResponse> apiResponse = ApiResponse.success(newAccessToken, loginResponse);
+        ApiResponse<LoginDto.LoginResponse> apiResponse = ApiResponse.success("JWT 재발급 성공", loginResponse);
 
         // test
         response.setHeader("access", newAccessToken);
