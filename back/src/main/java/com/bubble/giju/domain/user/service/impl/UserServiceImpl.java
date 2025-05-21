@@ -1,6 +1,7 @@
 package com.bubble.giju.domain.user.service.impl;
 
 import com.bubble.giju.domain.user.dto.UserCreateRequest;
+import com.bubble.giju.domain.user.dto.UserDto;
 import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.enums.Role;
 import com.bubble.giju.domain.user.repository.UserRepository;
@@ -8,12 +9,15 @@ import com.bubble.giju.domain.user.service.UserService;
 import com.bubble.giju.global.config.CustomException;
 import com.bubble.giju.global.config.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.UUID;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,7 +26,8 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public void save(UserCreateRequest userCreateRequest) {
+    @Transactional
+    public UserDto.Response save(UserCreateRequest userCreateRequest) {
         if (userRepository.findByLoginId(userCreateRequest.getLoginId()).isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE_USER_LoginId);
         }
@@ -39,10 +44,48 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userRepository.save(user);
+
+        return UserDto.Response.fromEntity(user);
     }
 
+    @Transactional
     @Override
-    public void findByLoginId(String loginId) {
-        Optional<User> byLoginId = userRepository.findByLoginId(loginId);
+    public UserDto.Response find(String userId) {
+        User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(
+                () -> new CustomException(ErrorCode.NON_EXISTENT_USER)
+        );
+
+        return UserDto.Response.fromEntity(user);
     }
+
+    @Transactional
+    @Override
+    public UserDto.Response update(String userId, UserDto.Request request) {
+//        if (!userId.equals(request.getUserId())) {
+        // Todo: 질문. 어느정도까지 자세히 에러를 분류할 것 인가? 프론트를 위한 에러?
+//            throw new CustomException(ErrorCode.NON_EXISTENT_USER);
+//        }
+
+        User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(
+                () -> new CustomException(ErrorCode.NON_EXISTENT_USER)
+        );
+
+        user.update(request);
+        log.info("Updated user: {}", user); // 변경 확인용 로그
+
+        return UserDto.Response.fromEntity(user);
+    }
+
+    @Transactional
+    @Override
+    public String delete(String userId) {
+        User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(
+                () -> new CustomException(ErrorCode.NON_EXISTENT_USER)
+        );
+
+        userRepository.deleteById(UUID.fromString(userId));
+
+        return user.getLoginId();
+    }
+
 }

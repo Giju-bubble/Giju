@@ -26,14 +26,21 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // 현재 요청 경로 추출
+        String requestURI = request.getRequestURI();
+
         // request에서 Authorization 헤더 추출
         String accssToken = request.getHeader("access");
 
         // Authorization 검증
         if (accssToken == null) {
-            filterChain.doFilter(request, response);
+//            if (requestURI.startsWith("/api/auth")) {
+                filterChain.doFilter(request, response);
 
-            return;
+                return;
+//            }
+//
+//            throw new CustomException(ErrorCode.INVALID_access);
         }
 
         // 토큰 검증 시작
