@@ -9,6 +9,8 @@ import com.bubble.giju.global.config.CustomException;
 import com.bubble.giju.global.config.ErrorCode;
 import com.bubble.giju.global.jwt.CookieUtil;
 import com.bubble.giju.global.jwt.JWTUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "User", description = "사용자 관련 API")
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +28,7 @@ public class AuthController {
     private final JWTUtil jwtUtil;
     private final CookieUtil cookieUtil;
 
+    @Operation(summary = "회원가입", description = "회원가입입니다.")
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserDto.Response>> createUser(@RequestBody UserCreateRequest userCreateRequest) {
         System.out.println(userCreateRequest);
@@ -35,6 +39,7 @@ public class AuthController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @Operation(summary = "Access 토큰 재발급", description = "쿠키의 Refresh로 Access 토큰을 재발급 받습니다.")
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<LoginDto.LoginResponse>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         // get refresh token
@@ -47,12 +52,12 @@ public class AuthController {
         }
 
         if (refresh == null) {
-            throw new CustomException(ErrorCode.INVALID_JWT);
+            throw new CustomException(ErrorCode.INVALID_refresh);
         }
 
         String category = jwtUtil.getCategory(refresh);
         if (!category.equals("refresh")) {
-            throw new CustomException(ErrorCode.INVALID_JWT);
+            throw new CustomException(ErrorCode.INVALID_refresh);
         }
 
         String role = jwtUtil.getRole(refresh);

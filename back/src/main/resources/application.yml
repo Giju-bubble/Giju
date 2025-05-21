@@ -5,8 +5,8 @@ spring:
   profiles:
     active: local
     group:
-      "prod": "prod, secret"
-      "local": "local, secret"
+      "prod": "prod, secret, swagger"
+      "local": "local, secret, swagger"
 
 logging:
   level:
