@@ -8,8 +8,12 @@ import com.bubble.giju.domain.order.entity.Order;
 import com.bubble.giju.domain.order.entity.OrderDetail;
 import com.bubble.giju.domain.order.repository.OrderRepository;
 import com.bubble.giju.domain.order.service.OrderService;
+import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.repository.UserRepository;
+import com.bubble.giju.global.config.CustomException;
+import com.bubble.giju.global.config.ErrorCode;
+import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,9 +35,11 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Transactional
-    public Order createOrder(String userId, List<Long> cartItemIds) {
-        User user = userRepository.findByLoginId("test")
-                .orElseThrow(() -> new IllegalArgumentException("유저 없음"));
+    @Override
+    public Order createOrder(List<Long> cartItemIds, CustomPrincipal principal) {
+        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
+
 
         List<Cart> cartItems = cartRepository.findAllById(cartItemIds);
 
