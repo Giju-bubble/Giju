@@ -20,7 +20,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -55,6 +54,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             return authenticationManager.authenticate(authToken);
         } catch (IOException e) {
             throw new CustomException(ErrorCode.INVALID_LOGIN_JSON);
+        } catch (AuthenticationException e) {
+            // 인증 예외는 이미 unsuccessfulAuthentication에서 처리됨
+            throw e;
+        } catch (Exception e) {
+            // 기타 예상치 못한 예외
+            log.error("Unexpected error during authentication", e);
+            throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 

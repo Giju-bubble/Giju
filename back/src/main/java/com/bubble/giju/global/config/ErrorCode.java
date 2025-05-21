@@ -46,7 +46,12 @@ public enum ErrorCode {
     /**
      * util
      */
-    INVALID_IMAGE_FORMAT("잘못된 이미지 포맷입니다.", HttpStatus.BAD_REQUEST);
+    INVALID_IMAGE_FORMAT("잘못된 이미지 포맷입니다.", HttpStatus.BAD_REQUEST),
+
+    /**
+     * Error
+     */
+    INTERNAL_SERVER_ERROR("서버에러입니다. 백엔드 로그를 확인해주세요", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String msg;
     private final HttpStatus status;

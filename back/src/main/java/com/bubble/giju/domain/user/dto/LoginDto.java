@@ -2,8 +2,6 @@ package com.bubble.giju.domain.user.dto;
 
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 public class LoginDto {
     @Getter
     public static class LoginRequest {
