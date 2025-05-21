@@ -2,27 +2,33 @@ package com.bubble.giju.domain.image.service.impl;
 
 import com.bubble.giju.domain.image.entity.Image;
 import com.bubble.giju.domain.image.repository.ImageRepository;
-import com.bubble.giju.domain.image.service.BlobService;
+import com.bubble.giju.domain.image.service.S3UploadService;
 import com.bubble.giju.domain.image.service.ImageService;
+import com.bubble.giju.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
+
+import java.io.File;
+import java.io.IOException;
 
 @Transactional
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-    public final BlobService blobService;
+    public final S3UploadService s3UploadService;
     public final ImageRepository imageRepository;
     
     @Override
-    public String upload(MultipartFile file) {
-        String url = blobService.upload(file);
+    public String upload(MultipartFile file) throws IOException {
+
+        File resizeFile= ImageUtils.resize(file,800,800);
+        String url = s3UploadService.upload(file);
         imageRepository.save(new Image(url));
 
         return url;
     }
+
 }
