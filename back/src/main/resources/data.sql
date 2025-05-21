@@ -1,0 +1,27 @@
+INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
+VALUES ('11111111-1111-1111-1111-111111111111', 'admin', 'admin1234', '기주', 'giju@example.com', '01012345678', '2000-01-01', '2025-01-01T10:00:00', 'admin');
+
+INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
+VALUES ('11111111-1111-1111-1111-111111111112', 'testuser1', 'pass1234', '김선준', 'kim@example.com', '01012348678', '1999-01-01', '2025-01-01T10:00:00', 'USER');
+
+INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
+VALUES ('22222222-2222-2222-2222-222222222222', 'testuser2', 'pass1234', '김창환', 'kim2@example.com', '01099998888', '2000-05-05', '2025-01-01T11:00:00', 'USER');
+
+INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
+VALUES ('22222222-2222-2222-2222-222222222223', 'testuser3', 'pass1234', '장인찬', 'jang@example.com', '01099978888', '2004-07-28', '2025-01-01T11:00:00', 'USER');
+
+INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
+VALUES ('22222222-2222-2222-2222-222222222224', 'testuser4', 'pass1234', '최종빈', 'choi@example.com', '01099908888', '2000-01-26', '2025-01-01T11:00:00', 'USER');
+
+
+INSERT INTO drink (drink_id, name, price) VALUES (1, '막걸리', 8000);
+INSERT INTO drink (drink_id, name, price) VALUES (2, '청주', 5000);
+INSERT INTO drink (drink_id, name, price) VALUES (3, '홍주', 6000);
+INSERT INTO drink (drink_id, name, price) VALUES (4, '한국주', 18000);
+INSERT INTO drink (drink_id, name, price) VALUES (5, '월량주', 10000);
+INSERT INTO drink (drink_id, name, price) VALUES (6, '서울의밤', 12000);
+
+
+INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (1, 1, 1, '11111111-1111-1111-1111-111111111112');
+INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (2, 2, 3, '11111111-1111-1111-1111-111111111112');
+INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (3, 1, 2, '22222222-2222-2222-2222-222222222222');
