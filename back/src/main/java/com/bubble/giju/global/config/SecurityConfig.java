@@ -2,12 +2,19 @@ package com.bubble.giju.global.config;
 
 import com.bubble.giju.global.jwt.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -72,14 +79,22 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // h2 console
-//                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+        http
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/auth/**", "/error").permitAll()
-//                              .requestMatchers(PathRequest.toH2Console()).permitAll()
-                                .anyRequest().authenticated()
+                        .requestMatchers("/api/auth/**", "/error").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/api/swagger-config/**", "/v3/api-docs/**",
+                                "/h2-console/**",
+                                "/favicon.ico",
+                                "/error",
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/v3/api-docs/**").permitAll()
+                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .anyRequest().authenticated()
                 );
 
         // login filter 등록
@@ -92,6 +107,29 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTExceptionHandler(), LoginFilter.class); // JWTFilter 앞에 예외 처리 필터 추가
 
         return http.build();
+    }
+
+    @Bean
+    public OpenAPI openAPI() {
+        Info info = new Info()
+                .title("Giju API")
+                .version("v1.0")
+                .description("Giju API 문서");
+
+        // JWT 인증 설정
+        SecurityScheme securityScheme = new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .in(SecurityScheme.In.HEADER)
+                .name("Authorization");
+
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
+
+        return new OpenAPI()
+                .info(info)
+                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
+                .addSecurityItem(securityRequirement);
     }
 
 }

@@ -46,7 +46,8 @@ public enum ErrorCode {
      * JWT
      */
     EXPIRED_JWT("JWT의 유효기간이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
-    INVALID_JWT("refresh token이 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_refresh("refresh token이 없습니다.", HttpStatus.BAD_REQUEST),
+    INVALID_access("access token이 없습니다.", HttpStatus.BAD_REQUEST),
 
     /**
      * Category
