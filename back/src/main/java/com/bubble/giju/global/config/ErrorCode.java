@@ -34,6 +34,12 @@ public enum ErrorCode {
     LOGIN_UNAUTHORIZED("로그인 실패", HttpStatus.UNAUTHORIZED),
 
     /**
+     * Address
+     */
+    // 존재하지 않는 Address
+    NON_EXIST_ADDRESS("존재하지않는 주소입니다.", HttpStatus.BAD_REQUEST),
+
+    /**
      * JWT
      */
     EXPIRED_JWT("JWT의 유효기간이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
