@@ -1,18 +1,20 @@
-spring:
-  # 1) AWS 자격증명 (Static Provider)
-  cloud:
-    aws:
-      credentials:
-        access-key: ${S3STORAGE_ACCESS_KEY}     # 환경 변수로부터 읽음
-        secret-key: ${S3STORAGE_SECRET_KEY} # 환경 변수로부터 읽음
-      region:
-        static: ap-northeast-2 # 환경 변수 또는 기본값 :contentReference[oaicite:0]{index=0}
-
-  # 2) S3 버킷 정보
+# 1) AWS 자격증명 (Static Provider)
+cloud:
   aws:
-    s3:
-      bucket: giju-bubble                   # 본인이 소유한 버킷 이름
-      region: ap-northeast-2                # 버킷 리전
+    credentials:
+      access-key: ${S3STORAGE_ACCESS_KEY}     # 환경 변수로부터 읽음
+      secret-key: ${S3STORAGE_SECRET_KEY} # 환경 변수로부터 읽음
+    region:
+      static: ap-northeast-2 # 환경 변수 또는 기본값 :contentReference[oaicite:0]{index=0}
+
+# 2) S3 버킷 정보
+aws:
+  s3:
+    bucket: giju-bubble                   # 본인이 소유한 버킷 이름
+    region: ap-northeast-2                # 버킷 리전
+
+spring:
+
 
   datasource:
     url: jdbc:mysql://ls-b2fc792cb0f26b7c752ed2c4cddfb8fef3a5b77e.csltb7uupiqk.ap-northeast-2.rds.amazonaws.com:3306/your_database_name #?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
