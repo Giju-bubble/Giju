@@ -1,4 +1,7 @@
+
 spring:
+
+
   datasource:
     url: jdbc:mysql://ls-b2fc792cb0f26b7c752ed2c4cddfb8fef3a5b77e.csltb7uupiqk.ap-northeast-2.rds.amazonaws.com:3306/your_database_name #?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,3 +16,4 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
         format_sql: true
         show-sql: true
+
