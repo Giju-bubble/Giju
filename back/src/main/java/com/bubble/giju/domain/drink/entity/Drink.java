@@ -42,7 +42,7 @@ public class Drink {
     private Category category;
 
     @Builder
-    public Drink (Long id ,String name,int price,int stock,double alcoholContent,int volume,boolean is_delete,String region){
+    public Drink (Long id ,String name,int price,int stock,double alcoholContent,int volume,boolean is_delete,String region,Category category){
         this.id = id;
         this.name = name;
         this.price = price;
@@ -51,5 +51,11 @@ public class Drink {
         this.volume = volume;
         this.is_delete = is_delete;
         this.region = region;
+        this.category = category;
+    }
+
+    public boolean is_delete()
+    {
+        return this.is_delete;
     }
 }

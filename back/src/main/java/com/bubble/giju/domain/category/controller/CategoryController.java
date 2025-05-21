@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//todo body 성공 객체로 나중에 다 바꿀것.
 @RestController
 @RequiredArgsConstructor
 public class CategoryController {

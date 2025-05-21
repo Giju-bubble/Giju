@@ -13,7 +13,7 @@ public class DrinkImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="drink_image_id", nullable=false, updatable=false, unique=true)
-    private long id;
+    private Long id;
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "image_id", nullable = false)
     private Image image;
@@ -26,7 +26,7 @@ public class DrinkImage {
     private boolean isThumbnail;
 
     @Builder
-    public DrinkImage(long id,Image image, Drink drink, boolean isThumbnail) {
+    public DrinkImage(Long id,Image image, Drink drink, boolean isThumbnail) {
         this.id = id;
         this.image = image;
         this.drink = drink;

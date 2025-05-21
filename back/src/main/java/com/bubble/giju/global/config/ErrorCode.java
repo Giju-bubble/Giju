@@ -53,6 +53,7 @@ public enum ErrorCode {
      * Category
      */
     EXISTENT_CATEGORY("이미 존재하는 카테고리입니다.",HttpStatus.CONFLICT),
+    NONEXISTENT_CATEGORY("존재하지 않는 카테고리입니다.",HttpStatus.BAD_REQUEST),
 
     /**
      * util
