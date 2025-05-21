@@ -44,6 +44,8 @@ jobs:
       working-directory: ./back
       env:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
       run: ./gradlew build
 
     - name: Check build results
