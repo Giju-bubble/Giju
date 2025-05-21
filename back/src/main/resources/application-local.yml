@@ -10,6 +10,7 @@ spring:
     username: sa
     password:
 
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -24,3 +25,4 @@ spring:
   sql:
     init:
       mode: always  # 항상 SQL 실행
+      data-locations: classpath:data.sql
