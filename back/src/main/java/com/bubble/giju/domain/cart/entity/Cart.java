@@ -10,7 +10,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "Cart")
+@Table(name = "cart")
 public class Cart {
 
     @Id
