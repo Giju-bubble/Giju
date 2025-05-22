@@ -7,6 +7,7 @@ import com.bubble.giju.domain.order.dto.request.OrderRequestDto;
 import com.bubble.giju.domain.order.dto.response.OrderResponseDto;
 import com.bubble.giju.domain.order.entity.Order;
 import com.bubble.giju.domain.order.entity.OrderDetail;
+import com.bubble.giju.domain.order.entity.OrderStatus;
 import com.bubble.giju.domain.order.repository.OrderRepository;
 import com.bubble.giju.domain.order.service.OrderService;
 import com.bubble.giju.domain.user.dto.CustomPrincipal;
@@ -123,4 +124,14 @@ public class OrderServiceImpl implements OrderService {
     private int calculateDeliveryCharge(int totalAmount) {
         return totalAmount >= 30000 ? 0 : deliveryCharge;
     }
+
+
+    //tossPayment 결제 결과에 따른 order 주문 상태 변화
+    @Transactional
+    public void updateOrderStatus(Long orderId, OrderStatus orderStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_ORDER));
+        order.updateStatus(orderStatus);
+    }
+
 }
