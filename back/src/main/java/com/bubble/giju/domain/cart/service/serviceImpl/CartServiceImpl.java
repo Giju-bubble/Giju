@@ -185,8 +185,4 @@ public class CartServiceImpl implements CartService {
                 .totalPriceWithDelivery(totalPrice + appliedDeliveryCharge)
                 .build();
     }
-
-
-
-
 }

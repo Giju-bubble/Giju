@@ -1,3 +1,19 @@
+# 1) AWS 자격증명 (Static Provider)
+cloud:
+  aws:
+    credentials:
+      access-key: ${S3STORAGE_ACCESS_KEY}     # 환경 변수로부터 읽음
+      secret-key: ${S3STORAGE_SECRET_KEY} # 환경 변수로부터 읽음
+    region:
+      static: ap-northeast-2 # 환경 변수 또는 기본값 :contentReference[oaicite:0]{index=0}
+
+# 2) S3 버킷 정보
+aws:
+  s3:
+    bucket: giju-bubble                   # 본인이 소유한 버킷 이름
+    region: ap-northeast-2                # 버킷 리전
+
+
 spring:
   application:
     name: giju
@@ -5,8 +21,8 @@ spring:
   profiles:
     active: local
     group:
-      "prod": "prod, secret"
-      "local": "local, secret"
+      "prod": "prod, secret, swagger"
+      "local": "local, secret, swagger"
 
 logging:
   level:
@@ -15,11 +31,13 @@ logging:
 order:
   targetPrice: 30000
   delivery-charge: 3000
+  cleanup-expiration-minutes: 15
+  delete-cycle: 30
 
 
 
 jwt:
   expirationtime:
-    accessTime: 216000
-    refreshTime: 216000
+    accessTime: 21600000
+    refreshTime: 21600000
   secret: ${JWT_SECRET:defaultfordevalsjfielsjfinaajfowinblxiejfwoihbya}
