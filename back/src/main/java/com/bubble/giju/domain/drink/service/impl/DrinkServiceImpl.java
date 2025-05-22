@@ -5,6 +5,7 @@ import com.bubble.giju.domain.category.entity.Category;
 import com.bubble.giju.domain.category.repository.CategoryRepository;
 import com.bubble.giju.domain.drink.dto.DrinkRequestDto;
 import com.bubble.giju.domain.drink.dto.DrinkResponseDto;
+import com.bubble.giju.domain.drink.dto.DrinkUpdateRequestDto;
 import com.bubble.giju.domain.drink.entity.Drink;
 import com.bubble.giju.domain.drink.entity.DrinkImage;
 import com.bubble.giju.domain.drink.repository.DrinkImageRepository;
@@ -88,6 +89,18 @@ public class DrinkServiceImpl implements DrinkService {
     @Override
     public DrinkResponseDto restoreDrink(Long drinkId) {
         return updateDrinkDeleteStatus(drinkId, false);
+    }
+
+    @Override
+    public DrinkResponseDto updateDrink(Long drinkId,DrinkUpdateRequestDto drinkUpdateRequestDto) {
+        Drink drink = drinkRepository.findById(drinkId).orElseThrow(()-> new CustomException(ErrorCode.NON_EXISTENT_DRINK));
+        Category category = categoryRepository.findById(drinkUpdateRequestDto.getCategoryId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NONEXISTENT_CATEGORY));
+        drink.update(drinkUpdateRequestDto,category);
+        //커밋시에 자동 변경감지 되지만 명시적으로 적어줌
+        drink = drinkRepository.save(drink);
+        DrinkResponseDto drinkResponseDto = buildDrinkResponseDto(drink);
+        return drinkResponseDto;
     }
 
     private DrinkResponseDto updateDrinkDeleteStatus(Long drinkId, boolean isDeleted) {

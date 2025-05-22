@@ -2,6 +2,7 @@ package com.bubble.giju.domain.drink.service;
 
 import com.bubble.giju.domain.drink.dto.DrinkRequestDto;
 import com.bubble.giju.domain.drink.dto.DrinkResponseDto;
+import com.bubble.giju.domain.drink.dto.DrinkUpdateRequestDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,4 +12,5 @@ public interface DrinkService {
     DrinkResponseDto saveDrink(DrinkRequestDto drinkRequestDto, List<MultipartFile> files, MultipartFile thumbnail) throws IOException;
     DrinkResponseDto deleteDrink(Long drinkId);
     DrinkResponseDto restoreDrink(Long drinkId);
+    DrinkResponseDto updateDrink(Long drinkId,DrinkUpdateRequestDto drinkUpdateRequestDto);
 }

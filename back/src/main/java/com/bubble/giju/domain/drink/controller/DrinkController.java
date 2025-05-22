@@ -2,6 +2,7 @@ package com.bubble.giju.domain.drink.controller;
 
 import com.bubble.giju.domain.drink.dto.DrinkRequestDto;
 import com.bubble.giju.domain.drink.dto.DrinkResponseDto;
+import com.bubble.giju.domain.drink.dto.DrinkUpdateRequestDto;
 import com.bubble.giju.domain.drink.service.DrinkService;
 import com.bubble.giju.global.config.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,6 +61,16 @@ public class DrinkController {
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
 
+    @Operation(summary = "술(상품) 업데이트",description = "술(상품) 업데이트 API")
+    @PatchMapping("/api/admin/drink/{drinkId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<DrinkResponseDto>> UpdateDrink(@PathVariable Long drinkId,
+                                                                     @RequestBody DrinkUpdateRequestDto drinkUpdateRequestDto
+                                                                     ) throws IOException {
+        DrinkResponseDto drinkResponseDto = drinkService.updateDrink(drinkId,drinkUpdateRequestDto);
+        ApiResponse<DrinkResponseDto> apiResponse=ApiResponse.success("술 상품 업데이트에 성공하셨습니다.",drinkResponseDto);
+        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
+    }
 
 
 }
