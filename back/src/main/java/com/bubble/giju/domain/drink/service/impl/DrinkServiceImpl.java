@@ -1,5 +1,6 @@
 package com.bubble.giju.domain.drink.service.impl;
 
+import com.bubble.giju.domain.category.dto.CategoryResponseDto;
 import com.bubble.giju.domain.category.entity.Category;
 import com.bubble.giju.domain.category.repository.CategoryRepository;
 import com.bubble.giju.domain.drink.dto.DrinkRequestDto;
@@ -72,9 +73,55 @@ public class DrinkServiceImpl implements DrinkService {
         DrinkResponseDto drinkResponseDto = DrinkResponseDto.builder().id(drink.getId())
                 .name(drink.getName()).price(drink.getPrice()).stock(drink.getStock())
                 .alcoholContent(drink.getAlcoholContent()).volume(drink.getVolume())
-                .is_delete(drink.is_delete()).region(drink.getRegion()).category(drink.getCategory())
+                .is_delete(drink.is_delete()).region(drink.getRegion()).category(new CategoryResponseDto(drink.getCategory().getId(),drink.getCategory().getName()))
                 .thumbnailUrl(thumbnailUrl).drinkImageUrlList(drinkImageUrlList)
                 .build();
         return drinkResponseDto;
     }
+
+    //todo  @Where + @SQLDelete로 자동 처리??
+    @Override
+    public DrinkResponseDto deleteDrink(Long drinkId) {
+        return updateDrinkDeleteStatus(drinkId, true);
+    }
+
+    @Override
+    public DrinkResponseDto restoreDrink(Long drinkId) {
+        return updateDrinkDeleteStatus(drinkId, false);
+    }
+
+    private DrinkResponseDto updateDrinkDeleteStatus(Long drinkId, boolean isDeleted) {
+        Drink drink = drinkRepository.findById(drinkId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_DRINK));
+
+        drink.updateDelete(isDeleted);
+        drinkRepository.save(drink);
+
+        return buildDrinkResponseDto(drink);
+    }
+
+    private DrinkResponseDto buildDrinkResponseDto(Drink drink) {
+        DrinkImage thumbnailDrinkImage = drinkImageRepository.findByDrinkIdAndThumbnailIsTrue(drink.getId());
+        String thumbnailUrl = thumbnailDrinkImage.getImage().getUrl();
+
+        List<DrinkImage> drinkImageList = drinkImageRepository.findByDrinkIdAndThumbnailIsFalse(drink.getId());
+        List<String> imageList = drinkImageList.stream()
+                .map(img -> img.getImage().getUrl())
+                .toList();
+
+        return DrinkResponseDto.builder()
+                .id(drink.getId())
+                .name(drink.getName())
+                .price(drink.getPrice())
+                .stock(drink.getStock())
+                .alcoholContent(drink.getAlcoholContent())
+                .volume(drink.getVolume())
+                .is_delete(drink.is_delete())
+                .region(drink.getRegion())
+                .category(new CategoryResponseDto(drink.getCategory().getId(),drink.getCategory().getName()))
+                .thumbnailUrl(thumbnailUrl)
+                .drinkImageUrlList(imageList)
+                .build();
+    }
+
 }

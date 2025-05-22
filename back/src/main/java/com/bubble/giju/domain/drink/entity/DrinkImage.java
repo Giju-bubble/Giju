@@ -4,11 +4,13 @@ import com.bubble.giju.domain.image.entity.Image;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Table(name="Drink_images")
+@Getter
 public class DrinkImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +25,13 @@ public class DrinkImage {
     private Drink drink;
 
     @Column(name="is_thumbnail", nullable=false)
-    private boolean isThumbnail;
+    private boolean thumbnail;
 
     @Builder
     public DrinkImage(Long id,Image image, Drink drink, boolean isThumbnail) {
         this.id = id;
         this.image = image;
         this.drink = drink;
-        this.isThumbnail = isThumbnail;
+        this.thumbnail = isThumbnail;
     }
 }

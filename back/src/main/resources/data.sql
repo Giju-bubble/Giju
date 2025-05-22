@@ -24,3 +24,7 @@ VALUES
 INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (1, 1, 1, '11111111-1111-1111-1111-111111111112');
 INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (2, 2, 3, '11111111-1111-1111-1111-111111111112');
 INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (3, 1, 2, '22222222-2222-2222-2222-222222222222');
+
+INSERT INTO Images(image_url) values ('https://giju-bubble.s3.ap-northeast-2.amazonaws.com/resized_12124821977126586917.png');
+
+INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,1,true);
