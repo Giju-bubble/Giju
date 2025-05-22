@@ -5,7 +5,7 @@ import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.CartSelectedRequestDto;
 import com.bubble.giju.domain.cart.dto.request.DeleteCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.UpdateQuantityRequestDto;
-import com.bubble.giju.domain.cart.dto.response.CartItemResponseDto;
+
 import com.bubble.giju.domain.cart.dto.response.CartResponseDto;
 import com.bubble.giju.domain.cart.dto.response.CartListResponseDto;
 import com.bubble.giju.domain.cart.service.CartService;
@@ -14,10 +14,10 @@ import com.bubble.giju.global.config.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -76,7 +76,7 @@ public class CartController {
     }
 
     @Operation(summary = "구매할 상품들 및 총값 조회", description = "구매하기 위해 선택된 각 상품의 정보(1개의 상품값, 상품값(상품*수량값), 갯수, 이름, 수량, cart아이디, 상품아이디), 선택된 상품 전체 총값, 배달비, 결제할 총값(총 상품값 + 배달비)")
-    @GetMapping("/buy")
+    @PostMapping("/buy")
     public ResponseEntity<CartListResponseDto> seletedforBuyCartList(
             @AuthenticationPrincipal CustomPrincipal customPrincipal,
             @RequestBody CartSelectedRequestDto cartSelectedRequestDto) {

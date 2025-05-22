@@ -24,7 +24,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private long id;
+    private Long id;
 
     // BigDecimal 추흐 할인, 쿠폰 등 추가시 변경
     @Column(name = "total_amount" , nullable = false )
