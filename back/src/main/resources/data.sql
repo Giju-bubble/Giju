@@ -1,18 +1,14 @@
 INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
-VALUES ('11111111-1111-1111-1111-111111111111', 'admin', 'admin1234', '기주', 'giju@example.com', '01012345678', '2000-01-01', '2025-01-01T10:00:00', 'admin');
+VALUES ('11111111-1111-1111-1111-111111111112', 'testuser1', '$2a$12$WbQzovwzqOtzDEUBjGeFcehv9OWx/ZJ0E0V3UHMJRw3m8Uiq..mDi', '김선준', 'kim@example.com', '01012348678', '1999-01-01', '2025-01-01T10:00:00', 'USER');
 
 INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
-VALUES ('11111111-1111-1111-1111-111111111112', 'testuser1', 'pass1234', '김선준', 'kim@example.com', '01012348678', '1999-01-01', '2025-01-01T10:00:00', 'USER');
+VALUES ('22222222-2222-2222-2222-222222222222', 'testuser2', '$2a$12$WbQzovwzqOtzDEUBjGeFcehv9OWx/ZJ0E0V3UHMJRw3m8Uiq..mDi', '김창환', 'kim2@example.com', '01099998888', '2000-05-05', '2025-01-01T11:00:00', 'USER');
 
 INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
-VALUES ('22222222-2222-2222-2222-222222222222', 'testuser2', 'pass1234', '김창환', 'kim2@example.com', '01099998888', '2000-05-05', '2025-01-01T11:00:00', 'USER');
+VALUES ('22222222-2222-2222-2222-222222222223', 'testuser3', '$2a$12$WbQzovwzqOtzDEUBjGeFcehv9OWx/ZJ0E0V3UHMJRw3m8Uiq..mDi', '장인찬', 'jang@example.com', '01099978888', '2004-07-28', '2025-01-01T11:00:00', 'USER');
 
 INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
-VALUES ('22222222-2222-2222-2222-222222222223', 'testuser3', 'pass1234', '장인찬', 'jang@example.com', '01099978888', '2004-07-28', '2025-01-01T11:00:00', 'USER');
-
-INSERT INTO users (user_id, login_id, password, name, email, phone_number, birthday, created_at, role)
-VALUES ('22222222-2222-2222-2222-222222222224', 'testuser4', 'pass1234', '최종빈', 'choi@example.com', '01099908888', '2000-01-26', '2025-01-01T11:00:00', 'USER');
-
+VALUES ('22222222-2222-2222-2222-222222222224', 'testuser4', '$2a$12$WbQzovwzqOtzDEUBjGeFcehv9OWx/ZJ0E0V3UHMJRw3m8Uiq..mDi', '최종빈', 'choi@example.com', '01099908888', '2000-01-26', '2025-01-01T11:00:00', 'USER');
 
 INSERT INTO categories (category_name) VALUES ('탁주'), ('청주'), ('증류주'), ('약주'), ('과실주'), ('기타');
 
