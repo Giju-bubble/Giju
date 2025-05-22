@@ -4,12 +4,14 @@ import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.domain.user.dto.UserDto;
 import com.bubble.giju.domain.user.service.UserService;
 import com.bubble.giju.global.config.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "User", description = "사용자 관련 API")
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api")
