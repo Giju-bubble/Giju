@@ -77,7 +77,7 @@ public class DrinkController {
     }
 
     @Operation(summary = "술(상품) 단일조회",description = "술(상품) 단일조회 API")
-    @GetMapping("/api/admin/drink/{drinkId}")
+    @GetMapping("/api/drink/{drinkId}")
     public ResponseEntity<DrinkDetailResponseDto> findDrink(@PathVariable Long drinkId,
                                                                          @AuthenticationPrincipal CustomPrincipal userDetails  // 인증 안 된 경우 null
     ) throws IOException {
