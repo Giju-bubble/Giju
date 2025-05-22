@@ -31,6 +31,8 @@ logging:
 order:
   targetPrice: 30000
   delivery-charge: 3000
+  cleanup-expiration-minutes: 15
+  delete-cycle: 30
 
 
 

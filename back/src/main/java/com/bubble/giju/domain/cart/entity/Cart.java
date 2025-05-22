@@ -16,7 +16,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "cart_id")
-    private long id;
+    private Long id;
 
     @Column (name = "quantity" , nullable = false)
     private int quantity;
@@ -45,6 +45,10 @@ public class Cart {
             throw new CustomException(ErrorCode.INVALID_QUANTITY);
         }
         this.quantity = quantity;
+    }
+
+    public int getSubtotal() {
+        return this.getDrink().getPrice() * this.getQuantity();
     }
 
 }
