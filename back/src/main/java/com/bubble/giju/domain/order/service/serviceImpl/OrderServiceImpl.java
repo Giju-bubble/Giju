@@ -4,6 +4,7 @@ import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.repository.CartRepository;
 import com.bubble.giju.domain.drink.entity.Drink;
 import com.bubble.giju.domain.order.dto.request.OrderRequestDto;
+import com.bubble.giju.domain.order.dto.response.OrderResponseDto;
 import com.bubble.giju.domain.order.entity.Order;
 import com.bubble.giju.domain.order.entity.OrderDetail;
 import com.bubble.giju.domain.order.repository.OrderRepository;
@@ -33,10 +34,19 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
 
+    @Value("${app.base-url}")
+    private String baseUrl;
+
+    @Value("${toss.success_url}")
+    private String successUrl;
+
+    @Value("${toss.fail_url}")
+    private String failUrl;
+
 
     @Transactional
     @Override
-    public Order createOrder(List<Long> cartItemIds, CustomPrincipal principal) {
+    public OrderResponseDto createOrder(List<Long> cartItemIds, CustomPrincipal principal) {
         User user = userRepository.findById(UUID.fromString(principal.getUserId()))
                 .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
 
@@ -75,7 +85,18 @@ public class OrderServiceImpl implements OrderService {
             //양뱡향 설정
             order.addOrderDetail(orderDetail);
         }
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+
+
+        return OrderResponseDto.builder()
+                .orderId(savedOrder.getId().toString()) //토스페이먼츠서버로 보내기 위해 String변환
+                .amount(savedOrder.getTotalAmount()+savedOrder.getDeliveryCharge()) // 상품값 + 배달비
+                .orderName(savedOrder.getOrderName())
+                .customerEmail(user.getEmail())
+                .customerName(user.getName())
+                .successUrl(baseUrl+successUrl)
+                .failUrl(baseUrl+failUrl)
+                .build();
     }
 
     // 선택된 물 건 총값 계산

@@ -33,6 +33,9 @@ order:
   delivery-charge: 3000
   cleanup-expiration-minutes: 15
 
+toss:
+  success_url: test
+  fail_url: test
 
 
 jwt:

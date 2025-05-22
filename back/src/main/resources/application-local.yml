@@ -26,3 +26,6 @@ spring:
     init:
       mode: always  # 항상 SQL 실행
       data-locations: classpath:data.sql
+
+app:
+  base-url: http://localhost:8080
