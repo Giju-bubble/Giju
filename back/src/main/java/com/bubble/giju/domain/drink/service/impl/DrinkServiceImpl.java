@@ -3,6 +3,7 @@ package com.bubble.giju.domain.drink.service.impl;
 import com.bubble.giju.domain.category.dto.CategoryResponseDto;
 import com.bubble.giju.domain.category.entity.Category;
 import com.bubble.giju.domain.category.repository.CategoryRepository;
+import com.bubble.giju.domain.drink.dto.DrinkDetailResponseDto;
 import com.bubble.giju.domain.drink.dto.DrinkRequestDto;
 import com.bubble.giju.domain.drink.dto.DrinkResponseDto;
 import com.bubble.giju.domain.drink.dto.DrinkUpdateRequestDto;
@@ -14,6 +15,10 @@ import com.bubble.giju.domain.drink.service.DrinkService;
 import com.bubble.giju.domain.image.entity.Image;
 import com.bubble.giju.domain.image.repository.ImageRepository;
 import com.bubble.giju.domain.image.service.ImageService;
+import com.bubble.giju.domain.like.entity.Like;
+import com.bubble.giju.domain.like.repository.LikeRepository;
+import com.bubble.giju.domain.review.entity.Review;
+import com.bubble.giju.domain.review.repository.ReviewRepository;
 import com.bubble.giju.global.config.CustomException;
 import com.bubble.giju.global.config.ErrorCode;
 import jakarta.transaction.Transactional;
@@ -21,9 +26,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -34,6 +42,8 @@ public class DrinkServiceImpl implements DrinkService {
     private final CategoryRepository categoryRepository;
     private final DrinkImageRepository drinkImageRepository;
     private final ImageRepository imageRepository;
+    private final ReviewRepository reviewRepository;
+    private final LikeRepository likeRepository;
 
     //todo 예외처리 해줄 것
     @Override
@@ -101,6 +111,36 @@ public class DrinkServiceImpl implements DrinkService {
         drink = drinkRepository.save(drink);
         DrinkResponseDto drinkResponseDto = buildDrinkResponseDto(drink);
         return drinkResponseDto;
+    }
+
+    @Override
+    public DrinkDetailResponseDto findById(Long drinkId, UUID userId) {
+        Drink drink = drinkRepository.findById(drinkId).orElseThrow(()->new CustomException(ErrorCode.NON_EXISTENT_DRINK));
+
+        DrinkResponseDto drinkResponseDto = buildDrinkResponseDto(drink);
+
+        long reviewSum =reviewRepository.findSumScoreByDrinkId(drinkId);
+        long reviewCount=reviewRepository.countByDrinkId(drinkId);
+
+        double reviewScore = (reviewCount > 0)
+                ? (double) reviewSum / reviewCount
+                : 0.0;
+
+
+        boolean isLike= likeRepository.existsByUser_UserIdAndDrink_id(userId,drinkId);
+
+
+        DrinkDetailResponseDto drinkDetailResponseDto = DrinkDetailResponseDto.builder()
+                .id(drinkResponseDto.getId()).name(drinkResponseDto.getName()).price(drinkResponseDto.getPrice())
+                .stock(drinkResponseDto.getStock()).alcoholContent(drink.getAlcoholContent())
+                .volume(drinkResponseDto.getVolume()).is_delete(drinkResponseDto.is_delete())
+                .region(drinkResponseDto.getRegion())
+                .category(new CategoryResponseDto(drinkResponseDto.getCategory().getId(),drinkResponseDto.getCategory().getName()))
+                .thumbnailUrl(drinkResponseDto.getThumbnailUrl()).drinkImageUrlList(drinkResponseDto.getDrinkImageUrlList())
+                .reviewScore(reviewScore).reviewCount(reviewCount)
+                .is_like(isLike).build();
+
+        return drinkDetailResponseDto;
     }
 
     private DrinkResponseDto updateDrinkDeleteStatus(Long drinkId, boolean isDeleted) {
