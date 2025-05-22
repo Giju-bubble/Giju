@@ -49,8 +49,12 @@ public class OrderServiceImpl implements OrderService {
         // 배달비
         int deliveryCharge = calculateDeliveryCharge(totalAmount);
 
+        // order 이름
+        String orderName = buildOrderName(cartItems);
+
         // order 생성
         Order order = Order.builder()
+                .orderName(orderName)
                 .totalAmount(totalAmount)
                 .deliveryCharge(deliveryCharge)
                 .user(user)
@@ -81,6 +85,15 @@ public class OrderServiceImpl implements OrderService {
                 .sum();
     }
 
+    private String buildOrderName(List<Cart> cartItems) {
+        List<Drink> drinks = cartItems.stream()
+                .map(Cart::getDrink)
+                .toList();
+
+        return drinks.size() == 1
+                ? drinks.get(0).getName()
+                : drinks.get(0).getName() + " 외 " + (drinks.size() - 1) + "개";
+    }
 
     // 3만원 이상 물건 구매시 배달비 무료!
     @Value("${order.delivery-charge}")
