@@ -118,17 +118,17 @@ public class SecurityConfig {
 
         // JWT 인증 설정
         SecurityScheme securityScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP)
-                .scheme("bearer")
-                .bearerFormat("JWT")
+                .type(SecurityScheme.Type.APIKEY)
                 .in(SecurityScheme.In.HEADER)
-                .name("Authorization");
+                .bearerFormat("JWT")
+                .name("access")
+                .description("access 토큰을 입력하세요");
 
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList("accessAuth");
 
         return new OpenAPI()
                 .info(info)
-                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
+                .components(new Components().addSecuritySchemes("accessAuth", securityScheme))
                 .addSecurityItem(securityRequirement);
     }
 
