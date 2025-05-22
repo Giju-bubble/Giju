@@ -23,7 +23,10 @@ spring:
     group:
       "prod": "prod, secret, swagger"
       "local": "local, secret, swagger"
-
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 100MB
 logging:
   level:
     org.springframework.security: DEBUG
