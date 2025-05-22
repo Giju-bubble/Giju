@@ -15,7 +15,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     private final UserRepository userRepository;
 
     @Override
-    public Page<User> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public Page<String> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(User::getStringUserID);
     }
 }

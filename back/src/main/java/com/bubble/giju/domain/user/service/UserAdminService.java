@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserAdminService {
-    Page<User> getAllUsers(Pageable pageable);
+    Page<String> getAllUsers(Pageable pageable);
 }

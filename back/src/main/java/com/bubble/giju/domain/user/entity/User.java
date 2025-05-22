@@ -49,6 +49,9 @@ public class User {
     @Column(name = "role")
     Role role;
 
+    public String getStringUserID() {
+        return userId.toString();
+    }
 
     public void update(UserDto.Request request) {
         this.name = request.getName() != null ? request.getName() : this.name;
