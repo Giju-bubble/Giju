@@ -58,4 +58,9 @@ public class Drink {
     {
         return this.is_delete;
     }
+
+    public void updateDelete(boolean is_delete)
+    {
+        this.is_delete = is_delete;
+    }
 }

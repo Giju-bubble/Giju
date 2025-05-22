@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface DrinkService {
     DrinkResponseDto saveDrink(DrinkRequestDto drinkRequestDto, List<MultipartFile> files, MultipartFile thumbnail) throws IOException;
+    DrinkResponseDto deleteDrink(Long drinkId);
+    DrinkResponseDto restoreDrink(Long drinkId);
 }
