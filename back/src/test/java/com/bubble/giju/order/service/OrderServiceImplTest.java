@@ -3,6 +3,7 @@ package com.bubble.giju.order.service;
 import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.repository.CartRepository;
 import com.bubble.giju.domain.drink.entity.Drink;
+import com.bubble.giju.domain.order.dto.response.OrderResponseDto;
 import com.bubble.giju.domain.order.entity.Order;
 import com.bubble.giju.domain.order.repository.OrderRepository;
 import com.bubble.giju.domain.order.service.serviceImpl.OrderServiceImpl;
@@ -96,27 +97,25 @@ public class OrderServiceImplTest {
 
 
         given(cartRepository.findAllById(List.of(1L, 2L))).willReturn(List.of(cart1, cart2));
-        given(orderRepository.save(any(Order.class))).willAnswer(inv -> inv.getArgument(0));
+        given(orderRepository.save(any(Order.class))).willAnswer(invocation -> {
+            Order order = invocation.getArgument(0);
+            ReflectionTestUtils.setField(order, "id", 1L);
+            return order;
+        });
+
 
         // when
         log.info("[실행] 주문 생성 로직 시작");
-        Order result = orderService.createOrder(List.of(1L, 2L), customPrincipal);
+        OrderResponseDto result = orderService.createOrder(List.of(1L, 2L), customPrincipal);
 
         // then
-        log.info("[검증] 생성된 Order: totalAmount = {}, deliveryCharge = {}, user = {}",
-                result.getTotalAmount(), result.getDeliveryCharge(), result.getUser().getName());
+        log.info("[검증] 생성된 Order: totalAmount = {}, user = {}",
+                result.getAmount(),  result.getCustomerName());
 
-        result.getOrderDetails().forEach(detail -> {
-            log.info("[검증] OrderDetail - drinkName: {}, price: {}, quantity: {}, 주문참조 여부: {}",
-                    detail.getDrinkName(), detail.getPrice(), detail.getQuantity(),
-                    detail.getOrder() != null ? "true" : "fail");
-        });
-
-        assertThat(result.getTotalAmount()).isEqualTo(25000);
-        assertThat(result.getDeliveryCharge()).isEqualTo(3000); // 3만원 미만 → 배달비 부과
-        assertThat(result.getUser()).isEqualTo(testUser);
-        assertThat(result.getOrderDetails()).hasSize(2);
-        assertThat(result.getOrderDetails().get(0).getOrder()).isEqualTo(result); // 양방향 확인
+        assertThat(result.getAmount()).isEqualTo(28000); // 상품 25000 + 배송비 3000
+        assertThat(result.getCustomerEmail()).isEqualTo(testUser.getEmail());
+        assertThat(result.getCustomerName()).isEqualTo(testUser.getName());
+        assertThat(result.getOrderName()).contains("외 1개");
 
         // verify
         verify(orderRepository, times(1)).save(any(Order.class));
@@ -133,27 +132,25 @@ public class OrderServiceImplTest {
         log.info("Cart 생성: {}", cart2);
 
         given(cartRepository.findAllById(List.of(1L, 2L))).willReturn(List.of(cart1, cart2));
-        given(orderRepository.save(any(Order.class))).willAnswer(inv -> inv.getArgument(0));
-
+        given(orderRepository.save(any(Order.class))).willAnswer(invocation -> {
+            Order order = invocation.getArgument(0);
+            ReflectionTestUtils.setField(order, "id", 1L);
+            return order;
+        });
         // when
         log.info("[실행] 주문 생성 로직 시작");
-        Order result = orderService.createOrder(List.of(1L, 2L), customPrincipal);
+        OrderResponseDto result = orderService.createOrder(List.of(1L, 2L), customPrincipal);
 
         // then
-        log.info("[검증] 생성된 Order: totalAmount = {}, deliveryCharge = {}, user = {}",
-                result.getTotalAmount(), result.getDeliveryCharge(), result.getUser().getName());
+        log.info("[검증] 생성된 Order: totalAmount = {}, user = {}",
+                result.getAmount(),  result.getCustomerName());
 
-        result.getOrderDetails().forEach(detail -> {
-            log.info("[검증] OrderDetail - drinkName: {}, price: {}, quantity: {}, 주문참조 여부: {}",
-                    detail.getDrinkName(), detail.getPrice(), detail.getQuantity(),
-                    detail.getOrder() != null ? "true" : "fail");
-        });
 
-        assertThat(result.getTotalAmount()).isEqualTo(50000);
-        assertThat(result.getDeliveryCharge()).isEqualTo(0); // 3만원 미만 → 배달비 부과
-        assertThat(result.getUser()).isEqualTo(testUser);
-        assertThat(result.getOrderDetails()).hasSize(2);
-        assertThat(result.getOrderDetails().get(0).getOrder()).isEqualTo(result); // 양방향 확인
+
+        assertThat(result.getAmount()).isEqualTo(50000); // 상품값(50000)+배달비 무료
+        assertThat(result.getCustomerEmail()).isEqualTo(testUser.getEmail());
+        assertThat(result.getCustomerName()).isEqualTo(testUser.getName());
+        assertThat(result.getOrderName()).contains("외 1개");
 
         // verify
         verify(orderRepository, times(1)).save(any(Order.class));

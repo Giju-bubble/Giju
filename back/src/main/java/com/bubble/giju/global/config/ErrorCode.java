@@ -35,6 +35,12 @@ public enum ErrorCode {
     INVALID_QUANTITY("유요하지 않은 수량입니다",HttpStatus.BAD_REQUEST),
 
     /**
+     * ORDER
+     * */
+    NON_EXISTENT_ORDER("주문이 존재 하지않습니다",HttpStatus.BAD_REQUEST),
+
+
+    /**
      * Auth
      */
     // Json파싱 실패
