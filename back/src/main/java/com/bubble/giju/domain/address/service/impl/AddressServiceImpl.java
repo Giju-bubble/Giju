@@ -97,20 +97,15 @@ public class AddressServiceImpl implements AddressService {
                 () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
         );
 
-        List<Address> addressList = addressRepository.findByUser_UserId(UUID.fromString(userId));
+        Address address = addressRepository.findByIdAndUser_UserId(addressId, UUID.fromString(userId)).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
+        );
 
-        boolean found = false;
-        for (Address address : addressList) {
-            if (address.getId().equals(addressId)) {
-                addressRepository.delete(address);
-                found = true;
-            }
+        if (address.isDefaultAddress()) {
+            throw new CustomException(ErrorCode.CANNOT_DELETE_DEFAULT_ADDRESS);
         }
 
-        if (!found) {
-            throw new CustomException(ErrorCode.NON_EXIST_ADDRESS);
-        }
-
+        addressRepository.delete(address);
         return addressId;
     }
 

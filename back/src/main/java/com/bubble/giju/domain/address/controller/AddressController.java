@@ -48,4 +48,12 @@ public class AddressController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @Operation(summary = "주소 삭제하기", description = "주소ID를 이용한 주소 삭제")
+    @DeleteMapping("/{addressId}")
+    public Long deleteAddress(@AuthenticationPrincipal CustomPrincipal customPrincipal, @PathVariable Long addressId) {
+        addressService.deleteAddress(customPrincipal.getUserId(), addressId);
+
+        return addressId;
+    }
+
 }
