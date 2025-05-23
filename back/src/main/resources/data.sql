@@ -14,17 +14,19 @@ INSERT INTO categories (category_name) VALUES ('탁주'), ('청주'), ('증류�
 
 INSERT INTO Drinks (drink_id, drink_name, drink_price, drink_stock, drink_alcohol_content, drink_volume, drink_is_delete, drink_region, category_id)
 VALUES
-    (1, '막걸리', 8000, 100, 6.5, 750, false, '전통', 1),
-    (2, '청주', 5000, 50, 13.0, 500, false, '전통', 2),
-    (3, '홍주', 6000, 30, 14.0, 700, false, '전통', 3),
-    (4, '한국주', 18000, 20, 15.0, 1000, false, '한국', 4),
-    (5, '월량주', 10000, 40, 16.5, 750, false, '중부', 5),
-    (6, '서울의밤', 12000, 25, 14.5, 600, false, '서울', 6);
+    (100, '막걸리', 8000, 100, 6.5, 750, false, '전통', 1),
+    (101, '청주', 5000, 50, 13.0, 500, false, '전통', 2),
+    (102, '홍주', 6000, 30, 14.0, 700, false, '전통', 3),
+    (103, '한국주', 18000, 20, 15.0, 1000, false, '한국', 4),
+    (104, '월량주', 10000, 40, 16.5, 750, false, '중부', 5),
+    (105, '서울의밤', 12000, 25, 14.5, 600, false, '서울', 6);
 
-INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (1, 1, 1, '11111111-1111-1111-1111-111111111112');
-INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (2, 2, 3, '11111111-1111-1111-1111-111111111112');
-INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (3, 1, 2, '22222222-2222-2222-2222-222222222222');
+INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (1, 1, 100, '11111111-1111-1111-1111-111111111112');
+INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (2, 2, 102, '11111111-1111-1111-1111-111111111112');
+INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (3, 1, 101, '22222222-2222-2222-2222-222222222222');
 
 INSERT INTO Images(image_url) values ('https://giju-bubble.s3.ap-northeast-2.amazonaws.com/resized_12124821977126586917.png');
 
-INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,1,true);
+INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,100,true);
+
+INSERT INTO Likes(drink_id,user_id,is_delete) VALUES (100,'22222222-2222-2222-2222-222222222222',false);

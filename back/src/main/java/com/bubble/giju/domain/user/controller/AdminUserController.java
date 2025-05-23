@@ -31,8 +31,8 @@ public class AdminUserController {
                          @RequestParam(required = false, defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<String> allUserIds = userAdminService.getAllUsers(pageable);
-        ApiResponse<Page<String>> apiResponse = ApiResponse.success("전체 유저ID 목록입니다.", allUserIds);
+        Page<UserDto.Response> allUserIds = userAdminService.getAllUsers(pageable);
+        ApiResponse<Page<UserDto.Response>> apiResponse = ApiResponse.success("전체 유저ID 목록입니다.", allUserIds);
 
         
 

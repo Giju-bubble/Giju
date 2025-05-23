@@ -1,9 +1,11 @@
 package com.bubble.giju.domain.drink.controller;
 
+import com.bubble.giju.domain.drink.dto.DrinkDetailResponseDto;
 import com.bubble.giju.domain.drink.dto.DrinkRequestDto;
 import com.bubble.giju.domain.drink.dto.DrinkResponseDto;
 import com.bubble.giju.domain.drink.dto.DrinkUpdateRequestDto;
 import com.bubble.giju.domain.drink.service.DrinkService;
+import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.global.config.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,11 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -72,5 +76,14 @@ public class DrinkController {
         return new ResponseEntity<>(apiResponse,HttpStatus.OK);
     }
 
-
+    @Operation(summary = "술(상품) 단일조회",description = "술(상품) 단일조회 API")
+    @GetMapping("/api/drink/{drinkId}")
+    public ResponseEntity<DrinkDetailResponseDto> findDrink(@PathVariable Long drinkId,
+                                                                         @AuthenticationPrincipal CustomPrincipal userDetails  // 인증 안 된 경우 null
+    ) throws IOException {
+        String userId = (userDetails != null ? userDetails.getUserId() : null);
+        UUID userUuid = userId == null ? null: UUID.fromString(userId);
+        DrinkDetailResponseDto drinkDetailResponseDto = drinkService.findById(drinkId,userUuid);
+        return ResponseEntity.ok(drinkDetailResponseDto);
+    }
 }
