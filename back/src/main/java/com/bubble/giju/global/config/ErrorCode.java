@@ -57,6 +57,11 @@ public enum ErrorCode {
     CANNOT_DELETE_DEFAULT_ADDRESS("기본 배송지는 삭제할 수 없습니다. 다른 배송지를 기본으로 설정한 후 삭제해주세요.", HttpStatus.BAD_REQUEST),
 
     /**
+     * Like
+     */
+    INVALID_LIKE("잘못된 찜 요청입니다.", HttpStatus.BAD_REQUEST),
+
+    /**
      * JWT
      */
     EXPIRED_JWT("JWT의 유효기간이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
