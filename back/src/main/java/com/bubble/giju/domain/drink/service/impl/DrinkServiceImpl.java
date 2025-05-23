@@ -154,8 +154,8 @@ public class DrinkServiceImpl implements DrinkService {
             throw new CustomException(ErrorCode.MISSING_REQUIRED_VALUE);
         }
 
-        // 기본 페이지 크기 설정 (예: 10)
-        int pageSize = 20;
+        // 기본 페이지 크기 설정
+        int pageSize = 6;
         Pageable pageable = PageRequest.of(pageNum, pageSize);
 
         Page<Drink> drinkPage=null;

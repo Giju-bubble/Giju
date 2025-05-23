@@ -8,6 +8,7 @@ import com.bubble.giju.domain.drink.service.DrinkService;
 import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.global.config.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -91,9 +92,13 @@ public class DrinkController {
 
     @Operation(summary = "술(상품) 검색",description = "술(상품) 검색 API")
     @GetMapping("/api/drinks")
-    public ResponseEntity<Page<DrinkDetailResponseDto>> findDrinkList(@RequestParam(required = true) String type,
-                                                            @RequestParam(required = true) String keyword,
-                                                            @RequestParam(required = false,defaultValue = "1") int pageNum,
+    public ResponseEntity<Page<DrinkDetailResponseDto>> findDrinkList(
+            @Parameter(description = "category(카테고리) , region(지역) , name(이름으로 검색)", required = true)
+            @RequestParam(required = true) String type,
+            @Parameter(description = "검색하고자 하는 키워드. ex) category: 카테고리의 아이디 값 (1), region : 지역 이름(서울) , name : 검색하고자 하는 술의 이름(막걸리), category와 region은 정확한 값을 가져와야하고, name은 Like연산을 통해 가져옵니다.", required = true)
+            @RequestParam(required = true) String keyword,
+            @Parameter(description = "페이지 번호")
+            @RequestParam(required = false,defaultValue = "1") int pageNum,
                                                             @AuthenticationPrincipal CustomPrincipal userDetails  // 인증 안 된 경우 null
     ) throws IOException {
         if(pageNum<1)
