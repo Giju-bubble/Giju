@@ -1,6 +1,8 @@
 package com.bubble.giju.domain.payment.service.paymentImpl;
 
+import com.bubble.giju.domain.cart.repository.CartRepository;
 import com.bubble.giju.domain.order.entity.Order;
+import com.bubble.giju.domain.order.entity.OrderDetail;
 import com.bubble.giju.domain.order.entity.OrderStatus;
 import com.bubble.giju.domain.order.repository.OrderRepository;
 import com.bubble.giju.domain.payment.dto.response.TossPaymentResponseDto;
@@ -19,6 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -31,6 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentFailInfoRepository paymentFailInfoRepository;
 
     private static final String CANCEL_REASON = "결제 정보 불일치로 인한 자동 취소";
+    private final CartRepository cartRepository;
 
     @Transactional
     @Override
@@ -38,7 +44,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         // TossPayment -> orderId 타입이 Long
         Long orderIdToss = Long.parseLong(orderId);
-
 
         // 결제 승인 요청
         TossPaymentResponseDto tossResponse = tossClientImpl.confirmPayment(paymentKey, orderId, amount);
@@ -71,6 +76,8 @@ public class PaymentServiceImpl implements PaymentService {
         order.updateStatus(OrderStatus.SUCCEEDED);
         orderRepository.save(order);
 
+
+
         Payment payment = Payment.builder()
                 .paymentKey(tossResponse.getPaymentKey())
                 .amount(tossResponse.getTotalAmount())
@@ -83,6 +90,9 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         paymentRepository.save(payment);
+
+        //결제 성공시 장바구니 삭제
+        cartRepository.deleteByUser(order.getUser());
     }
 
 
