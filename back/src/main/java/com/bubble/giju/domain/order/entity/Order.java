@@ -76,17 +76,10 @@ public class Order {
 
     }
 
-    public void changeOrderStatus(OrderStatus newStatus) {
-        this.orderStatus = newStatus;
-    }
-
     public void updateStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
 
-    public void cancel() {
-        this.orderStatus = OrderStatus.CANCELED;
-    }
 
     public void softDelete() {
         this.isDeleted = true;

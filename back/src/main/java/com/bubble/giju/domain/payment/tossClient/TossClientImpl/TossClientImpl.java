@@ -1,5 +1,6 @@
 package com.bubble.giju.domain.payment.tossClient.TossClientImpl;
 
+import com.bubble.giju.domain.payment.dto.response.TossCancelResponseDto;
 import com.bubble.giju.domain.payment.dto.response.TossPaymentResponseDto;
 import com.bubble.giju.domain.payment.tossClient.TossClient;
 import com.bubble.giju.global.config.CustomException;
@@ -48,8 +49,8 @@ public class TossClientImpl implements TossClient {
     }
 
     @Override
-    public void cancelPayment(String paymentKey, String cancelReason, int cancelAmount) {
-        webClient.post()
+    public TossCancelResponseDto cancelPayment(String paymentKey, String cancelReason, int cancelAmount) {
+        return webClient.post()
                 .uri("/v1/payments/" + paymentKey + "/cancel")
                 .header(HttpHeaders.AUTHORIZATION, "Basic " + encodeSecretKey())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -58,14 +59,20 @@ public class TossClientImpl implements TossClient {
                         "cancelAmount", cancelAmount
                 ))
                 .retrieve()
-                // 상태코드가 에러 -> 에러면 로그찌고 예외
-                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), res -> {
-                    log.error("Toss 결제 취소 실패: {}", res.statusCode());
-                    return res.createException();
-                })
-                .bodyToMono(Void.class)
+                .onStatus(
+                        status -> status.is4xxClientError() || status.is5xxServerError(),
+                        response -> {
+                            return response.bodyToMono(String.class)
+                                    .map(errorBody -> {
+                                        log.error("Toss 결제 취소 실패: {}", errorBody);
+                                        throw new CustomException(ErrorCode.PAYMENT_CANCEL_FAILED);
+                                    });
+                        }
+                )
+                .bodyToMono(TossCancelResponseDto.class)
                 .block();
     }
+
 
     private String encodeSecretKey() {
         return java.util.Base64.getEncoder().encodeToString((tossSecretKey + ":").getBytes());
