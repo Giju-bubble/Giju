@@ -54,7 +54,7 @@ public class PaymentController {
     }
 
     @GetMapping("/history")
-    public ResponseEntity<PaymentHistoryDto> getHistory(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
+    public ResponseEntity<List<PaymentHistoryDto>> getHistory(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
         List<PaymentHistoryDto> history = paymentService.paymentHistory(customPrincipal);
         return ResponseEntity.ok(history);
     }
