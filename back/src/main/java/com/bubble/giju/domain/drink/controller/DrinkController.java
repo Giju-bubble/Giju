@@ -93,7 +93,7 @@ public class DrinkController {
     @Operation(summary = "술(상품) 검색",description = "술(상품) 검색 API")
     @GetMapping("/api/drinks")
     public ResponseEntity<Page<DrinkDetailResponseDto>> findDrinkList(
-            @Parameter(description = "category , region , name", required = true)
+            @Parameter(description = "category(카테고리) , region(지역) , name(이름으로 검색)", required = true)
             @RequestParam(required = true) String type,
             @Parameter(description = "검색하고자 하는 키워드. ex) category: 카테고리의 아이디 값 (1), region : 지역 이름(서울) , name : 검색하고자 하는 술의 이름(막걸리), category와 region은 정확한 값을 가져와야하고, name은 Like연산을 통해 가져옵니다.", required = true)
             @RequestParam(required = true) String keyword,
