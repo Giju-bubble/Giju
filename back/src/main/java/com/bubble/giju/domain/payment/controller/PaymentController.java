@@ -7,6 +7,7 @@ import com.bubble.giju.domain.payment.service.PaymentService;
 import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.global.config.ApiResponse;
 import com.bubble.giju.global.config.CustomException;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +28,17 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
+    @Operation(summary = "결제 성공 처리", description = "Toss 결제 승인 시 호출되는 콜백 URL")
     @GetMapping("/success")
     public ResponseEntity<String> PaymentSuccess(
             @RequestParam String paymentKey,
             @RequestParam String orderId,
             @RequestParam int amount) {
         paymentService.paymentSuccess(paymentKey, orderId, amount);
-        return ResponseEntity.ok("결제 성공 처리 완료");
+        return ResponseEntity.ok("결제 성공");
     }
 
+    @Operation(summary = "결제 실패 처리", description = "Toss 결제 실패 시 호출되는 콜백 URL Toss에서 받은 메시지를 그대로 반환")
     @GetMapping("/fail")
     public ResponseEntity<String> paymentFail(
             @RequestParam String code,
@@ -43,9 +46,10 @@ public class PaymentController {
             @RequestParam String orderId
     ) {
         paymentService.paymentFail(code, message, orderId);
-        return ResponseEntity.ok("결제 실패");
+        return ResponseEntity.ok("결제 실패" + message + ", 주문 아이디" + orderId);
     }
 
+    @Operation(summary = "결제 취소", description = "선택한 상품 또는 전체 결제 금액을 취소 처리, isFullCancel는 전체 취소인지 아닌지 판별용")
     @PostMapping("/cancel")
     public ResponseEntity<ApiResponse<PaymentCancelResponseDto>> cancelPayment(@RequestBody PaymentCancelRequestDto paymentCancelRequestDto) {
         PaymentCancelResponseDto cancel = paymentService.paymentCancel(paymentCancelRequestDto);
@@ -53,9 +57,5 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/history")
-    public ResponseEntity<List<PaymentHistoryDto>> getHistory(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
-        List<PaymentHistoryDto> history = paymentService.paymentHistory(customPrincipal);
-        return ResponseEntity.ok(history);
-    }
+
 }

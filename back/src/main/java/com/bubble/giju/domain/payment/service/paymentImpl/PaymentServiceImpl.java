@@ -224,24 +224,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
     }
 
-    @Override
-    @Transactional
-    public List<PaymentHistoryDto> paymentHistory(CustomPrincipal principal) {
-        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
-                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
-
-        return paymentRepository.findAllByOrder_User(user).stream()
-                .map(payment -> PaymentHistoryDto.builder()
-                        .orderId(payment.getOrder().getId())
-                        .orderName(payment.getOrder().getOrderName())
-                        .amount(payment.getAmount())
-                        .paymentStatus(payment.getPaymentStatus())
-                        .paidAt(payment.getApprovedAt())
-                        .build())
-                .toList();
-    }
-
-
 
     private Order getOrder(Long orderId) {
         return orderRepository.findById(orderId)
