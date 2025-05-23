@@ -17,3 +17,5 @@ spring:
         format_sql: true
         show-sql: true
 
+app:
+  base-url: test

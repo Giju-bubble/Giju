@@ -36,6 +36,10 @@ order:
   cleanup-expiration-minutes: 15
   delete-cycle: 30
 
+toss:
+  success_url: test
+  fail_url: test
+
 jwt:
   expirationtime:
     accessTime: 21600000

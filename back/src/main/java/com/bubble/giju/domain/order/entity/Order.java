@@ -44,6 +44,9 @@ public class Order {
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
+    @Column(name = "order_name", nullable = false)
+    private String orderName;
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -55,7 +58,8 @@ public class Order {
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     @Builder
-    public Order(int totalAmount, int deliveryCharge, User user) {
+    public Order(String orderName ,int totalAmount, int deliveryCharge, User user) {
+        this.orderName = orderName;
         this.totalAmount = totalAmount;
         this.deliveryCharge = deliveryCharge;
         this.user = user;

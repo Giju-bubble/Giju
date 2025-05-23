@@ -4,6 +4,7 @@ import com.bubble.giju.domain.drink.dto.DrinkDetailResponseDto;
 import com.bubble.giju.domain.drink.dto.DrinkRequestDto;
 import com.bubble.giju.domain.drink.dto.DrinkResponseDto;
 import com.bubble.giju.domain.drink.dto.DrinkUpdateRequestDto;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,4 +17,5 @@ public interface DrinkService {
     DrinkResponseDto restoreDrink(Long drinkId);
     DrinkResponseDto updateDrink(Long drinkId,DrinkUpdateRequestDto drinkUpdateRequestDto);
     DrinkDetailResponseDto findById(Long drinkId, UUID userId);
+    Page<DrinkDetailResponseDto> findDrinks(String type,String keyword,int pageNum,UUID userUuid);
 }

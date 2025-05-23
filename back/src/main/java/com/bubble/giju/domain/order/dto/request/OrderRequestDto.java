@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class OrderRequestDto {
-    private String id; // 추후  @AuthenticationPrincipa
     private List<Long> cartItemIds;
 
 }

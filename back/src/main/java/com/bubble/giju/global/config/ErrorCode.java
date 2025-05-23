@@ -35,6 +35,12 @@ public enum ErrorCode {
     INVALID_QUANTITY("유요하지 않은 수량입니다",HttpStatus.BAD_REQUEST),
 
     /**
+     * ORDER
+     * */
+    NON_EXISTENT_ORDER("주문이 존재 하지않습니다",HttpStatus.BAD_REQUEST),
+
+
+    /**
      * Auth
      */
     // Json파싱 실패
@@ -71,7 +77,9 @@ public enum ErrorCode {
     /**
      * Error
      */
-    INTERNAL_SERVER_ERROR("서버에러입니다. 백엔드 로그를 확인해주세요", HttpStatus.INTERNAL_SERVER_ERROR);
+    INTERNAL_SERVER_ERROR("서버에러입니다. 백엔드 로그를 확인해주세요", HttpStatus.INTERNAL_SERVER_ERROR),
+    MISSING_REQUIRED_VALUE("요청에 필수 값이 누락되었습니다.", HttpStatus.BAD_REQUEST),
+    UNSUPPORTED_SEARCH_TYPE("지원하지 않는 검색 타입입니다.", HttpStatus.BAD_REQUEST);
 
     private final String msg;
     private final HttpStatus status;
