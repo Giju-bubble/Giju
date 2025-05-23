@@ -67,7 +67,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Transactional
     @Override
-    public Long updateAddress(String userId, Long addressId, AddressDto.Request request) {
+    public AddressDto.Response updateAddress(String userId, Long addressId, AddressDto.Request request) {
         Address address = addressRepository.findByIdAndUser_UserId(addressId, UUID.fromString(userId)).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
         );
@@ -87,7 +87,7 @@ public class AddressServiceImpl implements AddressService {
         // 주소 수정
         address.update(request);
 
-        return addressId;
+        return AddressDto.Response.fromEntity(address);
     }
 
     @Transactional

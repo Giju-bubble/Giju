@@ -8,6 +8,6 @@ import java.util.List;
 public interface AddressService {
     AddressDto.Response createAddress(String userId, AddressDto.Request request);
     List<AddressDto.Response> getAddress(String userId);
-    Long updateAddress(String userId, Long addressId, AddressDto.Request request);
+    AddressDto.Response updateAddress(String userId, Long addressId, AddressDto.Request request);
     Long deleteAddress(String userId, Long addressId);
 }

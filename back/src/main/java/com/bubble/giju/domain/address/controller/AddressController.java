@@ -40,10 +40,12 @@ public class AddressController {
 
     @Operation(summary = "주소 수정하기", description = "주소ID를 이용한 주소 수정")
     @PatchMapping("/{addressId}")
-    public void updateAddress(@AuthenticationPrincipal CustomPrincipal customPrincipal, @PathVariable Long addressId, @RequestBody AddressDto.Request request) {
+    public ResponseEntity<ApiResponse<?>> updateAddress(@AuthenticationPrincipal CustomPrincipal customPrincipal, @PathVariable Long addressId, @RequestBody AddressDto.Request request) {
+        AddressDto.Response response = addressService.updateAddress(customPrincipal.getUserId(), addressId, request);
 
-        addressService.updateAddress(customPrincipal.getUserId(), addressId, request);
+        ApiResponse<AddressDto.Response> apiResponse = ApiResponse.success("주소 수정 완료", response);
 
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
 }
