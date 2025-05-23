@@ -6,7 +6,8 @@ import com.bubble.giju.domain.address.entity.Address;
 import java.util.List;
 
 public interface AddressService {
-    void createAddress(String userId, AddressDto.Request request);
-    List<Address> getAddress(String userId);
+    AddressDto.Response createAddress(String userId, AddressDto.Request request);
+    List<AddressDto.Response> getAddress(String userId);
+    Long updateAddress(String userId, Long addressId, AddressDto.Request request);
     Long deleteAddress(String userId, Long addressId);
 }

@@ -1,5 +1,6 @@
 package com.bubble.giju.domain.address.entity;
 
+import com.bubble.giju.domain.address.dto.AddressDto;
 import com.bubble.giju.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,5 +42,17 @@ public class Address {
 
     public void updateDefaultAddressToTrue() {
         this.defaultAddress = true;
+    }
+
+    // Update 메서드
+    public void update(AddressDto.Request request) {
+        this.recipientName = request.getRecipientName() != null ? request.getRecipientName() : this.recipientName;
+        this.phoneNumber = request.getPhoneNumber() != null ? request.getPhoneNumber() : this.phoneNumber;
+        this.alias = request.getAlias() != null ? request.getAlias() : this.alias;
+        this.defaultAddress = request.isDefaultAddress();
+        this.postcode = request.getPostcode() != 0 ? request.getPostcode() : this.postcode;
+        this.roadAddress = request.getRoadAddress() != null ? request.getRoadAddress() : this.roadAddress;
+        this.buildingName = request.getBuildingName() != null ? request.getBuildingName() : this.buildingName;
+        this.detailAddress = request.getDetailAddress() != null ? request.getDetailAddress() : this.detailAddress;
     }
 }

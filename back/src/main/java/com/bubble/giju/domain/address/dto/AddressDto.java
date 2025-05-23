@@ -1,5 +1,7 @@
 package com.bubble.giju.domain.address.dto;
 
+import com.bubble.giju.domain.address.entity.Address;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 public class AddressDto {
@@ -10,7 +12,7 @@ public class AddressDto {
         private String phoneNumber;
 
         private String alias;
-        private boolean defaultAddress = false;
+        private boolean defaultAddress;
 
         private int postcode;
         private String roadAddress;
@@ -20,8 +22,36 @@ public class AddressDto {
     }
 
 
+    @AllArgsConstructor
     @Getter
-    public static class AddressResponse {
+    public static class Response {
+        private String userId;
+
+        private String recipientName;
+        private String phoneNumber;
+
+        private String alias;
+        private boolean defaultAddress;
+
+        private int postcode;
+        private String roadAddress;
+        private String buildingName;
+
+        private String detailAddress;
+
+        public static Response fromEntity(Address address) {
+            return new Response(
+                    address.getUser().getUserId().toString(),
+                    address.getRecipientName(),
+                    address.getPhoneNumber(),
+                    address.getAlias(),
+                    address.isDefaultAddress(),
+                    address.getPostcode(),
+                    address.getRoadAddress(),
+                    address.getBuildingName(),
+                    address.getDetailAddress()
+            );
+        }
 
     }
 }

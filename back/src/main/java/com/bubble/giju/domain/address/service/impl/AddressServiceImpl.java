@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -24,7 +24,7 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
 
     @Override
-    public void createAddress(String userId, AddressDto.Request request) {
+    public AddressDto.Response createAddress(String userId, AddressDto.Request request) {
         User user = userRepository.findByLoginId(userId).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
         );
@@ -52,14 +52,42 @@ public class AddressServiceImpl implements AddressService {
                 .build();
 
         addressRepository.save(address);
+
+        return AddressDto.Response.fromEntity(address);
     }
 
-    public List<Address> getAddress(String userId) {
+    public List<AddressDto.Response> getAddress(String userId) {
         userRepository.findByLoginId(userId).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
         );
 
-         return addressRepository.findByUser_UserId(UUID.fromString(userId));
+         return addressRepository.findByUser_UserId(UUID.fromString(userId))
+                 .stream().map(AddressDto.Response::fromEntity).toList();
+    }
+
+    @Transactional
+    @Override
+    public Long updateAddress(String userId, Long addressId, AddressDto.Request request) {
+        Address address = addressRepository.findByIdAndUser_UserId(addressId, UUID.fromString(userId)).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
+        );
+
+        // 기본 배송지 해제 불가
+        if (request.isDefaultAddress()) {
+            throw new CustomException(ErrorCode.INVALID_DEFAULT_ADDRESS);
+        }
+
+        // 기본배송지로 설정
+        if (request.isDefaultAddress()) {
+            // 기존 기본배송지를 false로 변경
+            addressRepository.findByUser_UserIdAndDefaultAddressTrue(UUID.fromString(userId))
+                    .ifPresent(Address::updateDefaultAddressToFalse);
+        }
+
+        // 주소 수정
+        address.update(request);
+
+        return addressId;
     }
 
     @Transactional

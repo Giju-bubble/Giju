@@ -47,6 +47,7 @@ public enum ErrorCode {
      */
     // 존재하지 않는 Address
     NON_EXIST_ADDRESS("존재하지않는 주소입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_DEFAULT_ADDRESS("기본 배송지를 해제 할 수 없습니다. 잘못된 요청입니다.", HttpStatus.BAD_REQUEST),
 
     /**
      * JWT
