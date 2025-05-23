@@ -23,6 +23,10 @@ import com.bubble.giju.global.config.CustomException;
 import com.bubble.giju.global.config.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,7 +49,7 @@ public class DrinkServiceImpl implements DrinkService {
     private final ReviewRepository reviewRepository;
     private final LikeRepository likeRepository;
 
-    //todo 예외처리 해줄 것
+    //todo 예외처리 해줄 것 Getter 다 삼항연산자로 null 넣도록 하자.
     @Override
     public DrinkResponseDto saveDrink(DrinkRequestDto drinkRequestDto, List<MultipartFile> files, MultipartFile thumbnail) throws IOException {
         //카테고리 가져옴
@@ -141,6 +145,53 @@ public class DrinkServiceImpl implements DrinkService {
                 .is_like(isLike).build();
 
         return drinkDetailResponseDto;
+    }
+
+    @Override
+    public Page<DrinkDetailResponseDto> findDrinks(String type, String keyword, int pageNum,UUID userUuid) {
+        if(type == null || type.isBlank()|| keyword==null || keyword.isBlank())
+        {
+            throw new CustomException(ErrorCode.MISSING_REQUIRED_VALUE);
+        }
+
+        // 기본 페이지 크기 설정 (예: 10)
+        int pageSize = 20;
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+
+        Page<Drink> drinkPage=null;
+
+        if(type.equals("category"))
+        {
+            drinkPage= drinkRepository.findByCategoryIdIAndIs_deleteFalse(Integer.parseInt(keyword),pageable);
+        }
+        else if(type.equals("region"))
+        {
+            drinkPage= drinkRepository.findByRegionIsDeleteFalse(keyword,pageable);
+        }
+        else if(type.equals("name"))
+        {
+            drinkPage=drinkRepository.findByNameContainsIAndIs_deleteFalse(keyword,pageable);
+        }
+        else
+        {
+            throw new CustomException(ErrorCode.UNSUPPORTED_SEARCH_TYPE);
+        }
+        List<DrinkDetailResponseDto> dtoList = new ArrayList<>();
+        //todo N+1 해결 안했으니까 시간재보고 해결 꼭 할 것 데이터 몇개 없을때 N+1 해결안한 시간 -  94ms
+        for (Drink drink : drinkPage.getContent()) {
+            long reviewSum = reviewRepository.findSumScoreByDrinkId(drink.getId());
+            long reviewCount = reviewRepository.countByDrinkId(drink.getId());
+            reviewSum = reviewSum < 0 ? reviewSum : 0;
+            reviewCount = reviewCount < 0 ? reviewCount : 1;
+            double reviewScore= (double) reviewSum /reviewCount;
+
+            boolean is_like = likeRepository.existsByUser_UserIdAndDrink_id(userUuid,drink.getId());
+
+            DrinkResponseDto dto = buildDrinkResponseDto(drink); // 이 메서드 구현 필요
+            DrinkDetailResponseDto drinkDetailResponseDto= DrinkDetailResponseDto.from(dto,reviewSum,reviewCount,is_like);
+            dtoList.add(drinkDetailResponseDto);
+        }
+        return new PageImpl<>(dtoList, pageable, drinkPage.getTotalElements());
     }
 
     private DrinkResponseDto updateDrinkDeleteStatus(Long drinkId, boolean isDeleted) {

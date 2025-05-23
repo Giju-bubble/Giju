@@ -10,6 +10,7 @@ import com.bubble.giju.global.config.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -86,4 +87,23 @@ public class DrinkController {
         DrinkDetailResponseDto drinkDetailResponseDto = drinkService.findById(drinkId,userUuid);
         return ResponseEntity.ok(drinkDetailResponseDto);
     }
+
+
+    @Operation(summary = "술(상품) 검색",description = "술(상품) 검색 API")
+    @GetMapping("/api/drinks")
+    public ResponseEntity<Page<DrinkDetailResponseDto>> findDrinkList(@RequestParam(required = true) String type,
+                                                            @RequestParam(required = true) String keyword,
+                                                            @RequestParam(required = false,defaultValue = "1") int pageNum,
+                                                            @AuthenticationPrincipal CustomPrincipal userDetails  // 인증 안 된 경우 null
+    ) throws IOException {
+        if(pageNum<1)
+        {
+            pageNum=1;
+        }
+        String userId = (userDetails != null ? userDetails.getUserId() : null);
+        UUID userUuid = userId == null ? null: UUID.fromString(userId);
+        Page<DrinkDetailResponseDto> drinkResponseDtoPage = drinkService.findDrinks(type,keyword,pageNum-1,userUuid);
+        return ResponseEntity.ok(drinkResponseDtoPage);
+    }
+
 }

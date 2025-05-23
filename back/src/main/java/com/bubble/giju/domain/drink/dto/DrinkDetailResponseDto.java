@@ -43,4 +43,29 @@ public class DrinkDetailResponseDto {
     @Schema(description = "찜 체크 여부")
     private boolean is_like;
 
+    public static DrinkDetailResponseDto from(
+            DrinkResponseDto dto,
+            double reviewScore,
+            long reviewCount,
+            boolean isLike
+    ) {
+        return DrinkDetailResponseDto.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .price(dto.getPrice())
+                .stock(dto.getStock())
+                .alcoholContent(dto.getAlcoholContent())
+                .volume(dto.getVolume())
+                .is_delete(dto.is_delete())
+                .region(dto.getRegion())
+                .category(new CategoryResponseDto(dto.getCategory().getId(), dto.getCategory().getName()))
+                .thumbnailUrl(dto.getThumbnailUrl())
+                .drinkImageUrlList(dto.getDrinkImageUrlList())
+                .reviewScore(reviewScore)
+                .reviewCount(reviewCount)
+                .is_like(isLike)
+                .build();
+    }
+
+
 }
