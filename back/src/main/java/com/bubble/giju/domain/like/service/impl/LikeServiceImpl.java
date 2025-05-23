@@ -66,7 +66,7 @@ public class LikeServiceImpl implements LikeService {
             throw new CustomException(ErrorCode.INVALID_LIKE);
         }
 
-        Like like = null;
+        Like like;
         if (likeRequest) {
             like = Like.builder()
                     .user(user)
@@ -77,7 +77,9 @@ public class LikeServiceImpl implements LikeService {
 
             likeRepository.save(like);
         } else {
-            like = optionalLike.get();
+            like = optionalLike.orElseThrow(
+                    () -> new CustomException(ErrorCode.INVALID_LIKE)
+            );
 
             like.deleteLike();
         }

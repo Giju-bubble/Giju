@@ -1,7 +1,6 @@
 package com.bubble.giju.domain.like.service;
 
 import com.bubble.giju.domain.like.dto.LikeDto;
-import com.bubble.giju.domain.like.entity.Like;
 
 import java.util.List;
 
