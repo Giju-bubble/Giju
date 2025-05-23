@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Admin - User", description = "관리자 - 사용자 관련 API")
+@Tag(name = "관리자 - 유저 API", description = "관리자의 사용자 API 입니다.")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
@@ -25,7 +25,7 @@ public class AdminUserController {
     private final UserAdminService userAdminService;
     private final UserService userService;
 
-    @Operation(summary = "모든 사용자 아이디 리스트를 불러옵니다.", description = "UUID userID 리스트입니다, 가져올 페이지번호와 갯수를 입력합니다.")
+    @Operation(summary = "모든 사용자 아이디 리스트를 불러옵니다.", description = "유저 객체 리스트입니다, 가져올 페이지번호와 갯수를 입력합니다.")
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<?>> getUsers(@RequestParam(required = false, defaultValue = "1") int page,
                          @RequestParam(required = false, defaultValue = "5") int size) {
@@ -39,7 +39,7 @@ public class AdminUserController {
          return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @Operation(summary = "특정 사용자정보를 불러옵니다.", description = "사용자 정보 전체를 가져옵니다.")
+    @Operation(summary = "특정 사용자정보를 불러옵니다.", description = "UUID를 이용해 특정 사용자의 정보 전체를 가져옵니다.")
     @GetMapping("/users/{userId}")
     public ResponseEntity<ApiResponse<UserDto.Response>> getUser(@PathVariable String userId) {
         UserDto.Response response = userService.find(userId);
