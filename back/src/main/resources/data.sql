@@ -28,5 +28,11 @@ INSERT INTO cart (cart_id, quantity, drink_id, user_id) VALUES (3, 1, 101, '2222
 INSERT INTO Images(image_url) values ('https://giju-bubble.s3.ap-northeast-2.amazonaws.com/resized_12124821977126586917.png');
 
 INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,100,true);
+INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,101,true);
+INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,102,true);
+INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,103,true);
+INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,104,true);
+INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,105,true);
+
 
 INSERT INTO Likes(drink_id,user_id,is_delete) VALUES (100,'22222222-2222-2222-2222-222222222222',false);

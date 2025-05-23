@@ -69,7 +69,9 @@ public enum ErrorCode {
     /**
      * Error
      */
-    INTERNAL_SERVER_ERROR("서버에러입니다. 백엔드 로그를 확인해주세요", HttpStatus.INTERNAL_SERVER_ERROR);
+    INTERNAL_SERVER_ERROR("서버에러입니다. 백엔드 로그를 확인해주세요", HttpStatus.INTERNAL_SERVER_ERROR),
+    MISSING_REQUIRED_VALUE("요청에 필수 값이 누락되었습니다.", HttpStatus.BAD_REQUEST),
+    UNSUPPORTED_SEARCH_TYPE("지원하지 않는 검색 타입입니다.", HttpStatus.BAD_REQUEST);
 
     private final String msg;
     private final HttpStatus status;
