@@ -1,5 +1,6 @@
 package com.bubble.giju.domain.user.controller;
 
+import com.bubble.giju.domain.like.dto.LikeDto;
 import com.bubble.giju.domain.like.service.LikeService;
 import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.domain.user.dto.UserDto;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "일반유저 API", description = "일반 사용자 관련 API")
 @Slf4j
@@ -58,7 +61,7 @@ public class UserController {
 
     @Operation(summary = "찜목록 불러오기", description = "회원이 찜한 상품들을 불러옵니다.")
     @GetMapping("/me/like")
-    public void getLike(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
-        likeService.getLike(customPrincipal.getUserId());
+    public List<LikeDto.Response> getLike(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
+        return likeService.getLike(customPrincipal.getUserId());
     }
 }

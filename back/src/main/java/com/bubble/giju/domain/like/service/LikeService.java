@@ -1,6 +1,11 @@
 package com.bubble.giju.domain.like.service;
 
+import com.bubble.giju.domain.like.dto.LikeDto;
+import com.bubble.giju.domain.like.entity.Like;
+
+import java.util.List;
+
 public interface LikeService {
-    void getLike(String userId);
-    void toggleLike(String userId, Long drinkId, Boolean likeRequest);
+    List<LikeDto.Response> getLike(String userId);
+    LikeDto.Response toggleLike(String userId, Long drinkId, Boolean likeRequest);
 }

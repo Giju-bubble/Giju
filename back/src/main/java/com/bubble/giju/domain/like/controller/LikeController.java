@@ -1,10 +1,13 @@
 package com.bubble.giju.domain.like.controller;
 
+import com.bubble.giju.domain.like.dto.LikeDto;
 import com.bubble.giju.domain.like.service.LikeService;
 import com.bubble.giju.domain.user.dto.CustomPrincipal;
+import com.bubble.giju.global.config.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +20,21 @@ public class LikeController {
 
     @Operation(summary = "찜하기", description = "회원이 빈하트를 누르면 찜하기 됩니다.")
     @PostMapping("/products/{drinkId}/wishlist")
-    public void addLike(@AuthenticationPrincipal CustomPrincipal customPrincipal, @PathVariable Long drinkId) {
-        likeService.toggleLike(customPrincipal.getUserId(), drinkId, true);
+    public ResponseEntity<ApiResponse<?>> addLike(@AuthenticationPrincipal CustomPrincipal customPrincipal, @PathVariable Long drinkId) {
+        LikeDto.Response response = likeService.toggleLike(customPrincipal.getUserId(), drinkId, true);
+
+        ApiResponse<LikeDto.Response> apiResponse = ApiResponse.success("찜하기 성공 완료", response);
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @Operation(summary = "찜하기", description = "회원이 채워진하트를 누르면 찜하기 취소 됩니다.")
     @DeleteMapping("/products/{drinkId}/wishlist")
-    public void deleteLike(@AuthenticationPrincipal CustomPrincipal customPrincipal, @PathVariable Long drinkId) {
-        likeService.toggleLike(customPrincipal.getUserId(), drinkId, false);
+    public ResponseEntity<ApiResponse<?>> deleteLike(@AuthenticationPrincipal CustomPrincipal customPrincipal, @PathVariable Long drinkId) {
+        LikeDto.Response response = likeService.toggleLike(customPrincipal.getUserId(), drinkId, false);
+
+        ApiResponse<LikeDto.Response> apiResponse = ApiResponse.success("찜하기 취소 완료", response);
+
+        return ResponseEntity.ok(apiResponse);
     }
 }

@@ -2,6 +2,7 @@ package com.bubble.giju.domain.like.service.impl;
 
 import com.bubble.giju.domain.drink.entity.Drink;
 import com.bubble.giju.domain.drink.repository.DrinkRepository;
+import com.bubble.giju.domain.like.dto.LikeDto;
 import com.bubble.giju.domain.like.entity.Like;
 import com.bubble.giju.domain.like.repository.LikeRepository;
 import com.bubble.giju.domain.like.service.LikeService;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,18 +30,20 @@ public class LikeServiceImpl implements LikeService {
 
     @Transactional
     @Override
-    public void getLike(String userId) {
+    public List<LikeDto.Response> getLike(String userId) {
         userRepository.findById(UUID.fromString(userId)).orElseThrow(
                 () -> new CustomException(ErrorCode.NON_EXISTENT_USER)
         );
 
         // TODO: 되는지 확인해야됨
-        likeRepository.findByUser_UserIdAndDeleteIsFalse(UUID.fromString(userId), Sort.by("create_at"));
+        List<Like> likeList = likeRepository.findByUser_UserIdAndDeleteIsFalse(UUID.fromString(userId), Sort.by("create_at"));
+
+        return likeList.stream().map(LikeDto.Response::fromEntity).toList();
     }
 
     @Transactional
     @Override
-    public void toggleLike(String userId, Long drinkId, Boolean likeRequest) {
+    public LikeDto.Response toggleLike(String userId, Long drinkId, Boolean likeRequest) {
         User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(
                 () -> new CustomException(ErrorCode.NON_EXISTENT_USER)
         );
@@ -62,8 +66,9 @@ public class LikeServiceImpl implements LikeService {
             throw new CustomException(ErrorCode.INVALID_LIKE);
         }
 
+        Like like = null;
         if (likeRequest) {
-            Like like = Like.builder()
+            like = Like.builder()
                     .user(user)
                     .drink(drink)
                     .delete(false)
@@ -72,9 +77,11 @@ public class LikeServiceImpl implements LikeService {
 
             likeRepository.save(like);
         } else {
-            Like like = optionalLike.get();
+            like = optionalLike.get();
 
             like.deleteLike();
         }
+
+        return LikeDto.Response.fromEntity(like);
     }
 }
