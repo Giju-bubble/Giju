@@ -1,5 +1,6 @@
 package com.bubble.giju.domain.user.service.impl;
 
+import com.bubble.giju.domain.user.dto.UserDto;
 import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.repository.UserRepository;
 import com.bubble.giju.domain.user.service.UserAdminService;
@@ -15,7 +16,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     private final UserRepository userRepository;
 
     @Override
-    public Page<String> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(User::getStringUserID);
+    public Page<UserDto.Response> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(UserDto.Response::fromEntity);
     }
 }
