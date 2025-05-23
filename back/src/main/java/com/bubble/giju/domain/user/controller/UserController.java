@@ -1,5 +1,6 @@
 package com.bubble.giju.domain.user.controller;
 
+import com.bubble.giju.domain.like.service.LikeService;
 import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.domain.user.dto.UserDto;
 import com.bubble.giju.domain.user.service.UserService;
@@ -15,15 +16,16 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "일반유저 API", description = "일반 사용자 관련 API")
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @RestController
 public class UserController {
 
     private final UserService userService;
+    private final LikeService likeService;
 
     // read
     @Operation(summary = "회원 불러오기", description = "현재 로그인한 회원의 정보를 불러옵니다.")
-    @GetMapping("/users")
+    @GetMapping("")
     public ResponseEntity<ApiResponse<UserDto.Response>> getUser(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
         UserDto.Response response = userService.find(customPrincipal.getUserId());
         ApiResponse<UserDto.Response> apiResponse = ApiResponse.success("회원불러오기 성공", response);
@@ -33,7 +35,7 @@ public class UserController {
 
     // update
     @Operation(summary = "회원 업데이트", description = "현재 로그인한 회원의 정보를 업데이트합니다.")
-    @PatchMapping("/users")
+    @PatchMapping("")
     public ResponseEntity<ApiResponse<UserDto.Response>> updateUser(@AuthenticationPrincipal CustomPrincipal customPrincipal, @RequestBody UserDto.Request request) {
         log.info(request.toString());
 
@@ -45,12 +47,18 @@ public class UserController {
 
     // delete
     @Operation(summary = "회원 삭제, 탈퇴", description = "현재 로그인한 회원을 삭제,탈퇴합니다.")
-    @DeleteMapping("/users")
+    @DeleteMapping("")
     public ResponseEntity<ApiResponse<String>> deleteUser(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
         // TODO: 회원에 관련된 모든 테이블 Cascade
         ApiResponse<String> apiResponse = ApiResponse.success(
                 "회원삭제 성공", userService.delete(customPrincipal.getUserId()));
 
         return ResponseEntity.ok(apiResponse);
+    }
+
+    @Operation(summary = "찜목록 불러오기", description = "회원이 찜한 상품들을 불러옵니다.")
+    @GetMapping("/me/like")
+    public void getLike(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
+        likeService.getLike(customPrincipal.getUserId());
     }
 }
