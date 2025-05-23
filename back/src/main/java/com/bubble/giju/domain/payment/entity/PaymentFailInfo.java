@@ -2,6 +2,7 @@ package com.bubble.giju.domain.payment.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ public class PaymentFailInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fail_id")
-    private Long failId;
+    private Long Id;
 
     @Column(name = "fail_message")
     private String failMessage;
@@ -25,4 +26,11 @@ public class PaymentFailInfo {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="payment_id", nullable = false , referencedColumnName = "payment_id")
     private Payment payment;
+
+    @Builder
+    public PaymentFailInfo(String failMessage, String failCode, Payment payment) {
+        this.failMessage = failMessage;
+        this.failCode = failCode;
+        this.payment = payment;
+    }
 }

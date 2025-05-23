@@ -6,7 +6,9 @@ import com.bubble.giju.domain.order.repository.OrderRepository;
 import com.bubble.giju.domain.payment.dto.response.TossPaymentResponseDto;
 import com.bubble.giju.domain.payment.entity.Payment;
 import com.bubble.giju.domain.payment.entity.PaymentCancelInfo;
+import com.bubble.giju.domain.payment.entity.PaymentFailInfo;
 import com.bubble.giju.domain.payment.repository.PaymentCancelInfoRepository;
+import com.bubble.giju.domain.payment.repository.PaymentFailInfoRepository;
 import com.bubble.giju.domain.payment.repository.PaymentRepository;
 import com.bubble.giju.domain.payment.service.PaymentService;
 import com.bubble.giju.domain.payment.tossClient.TossClientImpl.TossClientImpl;
@@ -15,6 +17,7 @@ import com.bubble.giju.global.config.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,22 +28,25 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final PaymentCancelInfoRepository paymentCancelInfoRepository;
+    private final PaymentFailInfoRepository paymentFailInfoRepository;
 
     private static final String CANCEL_REASON = "결제 정보 불일치로 인한 자동 취소";
 
+    @Transactional
+    @Override
+    public void paymentSuccess(String paymentKey, String orderId, int amount) {
 
-    public void paymentSuccess(String paymentKey, Long orderId, int amount) {
+        // TossPayment -> orderId 타입이 Long
+        Long orderIdToss = Long.parseLong(orderId);
 
-        // TossPayment -> orderId 타입이 String
-        String orderIdToss = orderId.toString();
 
         // 결제 승인 요청
-        TossPaymentResponseDto tossResponse = tossClientImpl.confirmPayment(paymentKey, orderIdToss, amount);
+        TossPaymentResponseDto tossResponse = tossClientImpl.confirmPayment(paymentKey, orderId, amount);
 
         // Order 테이블에서 실제 주문 조회
-        Order order = getOrder(orderId);
+        Order order = getOrder(orderIdToss);
 
-        if (!orderIdToss.equals(tossResponse.getOrderId()) ||
+        if (!orderId.equals(tossResponse.getOrderId()) ||
                 order.getTotalAmount() != tossResponse.getTotalAmount()) {
 
             // Toss 측에 환불 요청
@@ -63,6 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         // Order주문 상태 변경
         order.updateStatus(OrderStatus.SUCCEEDED);
+        orderRepository.save(order);
 
         Payment payment = Payment.builder()
                 .paymentKey(tossResponse.getPaymentKey())
@@ -76,6 +83,39 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         paymentRepository.save(payment);
+    }
+
+
+    @Transactional
+    @Override
+    public void paymentFail(String code, String message, String orderId) {
+
+        Long orderIdToss = Long.parseLong(orderId);
+        Order order = getOrder(orderIdToss);
+
+        // 실패 상태의 Payment 생성
+        Payment payment = Payment.builder()
+                .paymentKey(null) // 실패시에 paymentKey 없음
+                .amount(order.getTotalAmount())
+                .paymentMethod("PENDING")
+                .paymentStatus("FAILED")
+                .order(order)
+                .build();
+
+        paymentRepository.save(payment);
+
+        // 실패 정보 저장
+        PaymentFailInfo failInfo = PaymentFailInfo.builder()
+                .failCode(code)
+                .failMessage(message)
+                .payment(payment)
+                .build();
+
+        paymentFailInfoRepository.save(failInfo);
+
+        // 주문 상태도 실패로 변경
+        order.updateStatus(OrderStatus.FAILED);
+        orderRepository.save(order);
     }
 
     private Order getOrder(Long orderId) {

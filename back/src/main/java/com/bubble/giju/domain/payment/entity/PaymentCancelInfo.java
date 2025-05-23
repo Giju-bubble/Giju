@@ -15,7 +15,7 @@ public class PaymentCancelInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cancel_id")
-    private Long cancelId;
+    private Long Id;
 
     @Column(name ="cancel_reason")
     private String cancelReason;

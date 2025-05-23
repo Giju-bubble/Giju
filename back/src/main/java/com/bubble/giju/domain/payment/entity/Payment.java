@@ -21,7 +21,7 @@ public class Payment {
     @Column(name = "payment_id")
     private long id;
 
-    @Column(name ="payment_key", nullable = false, length = 255)
+    @Column(name ="payment_key", nullable = true, length = 255)
     private String paymentKey;
 
     @Column(name = "amount", nullable = false)

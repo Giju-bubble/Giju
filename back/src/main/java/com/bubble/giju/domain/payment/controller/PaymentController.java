@@ -24,9 +24,19 @@ public class PaymentController {
     @GetMapping("/success")
     public ResponseEntity<String> PaymentSuccess(
             @RequestParam String paymentKey,
-            @RequestParam Long orderId,
+            @RequestParam String orderId,
             @RequestParam int amount) {
         paymentService.paymentSuccess(paymentKey, orderId, amount);
         return ResponseEntity.ok("결제 성공 처리 완료");
+    }
+
+    @GetMapping("/fail")
+    public ResponseEntity<String> paymentFail(
+            @RequestParam String code,
+            @RequestParam String message,
+            @RequestParam String orderId
+    ) {
+        paymentService.paymentFail(code, message, orderId);
+        return ResponseEntity.ok("결제 실패 처리 완료");
     }
 }
