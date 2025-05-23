@@ -40,10 +40,6 @@ public class Address {
         this.defaultAddress = false;
     }
 
-    public void updateDefaultAddressToTrue() {
-        this.defaultAddress = true;
-    }
-
     // Update 메서드
     public void update(AddressDto.Request request) {
         this.recipientName = request.getRecipientName() != null ? request.getRecipientName() : this.recipientName;
