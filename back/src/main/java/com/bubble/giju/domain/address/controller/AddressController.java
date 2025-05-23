@@ -38,7 +38,7 @@ public class AddressController {
         return new ResponseEntity<>(addressService.getAddress(customPrincipal.getUserId()), HttpStatus.OK);
     }
 
-    @Operation(summary = "주소 수정하기", description = "주소ID를 이용한 주소 수정")
+    @Operation(summary = "주소 수정하기", description = "주소ID를 이용한 주소 수정 / 기본배송지는 해제할 수 없습니다. / 기본배송지는 삭제할 수 없습니다.")
     @PatchMapping("/{addressId}")
     public ResponseEntity<ApiResponse<?>> updateAddress(@AuthenticationPrincipal CustomPrincipal customPrincipal, @PathVariable Long addressId, @RequestBody AddressDto.Request request) {
         AddressDto.Response response = addressService.updateAddress(customPrincipal.getUserId(), addressId, request);

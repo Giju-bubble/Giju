@@ -10,12 +10,13 @@ import com.bubble.giju.global.config.CustomException;
 import com.bubble.giju.global.config.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AddressServiceImpl implements AddressService {
@@ -25,7 +26,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressDto.Response createAddress(String userId, AddressDto.Request request) {
-        User user = userRepository.findByLoginId(userId).orElseThrow(
+        User user = userRepository.findById(UUID.fromString(userId)).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
         );
 
@@ -57,7 +58,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     public List<AddressDto.Response> getAddress(String userId) {
-        userRepository.findByLoginId(userId).orElseThrow(
+        userRepository.findById(UUID.fromString(userId)).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
         );
 
@@ -73,7 +74,7 @@ public class AddressServiceImpl implements AddressService {
         );
 
         // 기본 배송지 해제 불가
-        if (request.isDefaultAddress()) {
+        if (address.isDefaultAddress() && !request.isDefaultAddress()) {
             throw new CustomException(ErrorCode.INVALID_DEFAULT_ADDRESS);
         }
 
@@ -93,7 +94,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     @Override
     public Long deleteAddress(String userId, Long addressId) {
-        userRepository.findByLoginId(userId).orElseThrow(
+        userRepository.findById(UUID.fromString(userId)).orElseThrow(
                 () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
         );
 

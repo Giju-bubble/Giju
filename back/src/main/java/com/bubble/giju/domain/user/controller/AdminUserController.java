@@ -34,6 +34,8 @@ public class AdminUserController {
         Page<String> allUserIds = userAdminService.getAllUsers(pageable);
         ApiResponse<Page<String>> apiResponse = ApiResponse.success("전체 유저ID 목록입니다.", allUserIds);
 
+        
+
          return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
