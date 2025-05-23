@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "User Authentication", description = "사용자 인증 관련 API")
+@Tag(name = "사용자 인증 API", description = "회원가입 & 토큰 재발급")
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @RestController

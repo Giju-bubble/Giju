@@ -13,7 +13,6 @@ aws:
     bucket: giju-bubble                   # 본인이 소유한 버킷 이름
     region: ap-northeast-2                # 버킷 리전
 
-
 spring:
   application:
     name: giju
@@ -41,9 +40,11 @@ toss:
   success_url: test
   fail_url: test
 
-
 jwt:
   expirationtime:
     accessTime: 21600000
     refreshTime: 21600000
   secret: ${JWT_SECRET:defaultfordevalsjfielsjfinaajfowinblxiejfwoihbya}
+
+springdoc:
+  show-login-endpoint: true
