@@ -2,14 +2,20 @@ package com.bubble.giju.domain.payment.controller;
 
 import com.bubble.giju.domain.payment.dto.request.PaymentCancelRequestDto;
 import com.bubble.giju.domain.payment.dto.response.PaymentCancelResponseDto;
+import com.bubble.giju.domain.payment.dto.response.PaymentHistoryDto;
 import com.bubble.giju.domain.payment.service.PaymentService;
+import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.global.config.ApiResponse;
+import com.bubble.giju.global.config.CustomException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "토스페이먼츠 API")
 @RestController
@@ -37,7 +43,7 @@ public class PaymentController {
             @RequestParam String orderId
     ) {
         paymentService.paymentFail(code, message, orderId);
-        return ResponseEntity.ok("결제 실패 처리 완료");
+        return ResponseEntity.ok("결제 실패");
     }
 
     @PostMapping("/cancel")
@@ -45,5 +51,11 @@ public class PaymentController {
         PaymentCancelResponseDto cancel = paymentService.paymentCancel(paymentCancelRequestDto);
         ApiResponse<PaymentCancelResponseDto> response = ApiResponse.success("결제 취소 성공",cancel);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<PaymentHistoryDto> getHistory(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
+        List<PaymentHistoryDto> history = paymentService.paymentHistory(customPrincipal);
+        return ResponseEntity.ok(history);
     }
 }

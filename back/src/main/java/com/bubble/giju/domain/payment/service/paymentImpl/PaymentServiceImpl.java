@@ -17,6 +17,9 @@ import com.bubble.giju.domain.payment.repository.PaymentFailInfoRepository;
 import com.bubble.giju.domain.payment.repository.PaymentRepository;
 import com.bubble.giju.domain.payment.service.PaymentService;
 import com.bubble.giju.domain.payment.tossClient.TossClientImpl.TossClientImpl;
+import com.bubble.giju.domain.user.dto.CustomPrincipal;
+import com.bubble.giju.domain.user.entity.User;
+import com.bubble.giju.domain.user.repository.UserRepository;
 import com.bubble.giju.global.config.CustomException;
 import com.bubble.giju.global.config.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +43,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentCancelInfoRepository paymentCancelInfoRepository;
     private final PaymentFailInfoRepository paymentFailInfoRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final UserRepository userRepository;
 
     private static final String CANCEL_REASON = "결제 정보 불일치로 인한 자동 취소";
     private final CartRepository cartRepository;
@@ -218,6 +223,24 @@ public class PaymentServiceImpl implements PaymentService {
                 .canceledItems(canceledItemDtos)
                 .build();
     }
+
+    @Override
+    @Transactional
+    public List<PaymentHistoryDto> paymentHistory(CustomPrincipal principal) {
+        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
+
+        return paymentRepository.findAllByOrder_User(user).stream()
+                .map(payment -> PaymentHistoryDto.builder()
+                        .orderId(payment.getOrder().getId())
+                        .orderName(payment.getOrder().getOrderName())
+                        .amount(payment.getAmount())
+                        .paymentStatus(payment.getPaymentStatus())
+                        .paidAt(payment.getApprovedAt())
+                        .build())
+                .toList();
+    }
+
 
 
     private Order getOrder(Long orderId) {
