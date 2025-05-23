@@ -3,12 +3,15 @@ package com.bubble.giju.domain.like.entity;
 import com.bubble.giju.domain.drink.entity.Drink;
 import com.bubble.giju.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Entity
+import java.time.LocalDateTime;
+
+@Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Table(name = "Likes")
 public class Like {
     @Id
@@ -24,13 +27,12 @@ public class Like {
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @Column(name = "is_delete")
+    @Column(name = "is_delete", nullable = false)
     private boolean delete;
 
-    @Builder
-    public Like(Drink drink, User user, boolean delete) {
-        this.drink = drink;
-        this.user = user;
-        this.delete = delete;
+    private LocalDateTime createdAt;
+
+    public void deleteLike() {
+        this.delete = true;
     }
 }
