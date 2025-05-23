@@ -29,24 +29,26 @@ public class AddressServiceImpl implements AddressService {
                 () -> new CustomException(ErrorCode.USER_UNAUTHORIZED)
         );
 
-        Optional<Address> userDefaultAddress = addressRepository.findByUser_UserIdAndDefaultAddressTrue(UUID.fromString(userId));
-
+        boolean isDefaultAddress = false;
+        // 기본배송지로 설정
         if (request.isDefaultAddress()) {
-            if (userDefaultAddress.isPresent()) {
-                userDefaultAddress.get().updateDefaultAddressToFalse();
-            }
+            isDefaultAddress = true;
+
+            // 기존 기본배송지를 false로 변경
+            addressRepository.findByUser_UserIdAndDefaultAddressTrue(UUID.fromString(userId))
+                    .ifPresent(Address::updateDefaultAddressToFalse);
         }
 
         Address address = Address.builder()
                 .user(user)
-                .address("address")
-                .alias("address")
-                .defaultAddress(request.isDefaultAddress())
-                .zipCode("zipCode")
-                .street("street")
-                .name("name")
-                .phoneNumber("phoneNumber")
-                .requestAddress("requestAddress")
+                .recipientName(request.getRecipientName())
+                .phoneNumber(request.getPhoneNumber())
+                .alias(request.getAlias())
+                .defaultAddress(isDefaultAddress)
+                .postcode(request.getPostcode())
+                .roadAddress(request.getRoadAddress())
+                .buildingName(request.getBuildingName())
+                .detailAddress(request.getDetailAddress())
                 .build();
 
         addressRepository.save(address);

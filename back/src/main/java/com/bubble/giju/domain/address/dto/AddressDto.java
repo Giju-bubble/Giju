@@ -6,7 +6,17 @@ public class AddressDto {
 
     @Getter
     public static class Request {
-        boolean defaultAddress = false;
+        private String recipientName;
+        private String phoneNumber;
+
+        private String alias;
+        private boolean defaultAddress = false;
+
+        private int postcode;
+        private String roadAddress;
+        private String buildingName;
+
+        private String detailAddress;
     }
 
 

@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.util.Lazy;
 
 @Getter
 @Builder
@@ -22,21 +21,25 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // 받는사람 정보
+    private String recipientName;
+    private String phoneNumber;
+
     private String alias;
     private boolean defaultAddress;
 
-    // 주소
     // 주소 정보
-    private String street;
-    private String address;
-    private String zipCode;
+    private int postcode; // 우편번호
+    private String roadAddress; // 도로명주소
+    private String buildingName; // 건물이름
 
-    // 정보
-    private String name;
-    private String phoneNumber;
-    private String requestAddress;
+    private String detailAddress; // 상세주소
 
     public void updateDefaultAddressToFalse() {
         this.defaultAddress = false;
+    }
+
+    public void updateDefaultAddressToTrue() {
+        this.defaultAddress = true;
     }
 }
