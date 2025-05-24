@@ -46,6 +46,7 @@ jobs:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
         S3STORAGE_ACCESS_KEY: ${{ secrets.S3STORAGE_ACCESS_KEY }}
         S3STORAGE_SECRET_KEY: ${{ secrets.S3STORAGE_SECRET_KEY }}
+        TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
       run: ./gradlew build
 
     - name: Check build results
