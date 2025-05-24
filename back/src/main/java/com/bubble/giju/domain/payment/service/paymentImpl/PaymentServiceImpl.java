@@ -43,7 +43,6 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentCancelInfoRepository paymentCancelInfoRepository;
     private final PaymentFailInfoRepository paymentFailInfoRepository;
     private final OrderDetailRepository orderDetailRepository;
-    private final UserRepository userRepository;
 
     private static final String CANCEL_REASON = "결제 정보 불일치로 인한 자동 취소";
     private final CartRepository cartRepository;
@@ -54,13 +53,19 @@ public class PaymentServiceImpl implements PaymentService {
 
         // TossPayment -> orderId 타입이 Long
         Long orderIdToss = Long.parseLong(orderId);
+        // Order 테이블에서 실제 주문 조회
+        Order order = getOrder(orderIdToss);
+
+        // 결제 버튼 누를때 생성된 Order의 총값 과 리다이렉트 파라미터 비교
+        if (order.getTotalAmount() != amount) {
+            throw new CustomException(ErrorCode.INVALID_PAYMENT_VERIFICATION);
+        }
 
         // 결제 승인 요청
         TossPaymentResponseDto tossResponse = tossClientImpl.confirmPayment(paymentKey, orderId, amount);
 
-        // Order 테이블에서 실제 주문 조회
-        Order order = getOrder(orderIdToss);
 
+        //추가 검증
         if (!orderId.equals(tossResponse.getOrderId()) ||
                 order.getTotalAmount() != tossResponse.getTotalAmount()) {
 

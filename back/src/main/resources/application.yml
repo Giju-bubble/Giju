@@ -37,7 +37,7 @@ order:
 toss:
   success_url: /api/payment/success
   fail_url: /api/payment/fail
-
+  secret-key:
 
 jwt:
   expirationtime:
