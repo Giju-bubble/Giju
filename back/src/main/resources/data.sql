@@ -71,7 +71,7 @@ INSERT INTO order_detail (
     drink_name,
     order_id
 ) VALUES
-      (1, 8000, 1, '막걸리', 1),
+      (1, 10000, 1, '막걸리', 1),
       (2, 12000, 1, '서울의밤', 1);
 
 
