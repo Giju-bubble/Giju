@@ -27,6 +27,10 @@ public class DeliveryCompany {
         this.name = name;
     }
 
+    public void modifyName(String newName) {
+        this.name = newName;
+    }
+
 
     @OneToMany(mappedBy = "deliveryCompany")
     private List<Delivery> deliveries = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.bubble.giju.domain.delivery.service.impl;
 
 import com.bubble.giju.domain.delivery.dto.DeliveryCompanyResponseDto;
+import com.bubble.giju.domain.delivery.dto.DeliveryCompanyUpdateRequestDto;
 import com.bubble.giju.domain.delivery.entity.DeliveryCompany;
 import com.bubble.giju.domain.delivery.repository.DeliveryCompanyRepository;
 import com.bubble.giju.domain.delivery.service.DeliveryCompanyService;
@@ -40,6 +41,18 @@ public class DeliveryCompanyServiceImpl implements DeliveryCompanyService {
         DeliveryCompany deliveryCompany = deliveryCompanyRepository.findById(deliveryCompanyId).get();
         deliveryCompanyRepository.delete(deliveryCompany);
         DeliveryCompanyResponseDto deliveryCompanyResponseDto = new DeliveryCompanyResponseDto(deliveryCompany.getId(),deliveryCompany.getName());
+        return deliveryCompanyResponseDto;
+    }
+
+    @Override
+    public DeliveryCompanyResponseDto update(int deliveryCompanyId, DeliveryCompanyUpdateRequestDto deliveryCompanyUpdateRequestDto) {
+        DeliveryCompany deliveryCompany = deliveryCompanyRepository.findById(deliveryCompanyId).orElseThrow(()-> new CustomException(ErrorCode.NON_EXISTENT_DELIVERY_COMPANY));
+
+        deliveryCompany.modifyName(deliveryCompanyUpdateRequestDto.getDeliveryCompanyName());
+
+        deliveryCompanyRepository.save(deliveryCompany);
+        DeliveryCompanyResponseDto deliveryCompanyResponseDto = new DeliveryCompanyResponseDto(deliveryCompanyId,deliveryCompany.getName());
+
         return deliveryCompanyResponseDto;
     }
 
