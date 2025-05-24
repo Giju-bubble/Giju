@@ -35,9 +35,8 @@ order:
   delete-cycle: 30
 
 toss:
-  success_url: /api/payment/success
-  fail_url: /api/payment/fail
-  secret-key:
+  success_url: "/api/payment/success"
+  fail_url: "/api/payment/fail"
 
 jwt:
   expirationtime:
