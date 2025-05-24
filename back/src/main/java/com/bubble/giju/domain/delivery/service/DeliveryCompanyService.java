@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface DeliveryCompanyService {
     List<DeliveryCompanyResponseDto> findAll();
+    DeliveryCompanyResponseDto deleteById(int deliveryCompanyId);
 }

@@ -4,6 +4,8 @@ import com.bubble.giju.domain.delivery.dto.DeliveryCompanyResponseDto;
 import com.bubble.giju.domain.delivery.entity.DeliveryCompany;
 import com.bubble.giju.domain.delivery.repository.DeliveryCompanyRepository;
 import com.bubble.giju.domain.delivery.service.DeliveryCompanyService;
+import com.bubble.giju.global.config.CustomException;
+import com.bubble.giju.global.config.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,17 @@ public class DeliveryCompanyServiceImpl implements DeliveryCompanyService {
         }
 
         return deliveryCompanyResponseDtoList;
+    }
+
+    @Override
+    public DeliveryCompanyResponseDto deleteById(int deliveryCompanyId) {
+        if(!deliveryCompanyRepository.existsById(deliveryCompanyId)){
+            throw new CustomException(ErrorCode.NON_EXISTENT_DELIVERY_COMPANY);
+        }
+        DeliveryCompany deliveryCompany = deliveryCompanyRepository.findById(deliveryCompanyId).get();
+        deliveryCompanyRepository.delete(deliveryCompany);
+        DeliveryCompanyResponseDto deliveryCompanyResponseDto = new DeliveryCompanyResponseDto(deliveryCompany.getId(),deliveryCompany.getName());
+        return deliveryCompanyResponseDto;
     }
 
 

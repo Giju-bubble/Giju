@@ -15,6 +15,7 @@ public class Delivery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="delivery_id", nullable = false, updatable = false, unique = true)
     private Long id;
 
     @ManyToOne

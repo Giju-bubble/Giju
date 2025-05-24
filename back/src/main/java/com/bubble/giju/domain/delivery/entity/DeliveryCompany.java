@@ -1,5 +1,7 @@
 package com.bubble.giju.domain.delivery.entity;
 
+import com.bubble.giju.global.config.CustomException;
+import com.bubble.giju.global.config.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,5 +27,15 @@ public class DeliveryCompany {
         this.name = name;
     }
 
+
+    @OneToMany(mappedBy = "deliveryCompany")
+    private List<Delivery> deliveries = new ArrayList<>();
+
+    @PreRemove
+    private void preRemove() {
+        if (!deliveries.isEmpty()) {
+            throw new CustomException(ErrorCode.FOREIGN_KEY_CONSTRAINT_VIOLATION);
+        }
+    }
 
 }
