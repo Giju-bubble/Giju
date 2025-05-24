@@ -22,8 +22,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("api/payment")
-@PreAuthorize("hasRole('USER')")
+@RequestMapping("/api/payment")
+//@PreAuthorize("hasRole('USER')")
 public class PaymentController {
 
     private final PaymentService paymentService;
