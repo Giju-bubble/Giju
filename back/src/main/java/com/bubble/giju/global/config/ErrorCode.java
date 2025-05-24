@@ -80,11 +80,17 @@ public enum ErrorCode {
     INVALID_IMAGE_FORMAT("잘못된 이미지 포맷입니다.", HttpStatus.BAD_REQUEST),
 
     /**
+     *
+     */
+    NON_EXISTENT_DELIVERY_COMPANY("존재하지 않는 택배회사입니다.",HttpStatus.BAD_REQUEST),
+
+    /**
      * Error
      */
     INTERNAL_SERVER_ERROR("서버에러입니다. 백엔드 로그를 확인해주세요", HttpStatus.INTERNAL_SERVER_ERROR),
     MISSING_REQUIRED_VALUE("요청에 필수 값이 누락되었습니다.", HttpStatus.BAD_REQUEST),
-    UNSUPPORTED_SEARCH_TYPE("지원하지 않는 검색 타입입니다.", HttpStatus.BAD_REQUEST);
+    UNSUPPORTED_SEARCH_TYPE("지원하지 않는 검색 타입입니다.", HttpStatus.BAD_REQUEST),
+    FOREIGN_KEY_CONSTRAINT_VIOLATION("이 항목은 현재 사용 중이므로 삭제할 수 없습니다.", HttpStatus.BAD_REQUEST);
 
     private final String msg;
     private final HttpStatus status;

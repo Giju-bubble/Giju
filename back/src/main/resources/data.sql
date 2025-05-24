@@ -36,3 +36,34 @@ INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,105,true);
 
 
 INSERT INTO Likes(drink_id,user_id,is_delete) VALUES (100,'22222222-2222-2222-2222-222222222222',false);
+
+INSERT INTO Delivery_companies (delivery_company_id,delivery_company_name)
+VALUES
+    (100,'택배'),
+    (101,'우체국 택배');
+
+INSERT INTO Orders (
+    order_id,
+    total_amount,
+    created_at,
+    order_status,
+    delivery_charge,
+    is_deleted,
+    order_name,
+    deleted_at,
+    user_id
+) VALUES (
+             1,
+             22000,
+             '2025-05-24T16:47:00',
+             'PENDING',
+             3000,
+             false,
+             'testuser1의 첫 주문',
+             NULL,
+             '11111111-1111-1111-1111-111111111112'
+         );
+
+INSERT INTO Deliveries(delivery_id,delivery_company_id,order_id,delivery_num)
+VALUES
+    (1,100,1,'12345');

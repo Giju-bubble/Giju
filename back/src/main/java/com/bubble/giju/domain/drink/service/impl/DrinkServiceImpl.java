@@ -133,7 +133,7 @@ public class DrinkServiceImpl implements DrinkService {
 
         boolean isLike= likeRepository.existsByUser_UserIdAndDrink_id(userId,drinkId);
 
-
+        //todo Mapper 이용할것
         DrinkDetailResponseDto drinkDetailResponseDto = DrinkDetailResponseDto.builder()
                 .id(drinkResponseDto.getId()).name(drinkResponseDto.getName()).price(drinkResponseDto.getPrice())
                 .stock(drinkResponseDto.getStock()).alcoholContent(drink.getAlcoholContent())
