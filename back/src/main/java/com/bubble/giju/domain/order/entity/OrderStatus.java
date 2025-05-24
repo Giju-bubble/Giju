@@ -9,7 +9,9 @@ public enum OrderStatus {
     PENDING("주문대기"),
     SUCCEEDED("결제완료"),
     FAILED("결제실패"),
-    CANCELED("주문취소");
+    CANCELED("주문취소"),
+    PARTIALLY_CANCELED("주문 부분취소");
+
 
     private final String label;
 

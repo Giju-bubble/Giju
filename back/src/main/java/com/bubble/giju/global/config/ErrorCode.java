@@ -39,6 +39,16 @@ public enum ErrorCode {
      * */
     NON_EXISTENT_ORDER("주문이 존재 하지않습니다",HttpStatus.BAD_REQUEST),
 
+    /**
+     * PAYMENT
+     * */
+    INVALID_ORDER_ID("Toss의 OrderId와 Order DB의 OrderId 불일치", HttpStatus.BAD_REQUEST),
+    INVALID_AMOUNT("Toss의 amount와 Order DB의 총 값이 불일치", HttpStatus.BAD_REQUEST),
+    PAYMENT_CONFIRMATION_FAILED("결제 실패", HttpStatus.BAD_REQUEST),
+    INVALID_PAYMENT_VERIFICATION("결제 검증 실패", HttpStatus.BAD_REQUEST),
+    PAYMENT_NOT_FOUND("결제를 찾을 수 없습니다", HttpStatus.BAD_REQUEST),
+    INVALID_CANCEL_ITEM("해당 주문에 포함되지 않은 항목을 취소할 수 없습니다", HttpStatus.BAD_REQUEST),
+    PAYMENT_CANCEL_FAILED("주문 취소 실패", HttpStatus.BAD_REQUEST),
 
     /**
      * Auth

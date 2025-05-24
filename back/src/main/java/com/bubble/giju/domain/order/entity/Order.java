@@ -1,5 +1,6 @@
 package com.bubble.giju.domain.order.entity;
 
+import com.bubble.giju.domain.payment.entity.Payment;
 import com.bubble.giju.domain.user.entity.User;
 
 import jakarta.persistence.*;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "Orders") // Order은 sql 예약어 orders로 변경함
+@Table(name = "orders") // Order은 sql 예약어 orders로 변경함
 public class Order {
 
     @Id
@@ -57,6 +58,9 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
+    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
+    private Payment payment;
+
     @Builder
     public Order(String orderName ,int totalAmount, int deliveryCharge, User user) {
         this.orderName = orderName;
@@ -72,17 +76,10 @@ public class Order {
 
     }
 
-    public void changeOrderStatus(OrderStatus newStatus) {
-        this.orderStatus = newStatus;
-    }
-
     public void updateStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
 
-    public void cancel() {
-        this.orderStatus = OrderStatus.CANCELED;
-    }
 
     public void softDelete() {
         this.isDeleted = true;

@@ -5,15 +5,15 @@ import com.bubble.giju.domain.order.entity.Order;
 import com.bubble.giju.domain.order.entity.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface OrderRepository extends CrudRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o WHERE o.orderStatus = :status AND o.createdAt < :cutoff AND o.isDeleted = false")
     Page<Order> findByOrderStatusAndCreatedAtBeforeAndIsDeletedFalse(
             @Param("status") OrderStatus status,

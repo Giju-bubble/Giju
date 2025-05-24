@@ -64,6 +64,17 @@ INSERT INTO Orders (
              '11111111-1111-1111-1111-111111111112'
          );
 
+INSERT INTO order_detail (
+    order_detail_id,
+    price,
+    quantity,
+    drink_name,
+    order_id
+) VALUES
+      (1, 10000, 1, '막걸리', 1),
+      (2, 12000, 1, '서울의밤', 1);
+
+
 INSERT INTO Deliveries(delivery_id,delivery_company_id,order_id,delivery_num)
 VALUES
     (1,100,1,'12345');
