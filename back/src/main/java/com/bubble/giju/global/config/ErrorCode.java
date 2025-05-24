@@ -59,6 +59,19 @@ public enum ErrorCode {
     LOGIN_UNAUTHORIZED("로그인 실패", HttpStatus.UNAUTHORIZED),
 
     /**
+     * Address
+     */
+    // 존재하지 않는 Address
+    NON_EXIST_ADDRESS("존재하지않는 주소입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_DEFAULT_ADDRESS("기본 배송지는 해제할 수 없습니다.", HttpStatus.BAD_REQUEST),
+    CANNOT_DELETE_DEFAULT_ADDRESS("기본 배송지는 삭제할 수 없습니다. 다른 배송지를 기본으로 설정한 후 삭제해주세요.", HttpStatus.BAD_REQUEST),
+
+    /**
+     * Like
+     */
+    INVALID_LIKE("잘못된 찜 요청입니다.", HttpStatus.BAD_REQUEST),
+
+    /**
      * JWT
      */
     EXPIRED_JWT("JWT의 유효기간이 만료되었습니다.", HttpStatus.UNAUTHORIZED),
@@ -77,9 +90,17 @@ public enum ErrorCode {
     INVALID_IMAGE_FORMAT("잘못된 이미지 포맷입니다.", HttpStatus.BAD_REQUEST),
 
     /**
+     *
+     */
+    NON_EXISTENT_DELIVERY_COMPANY("존재하지 않는 택배회사입니다.",HttpStatus.BAD_REQUEST),
+
+    /**
      * Error
      */
-    INTERNAL_SERVER_ERROR("서버에러입니다. 백엔드 로그를 확인해주세요", HttpStatus.INTERNAL_SERVER_ERROR);
+    INTERNAL_SERVER_ERROR("서버에러입니다. 백엔드 로그를 확인해주세요", HttpStatus.INTERNAL_SERVER_ERROR),
+    MISSING_REQUIRED_VALUE("요청에 필수 값이 누락되었습니다.", HttpStatus.BAD_REQUEST),
+    UNSUPPORTED_SEARCH_TYPE("지원하지 않는 검색 타입입니다.", HttpStatus.BAD_REQUEST),
+    FOREIGN_KEY_CONSTRAINT_VIOLATION("이 항목은 현재 사용 중이므로 삭제할 수 없습니다.", HttpStatus.BAD_REQUEST);
 
     private final String msg;
     private final HttpStatus status;

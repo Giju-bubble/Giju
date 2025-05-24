@@ -1,6 +1,7 @@
 package com.bubble.giju.domain.drink.entity;
 
 import com.bubble.giju.domain.category.entity.Category;
+import com.bubble.giju.domain.drink.dto.DrinkUpdateRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -58,4 +59,18 @@ public class Drink {
     {
         return this.is_delete;
     }
+
+    public void updateDelete(boolean is_delete)
+    {
+        this.is_delete = is_delete;
+    }
+
+    public void update(DrinkUpdateRequestDto dto, Category category) {
+        this.price = dto.getPrice();
+        this.stock = dto.getStock();
+        this.region = dto.getRegion();
+        this.category = category;
+    }
+
+
 }
