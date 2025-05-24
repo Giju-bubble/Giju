@@ -36,3 +36,9 @@ INSERT INTO Drink_images (image_id,drink_id,is_thumbnail) VALUES (1,105,true);
 
 
 INSERT INTO Likes(drink_id,user_id,is_delete) VALUES (100,'22222222-2222-2222-2222-222222222222',false);
+
+INSERT INTO Delivery_companies (delivery_company_id,delivery_company_name)
+VALUES
+    (1,'택배'),
+    (2,'우체국 택배');
+
