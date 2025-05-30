@@ -51,7 +51,7 @@ public class UserController {
     // delete
     @Operation(summary = "회원 삭제, 탈퇴", description = "현재 로그인한 회원을 삭제,탈퇴합니다.")
     @DeleteMapping("")
-
+    public ResponseEntity<ApiResponse<String>> deleteUser(@AuthenticationPrincipal CustomPrincipal customPrincipal) {
         // TODO: 회원에 관련된 모든 테이블 Cascade
         ApiResponse<String> apiResponse = ApiResponse.success(
                 "회원삭제 성공", userService.delete(customPrincipal.getUserId()));
