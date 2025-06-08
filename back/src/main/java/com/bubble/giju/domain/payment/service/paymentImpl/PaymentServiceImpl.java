@@ -125,7 +125,7 @@ public class PaymentServiceImpl implements PaymentService {
         orderRepository.save(order);
 
         //장바구니 정리
-        deleteCartsAndMappingsByOrder(order);
+//        deleteCartsAndMappingsByOrder(order);
     }
 
 
