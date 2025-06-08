@@ -87,7 +87,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         paymentRepository.save(payment);
 
-
+//
 //        //추가 검증
 //        if (!orderId.equals(tossResponse.getOrderId()) ||
 //            order.getTotalAmount() != tossResponse.getTotalAmount()) {
@@ -125,7 +125,7 @@ public class PaymentServiceImpl implements PaymentService {
         orderRepository.save(order);
 
         //장바구니 정리
-//        deleteCartsAndMappingsByOrder(order);
+        deleteCartsAndMappingsByOrder(order);
     }
 
 
@@ -262,8 +262,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .map(OrderCartMapping::getCart)
                 .toList();
 
-        cartRepository.deleteAll(cartsToDelete);
         orderCartMappingRepository.deleteByOrder(order);
+        cartRepository.deleteAll(cartsToDelete);
     }
 
 
