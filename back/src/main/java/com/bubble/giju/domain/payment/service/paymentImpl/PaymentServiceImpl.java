@@ -62,6 +62,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new CustomException(ErrorCode.INVALID_PAYMENT_VERIFICATION);
         }
 
+
         //soft delete 된 건지 판단
         if (order.isDeleted()) {
             throw new CustomException(ErrorCode.ALREADY_DELETED_ORDER);
@@ -90,7 +91,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         //추가 검증
         if (!orderId.equals(tossResponse.getOrderId()) ||
-            order.getTotalAmount() != tossResponse.getTotalAmount()) {
+            (order.getTotalAmount()+order.getDeliveryCharge()) != tossResponse.getTotalAmount()) {
 
             //결제 취소
             TossCancelResponseDto cancelResponse = tossClientImpl.cancelPayment(
@@ -262,8 +263,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .map(OrderCartMapping::getCart)
                 .toList();
 
-        cartRepository.deleteAll(cartsToDelete);
         orderCartMappingRepository.deleteByOrder(order);
+        cartRepository.deleteAll(cartsToDelete);
     }
 
 

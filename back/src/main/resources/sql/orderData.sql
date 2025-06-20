@@ -1,5 +1,10 @@
 -- 주문 및 주문상세 더미 데이터 (총 60개 주문: PENDING 10개, DELIVERED 50개)
 -- 주문 및 주문상세 더미 데이터 (총 60개 주문: PENDING 10개, DELIVERED 50개)
+-- 가정: drink_id = 10번 제품이 존재한다고 할 때
+INSERT INTO cart (quantity, drink_id, user_id)
+VALUES (1, 1, '22222222-2222-2222-2222-222222222231');
+
+
 INSERT INTO Orders (order_id, total_amount, created_at, order_status, delivery_charge, is_deleted, order_name, deleted_at, user_id, toss_order_id, customer_key)
 VALUES
 -- testuser1 (김선준) - 10개 주문
@@ -70,7 +75,7 @@ VALUES
 (57, 16000, '2025-01-29T16:10:00', 'PENDING', 3000, false, '유자리큐르', NULL, '22222222-2222-2222-2222-222222222228', 'ORDER_57_e7f8g9h0-i1j2-rstu-efgh-vwxyzabcdefg', 'user-22222222-2222-2222-2222-222222222228'),
 (58, 24000, '2025-01-30T11:50:00', 'PENDING', 3000, false, '바다별고래', NULL, '22222222-2222-2222-2222-222222222229', 'ORDER_58_f8g9h0i1-j2k3-stuv-fghi-wxyzabcdefgh', 'user-22222222-2222-2222-2222-222222222229'),
 (59, 35000, '2025-01-30T13:30:00', 'PENDING', 0, false, '제주고소리 증류주', NULL, '22222222-2222-2222-2222-222222222230', 'ORDER_59_g9h0i1j2-k3l4-tuvw-ghij-xyzabcdefghi', 'user-22222222-2222-2222-2222-222222222230'),
-(60, 27000, '2025-01-30T15:20:00', 'PENDING', 3000, false, '지황약주', NULL, '22222222-2222-2222-2222-222222222231', 'ORDER_60_h0i1j2k3-l4m5-uvwx-hijk-yzabcdefghij', 'user-22222222-2222-2222-2222-222222222231');
+(60, 3500, '2025-06-09T03:20:00', 'PENDING', 3000, false, '지황약주', NULL, '22222222-2222-2222-2222-222222222231', 'ORDER_60_h0i1j2k3-l4m5-uvwx-hijk-yzabcdefghig', 'user-22222222-2222-2222-2222-222222222231');
 
 
 
@@ -175,7 +180,7 @@ VALUES
 (62, 13000, 1, '유자리큐르', '전라남도', 57, false, false, false),
 (63, 21000, 1, '바다별고래', '전라남도', 58, false, false, false),
 (64, 32000, 1, '제주고소리 증류주', '제주도', 59, false, false, false),
-(65, 24000, 1, '지황약주', '경상북도', 60, false, false, false);
+(65, 3500, 1, '지황약주', '경상북도', 60, false, false, false);
 
 
 ALTER TABLE orders ALTER COLUMN order_id RESTART WITH 61;

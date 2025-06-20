@@ -47,7 +47,7 @@ order:
 toss:
   success_url: "/payment/success"
   fail_url: "/payment/fail"
-  secret-key: ${TOSS_SECRET_KEY:asdfasdfasdfasdf}
+  #secret-key: ${TOSS_SECRET_KEY:asdfasdfasdfasdf}
 #  secret-key: ${toss-secret:asdfasdfasdfasdf}
 
 jwt:

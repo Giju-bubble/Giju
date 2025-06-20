@@ -1,6 +1,5 @@
 package com.bubble.giju.domain.cart.dto.request;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
