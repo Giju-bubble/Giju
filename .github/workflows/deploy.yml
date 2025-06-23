@@ -24,6 +24,13 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      # Gradle 빌드 (JAR 생성)
+      - name: Build JAR with Gradle
+        working-directory: back
+        run: |
+          chmod +x gradlew
+          ./gradlew build
+
       # SonarQube 분석추가
       - name: SonarQube Scan
         working-directory: back
@@ -36,14 +43,7 @@ jobs:
             -Dsonar.projectKey=Giju-bubble_Giju \
             -Dsonar.organization=giju-bubble \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.java.binaries=build/classes
-
-      # Gradle 빌드 (JAR 생성)
-      - name: Build JAR with Gradle
-        working-directory: back
-        run: |
-          chmod +x gradlew
-          ./gradlew build
+            -Dsonar.java.binaries=build/classes/java/main
 
     # Docker  빌드를 위한 환경 설정
       - name: Set up Docker Buildx
