@@ -24,10 +24,11 @@ jobs:
 
     # SonarQube 분석추가
       - name: SonarQube Scan
+        working-directory: back
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          cd back
+          chmod +x gradlew
           ./gradlew sonarqube \
             -Dsonar.projectKey=Giju-bubble_Giju \
             -Dsonar.organization=giju-bubble \
@@ -37,7 +38,9 @@ jobs:
     # Gradle 빌드 (JAR 생성)
       - name: Build JAR with Gradle
         working-directory: back
-        run: ./gradlew build
+        run: |
+          chmod +x gradlew
+          ./gradlew build
 
     # Docker  빌드를 위한 환경 설정
       - name: Set up Docker Buildx
