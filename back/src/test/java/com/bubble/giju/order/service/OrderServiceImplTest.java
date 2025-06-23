@@ -7,7 +7,7 @@ import com.bubble.giju.domain.order.dto.response.OrderResponseDto;
 import com.bubble.giju.domain.order.entity.Order;
 import com.bubble.giju.domain.order.repository.OrderCartMappingRepository;
 import com.bubble.giju.domain.order.repository.OrderRepository;
-import com.bubble.giju.domain.order.service.serviceImpl.OrderServiceImpl;
+import com.bubble.giju.domain.order.service.impl.OrderServiceImpl;
 import com.bubble.giju.domain.user.dto.CustomPrincipal;
 import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.repository.UserRepository;

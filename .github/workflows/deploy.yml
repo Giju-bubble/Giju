@@ -1,0 +1,115 @@
+name: Deploy to AWS ECS
+
+#실행 조건 , dev브랜치로 push 혹은 PR 생성되거나 업데이트되면 실행
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ] # CI용
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 코드 받아오기
+      - name: Checkout code
+        uses: actions/checkout@v4
+    # JDK 설치 빌드
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+    # SonarQube 분석추가
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          cd back
+          ./gradlew sonarqube \
+            -Dsonar.projectKey=Giju-bubble_Giju \
+            -Dsonar.organization=giju-bubble \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_TOKEN
+
+    # Gradle 빌드 (JAR 생성)
+      - name: Build JAR with Gradle
+        working-directory: back
+        run: ./gradlew build
+
+    # Docker  빌드를 위한 환경 설정
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+    # ECR 로그인 _ 도커 이미지 push 준비
+      - name: Log in to Amazon ECR
+        id: ecrLogin
+        uses: aws-actions/amazon-ecr-login@v2
+
+    # Docker 이미지 빌드 및 ECR로 업로드
+      - name: Build and push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: giju
+          IMAGE_TAG: ${{ github.sha }} #커밋 해시 기반
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./back
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    # REPLACE_ME를 실제 커밋 해시로 치환
+      - name: Replace image tag in task definition
+        run: |
+          sed -i "s|REPLACE_ME|${{ github.sha }}|g" ecs-task-def.json
+
+    # ECS에 새 이미지로 배포 요청
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ecs-task-def.json
+          cluster: my-ecs-cluster
+          service: giju-service
+          wait-for-service-stability: true #배포가 완료할때 기다릴지 여부
+
+      # 배포 성공 시 Slack 알림
+      - name: Slack Notify Success
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{
+            "text": " [CI/CD] 배포 성공!",
+            "attachments": [
+              {
+                "color": "good",
+                "fields": [
+                  { "title": "브랜치", "value": "${{ github.ref_name }}", "short": true },
+                  { "title": "작업자", "value": "${{ github.actor }}", "short": true },
+                  { "title": "커밋 메시지", "value": "${{ github.event.head_commit.message }}" },
+                  { "title": "로그 보기", "value": "<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|GitHub Actions 로그>" }
+                ]
+              }
+            ]
+          }' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      # 실패 시 알림
+      - name: Slack Notify Failure
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{
+            "text": "[CI/CD] 배포 실패!",
+            "attachments": [
+              {
+                "color": "danger",
+                "fields": [
+                  { "title": "브랜치", "value": "${{ github.ref_name }}", "short": true },
+                  { "title": "작업자", "value": "${{ github.actor }}", "short": true },
+                  { "title": "실패한 작업", "value": "${{ github.job }}", "short": true },
+                  { "title": "로그 보기", "value": "<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|GitHub Actions 로그>" }
+                ]
+              }
+            ]
+          }' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
