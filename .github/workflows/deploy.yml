@@ -27,6 +27,9 @@ jobs:
     # Gradle 빌드 (JAR 생성)
       - name: Build JAR with Gradle
         working-directory: back
+        env:
+          S3STORAGE_ACCESS_KEY: ${{ secrets.S3STORAGE_ACCESS_KEY }}
+          S3STORAGE_SECRET_KEY: ${{ secrets.S3STORAGE_SECRET_KEY }}
         run: |
           chmod +x gradlew
           ./gradlew build
