@@ -1,4 +1,4 @@
-package com.bubble.giju.order.service;
+package com.bubble.giju.domain.order.service;
 
 import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.repository.CartRepository;
@@ -68,7 +68,7 @@ public class OrderServiceImplTest {
         // UUID로 유저 조회 설정
         given(userRepository.findById(userId)).willReturn(Optional.of(testUser));
 
-        ReflectionTestUtils.setField(orderService, "deliveryCharge", 3000);
+        ReflectionTestUtils.setField(orderService, "deliveryFee", 3000);
 
         drink1 = Drink.builder().id(1L).name("막걸리").price(15000).build();
         log.info("drink1: name={}, id={}, price={}", drink1.getName(), drink1.getId(), drink1.getPrice());
@@ -76,7 +76,7 @@ public class OrderServiceImplTest {
         drink2 = Drink.builder().id(2L).name("홍주").price(10000).build();
         log.info("drink2: name={}, id={}, price={}", drink2.getName(), drink2.getId(), drink2.getPrice());
 
-        ReflectionTestUtils.setField(orderService, "deliveryCharge", 3000);
+        ReflectionTestUtils.setField(orderService, "deliveryFee", 3000);
         ReflectionTestUtils.setField(orderService, "targetPrice", 30000);
 
     }

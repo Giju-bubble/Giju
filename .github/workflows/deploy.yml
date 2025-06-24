@@ -24,7 +24,7 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # Gradle 빌드 (JAR 생성)
+    # Gradle 빌드 (JAR 생성)
       - name: Build JAR with Gradle
         working-directory: back
         run: |
