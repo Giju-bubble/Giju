@@ -90,6 +90,7 @@ jobs:
           task-definition: ./back/ecs-task-def.json
           cluster: my-ecs-cluster
           service: giju-service
+          deployment-group: giju-deploy
           wait-for-service-stability: true #배포가 완료할때 기다릴지 여부
 
       # 배포 성공 시 Slack 알림
