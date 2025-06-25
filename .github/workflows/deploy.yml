@@ -81,13 +81,13 @@ jobs:
     # REPLACE_ME를 실제 커밋 해시로 치환
       - name: Replace image tag in task definition
         run: |
-          sed -i "s|REPLACE_ME|${{ github.sha }}|g" ecs-task-def.json
+          sed -i "s|REPLACE_ME|${{ github.sha }}|g" ./back/ecs-task-def.json
 
     # ECS에 새 이미지로 배포 요청
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ecs-task-def.json
+          task-definition: ./back/ecs-task-def.json
           cluster: my-ecs-cluster
           service: giju-service
           wait-for-service-stability: true #배포가 완료할때 기다릴지 여부
