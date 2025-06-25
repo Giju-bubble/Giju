@@ -31,7 +31,7 @@ jobs:
           aws-region: ap-northeast-2
           audience: sts.amazonaws.com
 
-          # JDK 설치 빌드
+    # JDK 설치 빌드
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -126,7 +126,7 @@ jobs:
                 "fields": [
                   { "title": "브랜치", "value": "${{ github.ref_name }}", "short": true },
                   { "title": "작업자", "value": "${{ github.actor }}", "short": true },
-                  { "title": "실패한 작업", "value": "${{ github.job }}", "short": true },
+                  { "title": "실패 단계", "value": "${{ needs.build-and-test.result == 'failure' && '빌드/테스트' || '배포' }}", "short": true },
                   { "title": "로그 보기", "value": "<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|GitHub Actions 로그>" }
                 ]
               }
