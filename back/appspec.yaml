@@ -8,10 +8,3 @@ Resources:
           ContainerName: "giju-container" # Task Definition의 컨테이너 이름과 일치해야 함
           ContainerPort: 8080 # 애플리케이션 포트
         PlatformVersion: "LATEST" # Fargate 플랫폼 버전
-
-Hooks:
-  - BeforeInstall: "BeforeInstall"
-  - AfterInstall: "AfterInstall"
-  - AfterAllowTestTraffic: "AfterAllowTestTraffic"
-  - BeforeAllowTraffic: "BeforeAllowTraffic"
-  - AfterAllowTraffic: "AfterAllowTraffic"
