@@ -29,7 +29,7 @@ jobs:
           role-to-assume: arn:aws:iam::104741737135:role/giju
           role-session-name: giju-${{ github.actor }}-${{ github.run_id }}
           aws-region: ap-northeast-2
-
+          audience: sts.amazonaws.com
 
           # JDK 설치 빌드
       - name: Set up Java
