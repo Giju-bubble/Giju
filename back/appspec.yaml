@@ -3,7 +3,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: <TASK_DEFINITION> # GitHub Actions에서 자동으로 치환됨
+        TaskDefinition: "giju-task"
         LoadBalancerInfo:
           ContainerName: "giju-container" # Task Definition의 컨테이너 이름과 일치해야 함
           ContainerPort: 8080 # 애플리케이션 포트

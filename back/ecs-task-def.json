@@ -1,34 +1,37 @@
 {
   "family": "giju-task",
-  "executionRoleArn": "arn:aws:iam::104741737135:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "1024",
   "memory": "3072",
-  "runtimePlatform": {
-    "cpuArchitecture": "X86_64",
-    "operatingSystemFamily": "LINUX"
-  },
+  "executionRoleArn": "arn:aws:iam::104741737135:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "name": "giju-container",
-      "image": "104741737135.dkr.ecr.ap-northeast-2.amazonaws.com/giju:REPLACE_ME",
-      "cpu": 0,
+      "image": "104741737135.dkr.ecr.ap-northeast-2.amazonaws.com/giju:latest",
+      "essential": true,
       "portMappings": [
         {
           "containerPort": 8080,
+          "hostPort": 8080,
           "protocol": "tcp",
           "appProtocol": "http"
         }
       ],
-      "essential": true,
+      "environment": [
+        { "name": "CLIENT_SECRET", "value": "$CLIENT_SECRET" },
+        { "name": "CLIENT_ID", "value": "$CLIENT_ID" },
+        { "name": "JWT_SECRET", "value": "$JWT_SECRET" },
+        { "name": "REDIRECT_URI", "value": "$REDIRECT_URI" },
+        { "name": "S3STORAGE_ACCESS_KEY", "value": "$S3STORAGE_ACCESS_KEY" },
+        { "name": "S3STORAGE_SECRET_KEY", "value": "$S3STORAGE_SECRET_KEY" },
+        { "name": "TOSS_SECRET_KEY", "value": "$TOSS_SECRET_KEY" }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
           "awslogs-group": "/ecs/giju-task",
-          "mode": "non-blocking",
           "awslogs-create-group": "true",
-          "max-buffer-size": "25m",
           "awslogs-region": "ap-northeast-2",
           "awslogs-stream-prefix": "ecs"
         }

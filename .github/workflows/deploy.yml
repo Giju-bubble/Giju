@@ -76,12 +76,22 @@ jobs:
           IMAGE_TAG: ${{ github.sha }} #커밋 해시 기반
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./back
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    # REPLACE_ME를 실제 커밋 해시로 치환
-      - name: Replace image tag in task definition
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          
+    #환경변수 랜더링
+      - name: Render ECS
         run: |
-          sed -i "s|REPLACE_ME|${{ github.sha }}|g" ./back/ecs-task-def.json
+          envsubst < ./back/ecs-task-def.template.json > ./back/ecs-task-def.json
+        env:
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+          S3STORAGE_ACCESS_KEY: ${{ secrets.S3STORAGE_ACCESS_KEY }}
+          S3STORAGE_SECRET_KEY: ${{ secrets.S3STORAGE_SECRET_KEY }}
+          TOSS_SECRET_KEY: ${{ secrets.TOSS_SECRET_KEY }}
 
     # ECS에 새 이미지로 배포 요청
       - name: Deploy to Amazon ECS
