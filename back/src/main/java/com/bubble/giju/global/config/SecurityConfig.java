@@ -98,7 +98,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/api/auth/**", "/oauth2/**", "/error",
                                 "/api/categories", "/api/rankings", "/api/payment/**", "/api/drink/**", "/api/drinks",
-                                "/toss/**", "/api/regions", "/api/reviews/drinks/**").permitAll()
+                                "/toss/**", "/api/regions", "/api/reviews/drinks/**", "/health").permitAll()
                         .requestMatchers("/swagger-ui/**",
                                 "/api/swagger-config/**",
                                 "/h2-console/**",

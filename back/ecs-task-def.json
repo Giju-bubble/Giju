@@ -1,5 +1,5 @@
 {
-  "family": "giju-task2",
+  "family": "giju-task",
   "executionRoleArn": "arn:aws:iam::104741737135:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
