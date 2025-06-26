@@ -8,4 +8,4 @@ Resources:
           TargetGroupInfoList:
             - Name: "ecs-blue-tg"
             - Name: "ecs-green-tg"
-        PlatformVersion: "LATEST"
+        PlatformVersion: LATEST
