@@ -8,9 +8,3 @@ Resources:
           ContainerName: "giju-container"
           ContainerPort: 8080
         PlatformVersion: "LATEST"
-
-hooks:
-  AfterInstall:
-    - location: scripts/success.sh
-      timeout: 30
-      runas: root

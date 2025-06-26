@@ -22,9 +22,6 @@ jobs:
         with:
           fetch-depth: 0
 
-    # 권한주기
-      - name: Set script execute permission
-        run: chmod +x ./back/scripts/success.sh
 
     # GitHub Actions가 AWS에 접근할 수 있도록 자격 증명 구성 (OIDC 기반 토근 발행)
       - name: Configure AWS credentials
