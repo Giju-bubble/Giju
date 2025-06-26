@@ -5,6 +5,7 @@
   "cpu": "1024",
   "memory": "3072",
   "executionRoleArn": "arn:aws:iam::104741737135:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::104741737135:role/ecsTaskRole",
   "containerDefinitions": [
     {
       "name": "giju-container",
@@ -18,14 +19,20 @@
           "appProtocol": "http"
         }
       ],
+
+      "secrets": [
+        { "name": "CLIENT_SECRET", "valueFrom": "/app/giju/CLIENT_SECRET" },
+        { "name": "CLIENT_ID", "valueFrom": "/app/giju/CLIENT_ID" },
+        { "name": "JWT_SECRET", "valueFrom": "/app/giju/JWT_SECRET" },
+        { "name": "REDIRECT_URI", "valueFrom": "/app/giju/REDIRECT_URI" },
+        { "name": "S3STORAGE_ACCESS_KEY", "valueFrom": "/app/giju/S3STORAGE_ACCESS_KEY" },
+        { "name": "S3STORAGE_SECRET_KEY", "valueFrom": "/app/giju/S3STORAGE_SECRET_KEY" },
+        { "name": "TOSS_SECRET_KEY", "valueFrom": "/app/giju/TOSS_SECRET_KEY" }
+      ],
+
       "environment": [
-        { "name": "CLIENT_SECRET", "value": "$CLIENT_SECRET" },
-        { "name": "CLIENT_ID", "value": "$CLIENT_ID" },
-        { "name": "JWT_SECRET", "value": "$JWT_SECRET" },
-        { "name": "REDIRECT_URI", "value": "$REDIRECT_URI" },
-        { "name": "S3STORAGE_ACCESS_KEY", "value": "$S3STORAGE_ACCESS_KEY" },
-        { "name": "S3STORAGE_SECRET_KEY", "value": "$S3STORAGE_SECRET_KEY" },
-        { "name": "TOSS_SECRET_KEY", "value": "$TOSS_SECRET_KEY" }
+        { "name": "SPRING_PROFILES_ACTIVE", "value": "prod" },
+        { "name": "SERVER_PORT", "value": "8080" }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",
