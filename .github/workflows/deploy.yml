@@ -86,11 +86,14 @@ jobs:
             sed -i "s|104741737135.dkr.ecr.ap-northeast-2.amazonaws.com/giju:latest|$ECR_REGISTRY/giju:$IMAGE_TAG|g" ./back/ecs-task-def.json
             echo "Updated task definition:"
             cat ./back/ecs-task-def.json
+
+      #appspec.yaml arn 타겟 설정
       - name: Update appspec with Target Group ARN
         run: |
-          sed -i "s/\$TARGET_GROUP_ARN/${{ secrets.TARGET_GROUP_ARN }}/g" ./back/appspec.yaml
+          sed -i "s|\$TARGET_GROUP_ARN|${{ secrets.TARGET_GROUP_ARN }}|g" ./back/appspec.yaml
           echo "Updated appspec.yaml:"
-          cat ./back/appspec.yaml   
+          cat ./back/appspec.yaml
+
 
     # ECS에 새 이미지로 배포 요청
       - name: Deploy to Amazon ECS
