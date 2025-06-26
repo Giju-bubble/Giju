@@ -1,11 +1,10 @@
-version: 1
+version: 0.0
 Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "giju-task"
+        TaskDefinition: "giju-task:9"
         LoadBalancerInfo:
-          TargetGroupInfoList:
-            - Name: "ecs-blue-tg"
-            - Name: "ecs-green-tg"
-        PlatformVersion: LATEST
+          ContainerName: "giju-container"
+          ContainerPort: 8080
+        PlatformVersion: "LATEST"
