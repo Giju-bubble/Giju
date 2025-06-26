@@ -7,4 +7,5 @@ Resources:
         LoadBalancerInfo:
           ContainerName: "giju-container" # Task Definition의 컨테이너 이름과 일치해야 함
           ContainerPort: 8080 # 애플리케이션 포트
+          TargetGroupARN: $TARGET_GROUP_ARN
         PlatformVersion: "LATEST" # Fargate 플랫폼 버전
