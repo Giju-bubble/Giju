@@ -31,7 +31,6 @@
       ],
 
       "environment": [
-        { "name": "SPRING_PROFILES_ACTIVE", "value": "prod" },
         { "name": "SERVER_PORT", "value": "8080" }
       ],
       "logConfiguration": {
