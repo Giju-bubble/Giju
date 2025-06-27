@@ -14,7 +14,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Profile("prod")
+@Profile("prod") //active = prod일때만 실행
 @Component
 public class SqlDataLoader implements ApplicationRunner {
 
