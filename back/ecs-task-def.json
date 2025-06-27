@@ -27,7 +27,10 @@
         { "name": "REDIRECT_URI", "valueFrom": "/app/giju/REDIRECT_URI" },
         { "name": "S3STORAGE_ACCESS_KEY", "valueFrom": "/app/giju/S3STORAGE_ACCESS_KEY" },
         { "name": "S3STORAGE_SECRET_KEY", "valueFrom": "/app/giju/S3STORAGE_SECRET_KEY" },
-        { "name": "TOSS_SECRET_KEY", "valueFrom": "/app/giju/TOSS_SECRET_KEY" }
+        { "name": "TOSS_SECRET_KEY", "valueFrom": "/app/giju/TOSS_SECRET_KEY" },
+        { "name": "DB_URL", "valueFrom": "/app/giju/DB_URL" },
+        { "name": "DB_USERNAME", "valueFrom": "/app/giju/DB_USERNAME" },
+        { "name": "DB_PASSWORD", "valueFrom": "/app/giju/DB_PASSWORD" }
       ],
 
       "environment": [
