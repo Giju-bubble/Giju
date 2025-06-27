@@ -44,7 +44,7 @@ jobs:
         working-directory: ./back
         run: |
           chmod +x gradlew
-          ./gradlew build -Dspring.profiles.active=local
+          ./gradlew build
 
       # SonarQube 분석추가
       - name: SonarQube Scan
