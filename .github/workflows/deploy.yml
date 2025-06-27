@@ -39,12 +39,24 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-    # Gradle 빌드 (JAR 생성)
+      # SSM에서 DB 비밀값 가져오기
+      - name: Fetch DB secrets from AWS SSM Parameter Store
+        id: fetch-db-secrets
+        run: |
+          echo "DB_URL=$(aws ssm get-parameter --name /app/giju/DB_URL --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "DB_USERNAME=$(aws ssm get-parameter --name /app/giju/DB_USERNAME --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "DB_PASSWORD=$(aws ssm get-parameter --name /app/giju/DB_PASSWORD --with-decryption --query Parameter.Value --output text)" >> $GITHUB_ENV
+
+      # Gradle 빌드 (JAR 생성, 환경변수로 DB 정보 전달)
       - name: Build JAR with Gradle
         working-directory: ./back
         run: |
           chmod +x gradlew
           ./gradlew build
+        env:
+          DB_URL: ${{ env.DB_URL }}
+          DB_USERNAME: ${{ env.DB_USERNAME }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
 
       # SonarQube 분석추가
       - name: SonarQube Scan
