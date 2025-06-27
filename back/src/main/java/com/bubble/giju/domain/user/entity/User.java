@@ -20,14 +20,14 @@ import java.util.UUID;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "user_id")
+    @Column(name = "user_id", columnDefinition = "CHAR(36)")
     UUID userId;
 
 
     @Column(name = "login_id", unique = true)
     String loginId;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 60)
     String password;
 
     @Column(name = "name")
