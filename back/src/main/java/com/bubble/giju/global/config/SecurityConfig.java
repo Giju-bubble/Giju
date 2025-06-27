@@ -50,7 +50,9 @@ public class SecurityConfig {
                 "https://giju.vercel.app",
                 "https://giju-front.vercel.app",
                 "https://seonjun.store",
-                "http://seonjun.store")));
+                "http://seonjun.store",
+                "https://coffeesubscription.store"
+        )));
 
         // 허용할 HTTP 메서드 설정
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
