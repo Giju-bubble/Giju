@@ -40,10 +40,17 @@ public class SqlDataLoader implements ApplicationRunner {
                 String sql = new BufferedReader(new InputStreamReader(resource.getInputStream()))
                         .lines().collect(Collectors.joining("\n"));
 
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.execute(sql);
-                    System.out.println("실행 완료: " + path);
+                String[] statements = sql.split(";");
+                for (String statement : statements) {
+                    statement = statement.trim();
+                    if (!statement.isEmpty()) {
+                        try (Statement stmt = conn.createStatement()) {
+                            stmt.execute(statement);
+                        }
+                    }
                 }
+
+                System.out.println("실행 완료: " + path);
             }
         }
     }
