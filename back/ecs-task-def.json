@@ -30,7 +30,8 @@
         { "name": "TOSS_SECRET_KEY", "valueFrom": "/app/giju/TOSS_SECRET_KEY" },
         { "name": "DB_URL", "valueFrom": "/app/giju/DB_URL" },
         { "name": "DB_USERNAME", "valueFrom": "/app/giju/DB_USERNAME" },
-        { "name": "DB_PASSWORD", "valueFrom": "/app/giju/DB_PASSWORD" }
+        { "name": "DB_PASSWORD", "valueFrom": "/app/giju/DB_PASSWORD" },
+        { "name": "DNS_URL", "valueFrom": "/app/giju/DNS_URL" }
       ],
 
 

@@ -16,6 +16,7 @@ spring:
         format_sql: true
         show-sql: true
 
-
+app:
+  base-url: ${DNS_URL:dummy}
 front:
   uri: ${FRONT_URI:https://giju.vercel.app}
