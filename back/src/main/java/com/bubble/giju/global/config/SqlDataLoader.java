@@ -2,6 +2,7 @@ package com.bubble.giju.global.config;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Profile("prod")
 @Component
 public class SqlDataLoader implements ApplicationRunner {
 
