@@ -257,4 +257,5 @@ INSERT INTO Drink_images (image_id, drink_id, is_thumbnail) VALUES
 (119, 119, true), -- 오가피리큐르
 (120, 120, true); -- 도라지리큐르
 
-ALTER TABLE Drink_images ALTER COLUMN drink_image_id RESTART WITH 121;
+-- ALTER TABLE Drink_images ALTER COLUMN drink_image_id RESTART WITH 121;
+ALTER TABLE Drinks AUTO_INCREMENT = 121;

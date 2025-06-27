@@ -1,15 +1,11 @@
-INSERT INTO categories (category_name)
-SELECT * FROM (VALUES
-                   ('탁주'),
-                   ('청주'),
-                   ('증류주'),
-                   ('약주'),
-                   ('과실주'),
-                   ('기타')
-              ) AS vals(category_name)
-WHERE NOT EXISTS (
-    SELECT 1 FROM categories WHERE categories.category_name = vals.category_name
-);
+INSERT IGNORE INTO categories (category_name)
+VALUES
+  ('탁주'),
+  ('청주'),
+  ('증류주'),
+  ('약주'),
+  ('과실주'),
+  ('기타');
 
 
 
@@ -148,4 +144,5 @@ VALUES
 (119, '오가피리큐르', 22000, 40, 14.0, 375, FALSE, '강원도', 6),
 (120, '도라지리큐르', 15000, 65, 9.0, 375, FALSE, '강원도', 6);
 
-ALTER TABLE Drinks ALTER COLUMN drink_id RESTART WITH 121;
+-- ALTER TABLE Drinks ALTER COLUMN drink_id RESTART WITH 121;
+ALTER TABLE Drinks AUTO_INCREMENT = 121;

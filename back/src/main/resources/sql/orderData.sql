@@ -183,6 +183,8 @@ VALUES
 (65, 3500, 1, '지황약주', '경상북도', 60, false, false, false);
 
 
-ALTER TABLE orders ALTER COLUMN order_id RESTART WITH 61;
-ALTER TABLE order_detail ALTER COLUMN order_detail_id RESTART WITH 66;
+-- ALTER TABLE orders ALTER COLUMN order_id RESTART WITH 61;
+-- ALTER TABLE order_detail ALTER COLUMN order_detail_id RESTART WITH 66;
+ALTER TABLE orders AUTO_INCREMENT = 61;
 
+ALTER TABLE order_detail AUTO_INCREMENT = 66;

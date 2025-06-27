@@ -142,4 +142,5 @@ VALUES
 ('payment_key_053_a3b4c5d6e7f8', 19000, '계좌이체', 'DONE', '2025-01-25T17:20:00+09:00', 'txn_053_a3b4c5d6', 'APV_053_345901', NULL, 'https://cashreceipt.toss.im/payment_053', 53);
 
 -- Auto-increment 값 재설정
-ALTER TABLE payment ALTER COLUMN payment_id RESTART WITH 51;
+-- ALTER TABLE payment ALTER COLUMN payment_id RESTART WITH 51;
+ALTER TABLE payment AUTO_INCREMENT = 51;
