@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
+@Profile("prod")
 public class SqlDataLoader {
 
     private final DataSource dataSource;
