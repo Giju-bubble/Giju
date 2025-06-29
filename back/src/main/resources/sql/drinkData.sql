@@ -10,7 +10,7 @@ VALUES
 
 
 -- 전통주 데이터 INSERT
-INSERT INTO drinks (drink_id, drink_name, drink_price, drink_stock, drink_alcohol_content, drink_volume, drink_is_delete, drink_region, category_id)
+INSERT IGNORE INTO drinks (drink_id, drink_name, drink_price, drink_stock, drink_alcohol_content, drink_volume, drink_is_delete, drink_region, category_id)
 VALUES
 -- 탁주 (막걸리) 20개
 (1, '느린마을 막걸리', 3500, 150, 6.0, 750, FALSE, '경기도', 1),

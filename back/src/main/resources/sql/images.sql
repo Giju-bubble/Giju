@@ -1,4 +1,4 @@
-INSERT INTO images(image_id,image_url)
+INSERT IGNORE INTO images(image_id,image_url)
 values
     (1,'https://giju-bubble.s3.ap-northeast-2.amazonaws.com/%EB%8A%90%EB%A6%B0%EB%A7%88%EC%9D%84+%EB%A7%89%EA%B1%B8%EB%A6%AC.jpg'),
     (2, 'https://giju-bubble.s3.ap-northeast-2.amazonaws.com/%EB%B3%B5%EC%88%9C%EB%8F%84%EA%B0%80+%EC%86%90%EB%A7%89%EA%B1%B8%EB%A6%AC.jpg'),
@@ -126,7 +126,7 @@ ALTER TABLE images AUTO_INCREMENT = 121;
 
 
 -- Drink_images 테이블에 이미지와 술 연결 정보 삽입
-INSERT INTO drink_images (image_id, drink_id, is_thumbnail) VALUES
+INSERT IGNORE INTO drink_images (image_id, drink_id, is_thumbnail) VALUES
 -- 탁주 (막걸리) 연결 (1-20)
 (1, 1, true),   -- 느린마을 막걸리
 (2, 2, true),   -- 복순도가 손막걸리

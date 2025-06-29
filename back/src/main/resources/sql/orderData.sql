@@ -1,11 +1,11 @@
 -- 주문 및 주문상세 더미 데이터 (총 60개 주문: PENDING 10개, DELIVERED 50개)
 -- 주문 및 주문상세 더미 데이터 (총 60개 주문: PENDING 10개, DELIVERED 50개)
 -- 가정: drink_id = 10번 제품이 존재한다고 할 때
-INSERT INTO cart (quantity, drink_id, user_id)
+INSERT IGNORE INTO IGNORE IGNORE cart (quantity, drink_id, user_id)
 VALUES (1, 1, UUID_TO_BIN('22222222-2222-2222-2222-222222222231'));
 
 
-INSERT INTO orders (order_id, total_amount, created_at, order_status, delivery_charge, is_deleted, order_name, deleted_at, user_id, toss_order_id, customer_key)
+INSERT IGNORE INTO IGNORE IGNORE orders (order_id, total_amount, created_at, order_status, delivery_charge, is_deleted, order_name, deleted_at, user_id, toss_order_id, customer_key)
 VALUES
 -- testuser1 (김선준) - 10개 주문
 (1, 15500, '2024-12-10T14:30:00', 'DELIVERED', 3000, false, '느린마을 막걸리', NULL, UUID_TO_BIN('11111111-1111-1111-1111-111111111112'), 'ORDER_1_a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'user-11111111-1111-1111-1111-111111111112'),
@@ -82,7 +82,7 @@ VALUES
 
 
 -- 주문상세 데이터
-INSERT INTO order_detail (order_detail_id, price, quantity, drink_name, region, order_id, is_canceled, is_refund_requested, is_refunded)
+INSERT IGNORE INTO IGNORE IGNORE order_detail (order_detail_id, price, quantity, drink_name, region, order_id, is_canceled, is_refund_requested, is_refunded)
 VALUES
 -- Order 1
 (1, 3500, 1, '느린마을 막걸리', '경기도', 1, false, false, false),
