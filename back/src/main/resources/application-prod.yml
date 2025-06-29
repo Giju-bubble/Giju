@@ -2,21 +2,24 @@
 spring:
 
   datasource:
-    url: ${DB_URL:dummy}
+    url: ${DB_URL:jjdbc:mysql://mysql:3306/mydb}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username:  ${DB_USERNAME:dummy}
-    password:  ${DB_PASSWORD:dummy}
+    username:  ${DB_USERNAME:myuser}
+    password:  ${DB_PASSWORD:1234}
   jpa:
-    #defer-datasource-initialization: true
+    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
         show-sql: true
+  sql:
+    init:
+      mode: never
 
 app:
-  base-url: ${DNS_URL:dummy}
+  base-url: ${DNS_URL:localhost 8080}
 front:
   uri: ${FRONT_URI:https://giju.vercel.app}

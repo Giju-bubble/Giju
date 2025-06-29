@@ -1,5 +1,5 @@
 -- testuser1 (김선준)의 리뷰들 - DELIVERED 주문만
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN( '11111111-1111-1111-1111-111111111112'), 1, 1, NULL, '느린마을 막걸리 정말 맛있어요! 부드럽고 깔끔한 맛이 일품입니다. 경기도에서 직접 만든 정성이 느껴지네요. 다음에도 꼭 주문할 예정입니다.', 5),
     (UUID_TO_BIN( '11111111-1111-1111-1111-111111111112'), 2, 2, NULL, '복순도가 손막걸리는 가격대가 있지만 그만한 가치가 있어요. 전통 방식으로 빚은 깊은 맛이 인상적입니다.', 4),
@@ -11,7 +11,7 @@ VALUES
     (UUID_TO_BIN( '11111111-1111-1111-1111-111111111112'), 101, 8, NULL, '조은술 바나나주는 색다른 경험이었어요. 바나나 향이 진하게 나면서도 달지 않아서 신기했습니다.', 3);
 
 -- testuser2 (김창환)의 리뷰들 - DELIVERED 주문만
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222222'), 3, 11, NULL, '배혜정도가 우곡생주 정말 좋아요! 10도라 적당하고 쌀의 단맛이 살아있어서 마시기 편했습니다.', 5),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222222'), 4, 12, NULL, '해창 막걸리는 강원도 특산품답게 깔끔하면서도 구수한 맛이 일품이에요. 9도라 적당한 도수가 좋습니다.', 4),
@@ -21,7 +21,7 @@ VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222222'), 68, 16, NULL, '오미자약주는 건강에도 좋고 맛도 독특해서 흥미로웠어요. 새콤달콤한 맛이 일품입니다.', 4);
 
 -- testuser3 (장인찬)의 리뷰들 - DELIVERED 주문만
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222223'), 10, 19, NULL, '삼양춘 정말 고급스러운 맛이에요! 가격은 비싸지만 그만한 가치가 충분히 있는 프리미엄 막걸리입니다.', 5),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222223'), 12, 20, NULL, '풍정사계는 충청남도 전통주답게 깊이 있는 맛이 일품이에요. 7도라 부담스럽지 않고 식사와 잘 어울려요.', 4),
@@ -30,7 +30,7 @@ VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222223'), 17, 23, NULL, '제주 오메기술은 제주도만의 독특한 맛이 있어요. 12도치고는 부드럽고 오메기쌀의 고소함이 좋습니다.', 4);
 
 -- testuser4 (최종빈)의 리뷰들 - DELIVERED 주문만
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222224'), 15, 25, NULL, '김천 배금도가 찹쌀막걸리 정말 진하고 맛있어요! 12도라 좀 독하지만 찹쌀의 달콤함이 일품입니다.', 5),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222224'), 36, 26, NULL, '한산소곡주 백송16은 정말 최고급 전통주네요. 16도인데 목넘김이 실크처럼 부드럽고 향이 환상적입니다.', 5),
@@ -40,67 +40,67 @@ VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222224'), 48, 30, NULL, '한주매화 정말 고급스러운 증류주예요. 35도치고는 부드럽고 매화향이 은은하게 나서 좋습니다.', 4);
 
 -- testuser5 (김하늘)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222225'), 5, 32, NULL, '서울장수막걸리는 가성비 최고예요! 저렴한 가격에 이런 맛을 낼 수 있다니 놀랍습니다.', 4),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222225'), 100, 43, NULL, '블루베리주 색깔도 예쁘고 맛도 달콤해서 좋아요. 11.5도로 적당하고 여성들이 좋아할 맛입니다.', 4);
 
 -- testuser6 (박민수)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222226'), 8, 33, NULL, '감천막걸리 경상남도 특산품답게 깔끔하고 좋네요. 6도라 부담 없이 마실 수 있어서 좋았어요.', 4),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222226'), 47, 44, NULL, '서울고량주 레드는 35도치고는 목넘김이 부드러워요. 중국 고량주 스타일이지만 한국적인 맛이 있네요.', 3);
 
 -- testuser7 (이서윤)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222227'), 27, 34, NULL, '내국양조 송이주 정말 특별해요! 송이버섯 향이 독특하고 13도로 적당해서 마시기 좋았습니다.', 5),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222227'), 38, 45, NULL, '제주고소리술은 제주도만의 독특한 맛이 있어요. 15도로 적당하고 깔끔한 마무리가 좋습니다.', 4);
 
 -- testuser8 (전성환)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222228'), 25, 35, NULL, '참주가 우리청주 가성비 정말 좋아요! 11도로 부담없고 깔끔한 맛이 일상에서 마시기 좋습니다.', 4),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222228'), 25, 46, NULL, '참주가 우리청주 재주문했는데 역시 맛있어요. 여러 개 주문해서 친구들과 나눠 마셨습니다.', 4);
 
 -- testuser9 (최지영)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222229'), 70, 36, NULL, '복분자약주 건강에도 좋고 맛도 달콤해서 좋아요. 13도로 적당하고 복분자 특유의 신맛이 일품입니다.', 4),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222229'), 75, 47, NULL, '황기약주는 한약재 맛이 나지만 생각보다 마시기 편해요. 건강 생각해서 구매했는데 만족스럽습니다.', 3);
 
 -- testuser10 (박준걸)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222230'), 94, 37, NULL, '석류주 색깔도 예쁘고 맛도 상큼해서 좋아요. 11도로 적당하고 석류 특유의 단맛이 매력적입니다.', 4),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222230'), 98, 48, NULL, '산딸기주는 강원도 특산품답게 자연스러운 맛이 좋아요. 11도로 마시기 편하고 향도 좋습니다.', 4);
 
 -- testuser11 (윤소라)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222231'), 86, 38, NULL, '사과애주 정말 사과 맛이 진하게 나서 좋아요. 10도로 부담없고 디저트술로 딱 좋네요.', 4),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222231'), 62, 49, NULL, '인삼약주는 건강에 좋을 것 같아서 주문했는데, 생각보다 마시기 편하고 인삼 향이 은은해요.', 3);
 
 -- testuser12 (임동혁)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222232'), 96, 39, NULL, '청매실주 정말 상큼하고 좋네요! 13도로 적당하고 매실 특유의 신맛이 여름에 마시기 딱 좋아요.', 5),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222232'), 71, 50, NULL, '홍삼약주는 가격대가 있지만 홍삼의 진한 맛과 향이 좋아요. 건강 생각하면 가성비 좋은 것 같습니다.', 4);
 
 -- testuser13 (송예진)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222233'), 107, 40, NULL, '천매 매실원주 가격도 저렴하고 맛도 좋아요. 13도로 적당하고 매실 맛이 진해서 만족스럽습니다.', 4),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222233'), 95, 51, NULL, '오디주는 처음 마셔봤는데 색깔도 예쁘고 맛도 독특해서 좋았어요. 10도로 마시기 편합니다.', 4);
 
 -- testuser14 (강연준)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222234'), 89, 41, NULL, '공주 알밤주 정말 독특하고 맛있어요! 알밤의 고소함이 살아있고 11도로 적당해서 좋습니다.', 4),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222234'), 97, 52, NULL, '감와인은 처음 마셔봤는데 감의 달콤함이 와인과 잘 어울려요. 12도로 적당하고 독특한 경험이었습니다.', 3);
 
 -- testuser15 (오다은)의 리뷰들
-INSERT INTO Reviews (user_id, drink_id, order_id, image_id, content, score)
+INSERT INTO reviews (user_id, drink_id, order_id, image_id, content, score)
 VALUES
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222235'), 99, 42, NULL, '아로니아주 건강에도 좋고 맛도 특별해서 좋아요. 12도로 적당하고 아로니아 특유의 맛이 인상적입니다.', 4),
     (UUID_TO_BIN('22222222-2222-2222-2222-222222222235'), 106, 53, NULL, '오매락은 독특한 네이밍과 맛이 인상적이에요. 11도로 마시기 편하고 경상북도 특산품답게 깊은 맛이 있어요.', 4);

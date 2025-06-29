@@ -1,4 +1,4 @@
-package com.bubble.giju.global.runner;
+/*package com.bubble.giju.global.runner;
 
 import com.bubble.giju.domain.user.entity.User;
 import com.bubble.giju.domain.user.enums.Role;
@@ -66,3 +66,4 @@ public class UserInitializer implements CommandLineRunner {
         userRepository.saveAll(Arrays.asList(admin, user));
     }
 }
+*/

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-@Table(name="Drink_images")
+@Table(name="drink_images")
 @Getter
 public class DrinkImage {
     @Id

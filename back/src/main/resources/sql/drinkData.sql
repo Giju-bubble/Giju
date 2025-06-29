@@ -10,7 +10,7 @@ VALUES
 
 
 -- 전통주 데이터 INSERT
-INSERT INTO Drinks (drink_id, drink_name, drink_price, drink_stock, drink_alcohol_content, drink_volume, drink_is_delete, drink_region, category_id)
+INSERT INTO drinks (drink_id, drink_name, drink_price, drink_stock, drink_alcohol_content, drink_volume, drink_is_delete, drink_region, category_id)
 VALUES
 -- 탁주 (막걸리) 20개
 (1, '느린마을 막걸리', 3500, 150, 6.0, 750, FALSE, '경기도', 1),
@@ -145,4 +145,4 @@ VALUES
 (120, '도라지리큐르', 15000, 65, 9.0, 375, FALSE, '강원도', 6);
 
 -- ALTER TABLE Drinks ALTER COLUMN drink_id RESTART WITH 121;
-ALTER TABLE Drinks AUTO_INCREMENT = 121;
+ALTER TABLE drinks AUTO_INCREMENT = 121;

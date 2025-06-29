@@ -5,7 +5,7 @@ INSERT INTO cart (quantity, drink_id, user_id)
 VALUES (1, 1, UUID_TO_BIN('22222222-2222-2222-2222-222222222231'));
 
 
-INSERT INTO Orders (order_id, total_amount, created_at, order_status, delivery_charge, is_deleted, order_name, deleted_at, user_id, toss_order_id, customer_key)
+INSERT INTO orders (order_id, total_amount, created_at, order_status, delivery_charge, is_deleted, order_name, deleted_at, user_id, toss_order_id, customer_key)
 VALUES
 -- testuser1 (김선준) - 10개 주문
 (1, 15500, '2024-12-10T14:30:00', 'DELIVERED', 3000, false, '느린마을 막걸리', NULL, UUID_TO_BIN('11111111-1111-1111-1111-111111111112'), 'ORDER_1_a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'user-11111111-1111-1111-1111-111111111112'),

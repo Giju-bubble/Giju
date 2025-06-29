@@ -1,8 +1,8 @@
 package com.bubble.giju.global.config;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Profile;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -14,18 +14,21 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Profile("prod") //active = prod일때만 실행
 @Component
-public class SqlDataLoader implements ApplicationRunner {
+@Slf4j
+public class SqlDataLoader {
 
     private final DataSource dataSource;
 
     public SqlDataLoader(DataSource dataSource) {
         this.dataSource = dataSource;
+        log.info("SqlDataLoader 생성됨 - DataSource: {}", dataSource.getClass().getSimpleName());
     }
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
+    @EventListener(ApplicationReadyEvent.class)
+    public void onApplicationReady() throws Exception {
+        log.info("=== SqlDataLoader 실행 시작 ===");
+
         List<String> sqlFiles = List.of(
                 "sql/userData.sql",
                 "sql/drinkData.sql",
@@ -36,24 +39,61 @@ public class SqlDataLoader implements ApplicationRunner {
                 "sql/reviews.sql"
         );
 
+        //DB커넥션 연결
         try (Connection conn = dataSource.getConnection()) {
-            for (String path : sqlFiles) {
-                ClassPathResource resource = new ClassPathResource(path);
-                String sql = new BufferedReader(new InputStreamReader(resource.getInputStream()))
-                        .lines().collect(Collectors.joining("\n"));
+            log.info("데이터베이스 연결 성공: {}", conn.getMetaData().getURL());
 
-                String[] statements = sql.split(";");
-                for (String statement : statements) {
-                    statement = statement.trim();
-                    if (!statement.isEmpty()) {
-                        try (Statement stmt = conn.createStatement()) {
-                            stmt.execute(statement);
+            for (String path : sqlFiles) {
+                log.info("SQL 파일 처리 시작: {}", path);
+
+                try {
+                    ClassPathResource resource = new ClassPathResource(path);
+
+                    if (!resource.exists()) {
+                        log.warn("SQL 파일이 존재하지 않음: {}", path);
+                        continue;
+                    }
+
+                    String sql = new BufferedReader(new InputStreamReader(resource.getInputStream()))
+                            .lines().collect(Collectors.joining("\n"));
+
+                    if (sql.trim().isEmpty()) {
+                        log.warn("SQL 파일이 비어있음: {}", path);
+                        continue;
+                    }
+
+                    String[] statements = sql.split(";");
+                    log.info("파일 {} 에서 {} 개의 SQL 문장 발견", path, statements.length);
+
+                    int executedCount = 0;
+                    for (String statement : statements) {
+                        statement = statement.trim();
+                        if (!statement.isEmpty()) {
+                            try (Statement stmt = conn.createStatement()) {
+                                log.debug("SQL 실행: {}", statement.length() > 100 ?
+                                        statement.substring(0, 100) + "..." : statement);
+                                stmt.execute(statement);
+                                executedCount++;
+                            } catch (Exception e) {
+                                log.error("SQL 실행 실패: {}", statement, e);
+                                throw e;
+                            }
                         }
                     }
-                }
 
-                System.out.println("실행 완료: " + path);
+                    log.info("파일 {} 실행 완료 - {} 개 SQL 문장 실행됨", path, executedCount);
+
+                } catch (Exception e) {
+                    log.error("파일 {} 처리 중 오류 발생", path, e);
+                    throw e;
+                }
             }
+
+            log.info("=== SqlDataLoader 실행 완료 ===");
+
+        } catch (Exception e) {
+            log.error("데이터베이스 연결 또는 SQL 실행 중 오류 발생", e);
+            throw e;
         }
     }
 }

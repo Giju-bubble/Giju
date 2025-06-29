@@ -1,11 +1,10 @@
-# 베이스 이미지 선택
-FROM openjdk:21-jdk
+FROM eclipse-temurin:21-jdk
 
-# JAR 복사
+WORKDIR /app
+
+
 COPY build/libs/*.jar app.jar
 
-# 포트 노출
 EXPOSE 8080
 
-# 실행 명령
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
