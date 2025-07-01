@@ -23,3 +23,13 @@ app:
   base-url: ${DNS_URL:localhost 8080}
 front:
   uri: ${FRONT_URI:https://giju.vercel.app}
+
+# /actuator/prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      enabled: true

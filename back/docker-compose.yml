@@ -1,41 +1,18 @@
-version: '3.8'
+version: "3"
 
 services:
-
-  mysql:
-    image: mysql:8.0
-    container_name: mydb
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: 1234
+  prometheus:
+    image: prom/prometheus
     ports:
-      - "3306:3306"
+      - "9090:9090"
     volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
-  spring-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: myapp
-    depends_on:
-      mysql:
-        condition: service_healthy
+  grafana:
+    image: grafana/grafana
     ports:
-      - "8080:8080"
+      - "3000:3000"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/mydb
-      SPRING_DATASOURCE_USERNAME: myuser
-      SPRING_DATASOURCE_PASSWORD: 1234
-    restart: unless-stopped
-
-volumes:
-  mysql_data:
+      - GF_SECURITY_ADMIN_PASSWORD=admin1234
+    depends_on:
+      - prometheus
