@@ -46,7 +46,7 @@
         "logDriver": "awsfirelens",
         "options": {
           "Name": "loki",
-          "Host": "localhost",
+          "Host": "${LOKI_HOST}",
           "Port": "3100",
           "labels": "ecs_task,ecs_cluster",
           "remove_keys": "log",
