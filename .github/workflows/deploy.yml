@@ -83,11 +83,8 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.ecrLogin.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
-          LOKI_HOST: ${{ secrets.LOKI_HOST }}
         run: |
             sed -i "s|104741737135.dkr.ecr.ap-northeast-2.amazonaws.com/giju:latest|$ECR_REGISTRY/giju:$IMAGE_TAG|g" ./back/ecs-task-def.json
-            sed -i "s|\${LOKI_HOST}|$LOKI_HOST|g" ./back/ecs-task-def.json
-          
             echo "Updated task definition:"
             cat ./back/ecs-task-def.json
 
