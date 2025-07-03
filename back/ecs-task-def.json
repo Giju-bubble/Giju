@@ -12,17 +12,35 @@
   "taskRoleArn": "arn:aws:iam::104741737135:role/ecsTaskRole",
   "containerDefinitions": [
     {
+      "name": "log-router",
+      "image": "amazon/aws-for-fluent-bit:latest",
+      "essential": true,
+      "firelensConfiguration": {
+        "type": "fluentbit",
+        "options": {
+          "enable-ecs-log-metadata": "true"
+        }
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/firelens-container",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "firelens"
+        }
+      },
+      "memoryReservation": 50
+    },
+    {
       "name": "giju-container",
       "image": "104741737135.dkr.ecr.ap-northeast-2.amazonaws.com/giju:latest",
       "essential": true,
-      "cpu": 256,
-      "memory": 512,
+      "cpu": 206,
+      "memoryReservation": 462,
       "portMappings": [
         {
           "containerPort": 8080,
-          "hostPort": 8080,
-          "protocol": "tcp",
-          "appProtocol": "http"
+          "protocol": "tcp"
         }
       ],
       "environment": [
@@ -45,29 +63,21 @@
       "logConfiguration": {
         "logDriver": "awsfirelens",
         "options": {
-          "Name": "loki",
+          "Name": "http",
           "Host": "${LOKI_HOST}",
           "Port": "3100",
-          "labels": "ecs_task,ecs_cluster",
-          "remove_keys": "log",
-          "line_format": "json",
-          "log_level": "info"
-        }
-      }
-
-    },
-    {
-      "name": "log-router",
-      "image": "amazon/aws-for-fluent-bit:latest",
-      "essential": true,
-      "firelensConfiguration": {
-        "type": "fluentbit",
-        "options": {
-          "enable-ecs-log-metadata": "true"
+          "URI": "/loki/api/v1/push",
+          "Format": "json_lines",
+          "json_date_key": "time",
+          "json_date_format": "epoch"
         }
       },
-      "memoryReservation": 50
+      "dependsOn": [
+        {
+          "containerName": "log-router",
+          "condition": "START"
+        }
+      ]
     }
-  ],
-  "volumes": []
+  ]
 }
