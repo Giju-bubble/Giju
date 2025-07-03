@@ -22,11 +22,10 @@
         }
       },
       "logConfiguration": {
-        "logDriver": "awslogs",
+        "logDriver": "json-file",
         "options": {
-          "awslogs-group": "/ecs/firelens-container",
-          "awslogs-region": "ap-northeast-2",
-          "awslogs-stream-prefix": "firelens"
+          "max-size": "10m",
+          "max-file": "3"
         }
       },
       "memoryReservation": 50
