@@ -66,9 +66,7 @@
           "Name": "loki",
           "Url": "http://${LOKI_HOST}:3100/loki/api/v1/push",
           "Labels": "job=giju-task,container=giju-container,environment=prod",
-          "LineFormat": "json",
-          "BatchWait": "1",
-          "BatchSize": "102400"
+          "LineFormat": "json"
         }
       },
       "dependsOn": [
