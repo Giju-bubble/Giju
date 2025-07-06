@@ -16,7 +16,7 @@
       "image": "amazon/aws-for-fluent-bit:latest",
       "cpu": 0,
       "memoryReservation": 50,
-      "essential": true,
+      "essential": false,
       "environment": [
         {
           "name": "AWS_REGION",
@@ -78,13 +78,7 @@
           "json_date_format": "epoch",
           "Labels": "job=giju-task,container=giju-container"
         }
-      },
-      "dependsOn": [
-        {
-          "containerName": "log-router",
-          "condition": "START"
-        }
-      ]
+      }
     }
   ]
 }
