@@ -2,8 +2,8 @@
   "family": "giju-task",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["EC2"],
-  "cpu": "256",
-  "memory": "768",
+  "cpu": "384",
+  "memory": "896",
   "runtimePlatform": {
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
@@ -34,8 +34,8 @@
       "name": "giju-container",
       "image": "104741737135.dkr.ecr.ap-northeast-2.amazonaws.com/giju:latest",
       "essential": true,
-      "cpu": 206,
-      "memoryReservation": 640,
+      "cpu": 300,
+      "memoryReservation": 768,
       "portMappings": [
         {
           "containerPort": 8080,
