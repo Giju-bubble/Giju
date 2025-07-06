@@ -21,20 +21,15 @@
           "enable-ecs-log-metadata": "true"
         }
       },
-      "logConfiguration": {
-        "logDriver": "json-file",
-        "options": {
-          "max-size": "10m",
-          "max-file": "3"
-        }
-      },
       "memoryReservation": 64,
-      "environment": [
-        {
-          "name": "LOKI_HOST",
-          "value": "${LOKI_HOST}"
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/giju-task",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "firelens"
         }
-      ]
+      }
     },
     {
       "name": "giju-container",
@@ -70,14 +65,10 @@
         "options": {
           "Name": "loki",
           "Url": "http://${LOKI_HOST}:3100/loki/api/v1/push",
-          "Labels": "{job=\"giju-task\", container=\"giju-container\", environment=\"prod\"}",
-          "BatchWait": "1",
-          "BatchSize": "1001024",
+          "Labels": "job=giju-task,container=giju-container,environment=prod",
           "LineFormat": "json",
-          "LogLevel": "info",
-          "RemoveKeys": "container_id,container_name,source,ecs_task_arn",
-          "LabelKeys": "container_name,ecs_task_definition,ecs_cluster",
-          "DropSingleKey": "false"
+          "BatchWait": "1",
+          "BatchSize": "102400"
         }
       },
       "dependsOn": [
