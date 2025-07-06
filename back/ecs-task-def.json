@@ -64,7 +64,8 @@
         "logDriver": "awsfirelens",
         "options": {
           "Name": "loki",
-          "Url": "http://${LOKI_HOST}:3100/loki/api/v1/push",
+          "http_host": "${LOKI_HOST}",
+          "http_port": "3100",
           "Labels": "job=giju-task,container=giju-container,environment=prod",
           "line_format": "json"
         }
