@@ -13,7 +13,7 @@
   "containerDefinitions": [
     {
       "name": "log-router",
-      "image": "amazon/aws-for-fluent-bit:latest",
+      "image": "fluent/fluent-bit:2.2",
       "essential": true,
       "firelensConfiguration": {
         "type": "fluentbit",
@@ -64,8 +64,7 @@
         "logDriver": "awsfirelens",
         "options": {
           "Name": "loki",
-          "http_host": "${LOKI_HOST}",
-          "http_port": "3100",
+          "Url": "http://${LOKI_HOST}:3100/loki/api/v1/push",
           "Labels": "job=giju-task,container=giju-container,environment=prod",
           "line_format": "json"
         }
