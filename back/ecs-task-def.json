@@ -13,16 +13,8 @@
   "containerDefinitions": [
     {
       "name": "log-router",
-      "image": "amazon/aws-for-fluent-bit:latest",
-      "cpu": 0,
-      "memoryReservation": 50,
-      "essential": false,
-      "environment": [
-        {
-          "name": "AWS_REGION",
-          "value": "ap-northeast-2"
-        }
-      ],
+      "image": "104741737135.dkr.ecr.ap-northeast-2.amazonaws.com/giju:latest",
+      "essential": true,
       "firelensConfiguration": {
         "type": "fluentbit",
         "options": {
@@ -35,7 +27,8 @@
           "max-size": "10m",
           "max-file": "3"
         }
-      }
+      },
+      "memoryReservation": 50
     },
     {
       "name": "giju-container",
@@ -69,16 +62,18 @@
       "logConfiguration": {
         "logDriver": "awsfirelens",
         "options": {
-          "Name": "http",
+          "Name": "loki",
           "Host": "${LOKI_HOST}",
           "Port": "3100",
-          "URI": "/loki/api/v1/push",
-          "Format": "json_lines",
-          "json_date_key": "time",
-          "json_date_format": "epoch",
           "Labels": "job=giju-task,container=giju-container"
         }
-      }
+      },
+      "dependsOn": [
+        {
+          "containerName": "log-router",
+          "condition": "START"
+        }
+      ]
     }
   ]
 }
