@@ -8,12 +8,12 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "executionRoleArn": "arn:aws:iam::104741737135:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::104741737135:role/ecsTaskRole",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/ecsTaskRole",
   "containerDefinitions": [
     {
       "name": "log-router",
-      "image": "fluent/fluent-bit:2.2",
+      "image": "fluent/fluent-bit:2.2.3",
       "essential": true,
       "firelensConfiguration": {
         "type": "fluentbit",
@@ -21,15 +21,14 @@
           "enable-ecs-log-metadata": "true"
         }
       },
-      "memoryReservation": 64,
       "logConfiguration": {
-        "logDriver": "awslogs",
+        "logDriver": "json-file",
         "options": {
-          "awslogs-group": "/ecs/giju-task",
-          "awslogs-region": "ap-northeast-2",
-          "awslogs-stream-prefix": "firelens"
+          "max-size": "10m",
+          "max-file": "3"
         }
-      }
+      },
+      "memoryReservation": 64
     },
     {
       "name": "giju-container",
@@ -64,12 +63,11 @@
         "logDriver": "awsfirelens",
         "options": {
           "Name": "loki",
-          "Url": "http://${LOKI_HOST}:3100/loki/api/v1/push",
-          "Labels": "job=giju-task,container=giju-container,environment=prod",
+          "uri": "http://${LOKI_HOST}:3100/loki/api/v1/push",
+          "labels": "job=giju-task,container=giju-container,environment=prod",
           "line_format": "json"
         }
-      }
-    ,
+      },
       "dependsOn": [
         {
           "containerName": "log-router",
