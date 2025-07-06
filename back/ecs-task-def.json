@@ -13,7 +13,7 @@
   "containerDefinitions": [
     {
       "name": "log-router",
-      "image": "amazon/aws-for-fluent-bit:stable",
+      "image": "amazon/aws-for-fluent-bit:latest",
       "essential": true,
       "firelensConfiguration": {
         "type": "fluentbit",
@@ -68,7 +68,8 @@
           "Labels": "job=giju-task,container=giju-container,environment=prod",
           "line_format": "json"
         }
-      },
+      }
+    ,
       "dependsOn": [
         {
           "containerName": "log-router",
