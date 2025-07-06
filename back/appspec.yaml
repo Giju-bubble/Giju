@@ -7,4 +7,3 @@ Resources:
         LoadBalancerInfo:
           ContainerName: "giju-container"
           ContainerPort: 8080
-        PlatformVersion: "LATEST"
