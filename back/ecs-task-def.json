@@ -8,12 +8,12 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/ecsTaskRole",
+  "executionRoleArn": "arn:aws:iam::104741737135:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::104741737135:role/ecsTaskRole",
   "containerDefinitions": [
     {
       "name": "log-router",
-      "image": "fluent/fluent-bit:2.2.3",
+      "image": "fluent/fluent-bit:2.2",
       "essential": true,
       "firelensConfiguration": {
         "type": "fluentbit",
