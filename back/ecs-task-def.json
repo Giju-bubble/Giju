@@ -68,7 +68,8 @@
           "URI": "/loki/api/v1/push",
           "Format": "json_lines",
           "json_date_key": "time",
-          "json_date_format": "epoch"
+          "json_date_format": "epoch",
+          "Labels": "job=giju-task,container=giju-container"
         }
       },
       "dependsOn": [
