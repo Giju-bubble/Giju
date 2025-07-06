@@ -14,7 +14,15 @@
     {
       "name": "log-router",
       "image": "amazon/aws-for-fluent-bit:latest",
+      "cpu": 0,
+      "memoryReservation": 50,
       "essential": true,
+      "environment": [
+        {
+          "name": "AWS_REGION",
+          "value": "ap-northeast-2"
+        }
+      ],
       "firelensConfiguration": {
         "type": "fluentbit",
         "options": {
@@ -27,8 +35,7 @@
           "max-size": "10m",
           "max-file": "3"
         }
-      },
-      "memoryReservation": 50
+      }
     },
     {
       "name": "giju-container",
