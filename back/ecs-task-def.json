@@ -13,7 +13,7 @@
   "containerDefinitions": [
     {
       "name": "log-router",
-      "image": "fluent/fluent-bit:2.2",
+      "image": "amazon/aws-for-fluent-bit:2.31.0",
       "essential": true,
       "firelensConfiguration": {
         "type": "fluentbit",
