@@ -13,7 +13,7 @@
   "containerDefinitions": [
     {
       "name": "log-router",
-      "image": "104741737135.dkr.ecr.ap-northeast-2.amazonaws.com/giju:latest",
+      "image": "amazon/aws-for-fluent-bit:stable",
       "essential": true,
       "firelensConfiguration": {
         "type": "fluentbit",
@@ -28,7 +28,13 @@
           "max-file": "3"
         }
       },
-      "memoryReservation": 64
+      "memoryReservation": 64,
+      "environment": [
+        {
+          "name": "LOKI_HOST",
+          "value": "${LOKI_HOST}"
+        }
+      ]
     },
     {
       "name": "giju-container",
@@ -63,9 +69,15 @@
         "logDriver": "awsfirelens",
         "options": {
           "Name": "loki",
-          "Host": "${LOKI_HOST}",
-          "Port": "3100",
-          "Labels": "job=giju-task,container=giju-container"
+          "Url": "http://${LOKI_HOST}:3100/loki/api/v1/push",
+          "Labels": "{job=\"giju-task\", container=\"giju-container\", environment=\"prod\"}",
+          "BatchWait": "1",
+          "BatchSize": "1001024",
+          "LineFormat": "json",
+          "LogLevel": "info",
+          "RemoveKeys": "container_id,container_name,source,ecs_task_arn",
+          "LabelKeys": "container_name,ecs_task_definition,ecs_cluster",
+          "DropSingleKey": "false"
         }
       },
       "dependsOn": [
