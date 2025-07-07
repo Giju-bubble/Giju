@@ -63,14 +63,17 @@ jobs:
       # Docker  빌드를 위한 환경 설정
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        if: github.event_name == 'push'
 
       # ECR 로그인 _ 도커 이미지 push 준비
       - name: Log in to Amazon ECR
         id: ecrLogin
         uses: aws-actions/amazon-ecr-login@v2
+        if: github.event_name == 'push'
 
       # Docker 이미지 빌드 및 ECR로 업로드
       - name: Build and push Docker image
+        if: github.event_name == 'push'
         env:
           ECR_REGISTRY: ${{ steps.ecrLogin.outputs.registry }}
           ECR_REPOSITORY: giju
@@ -80,6 +83,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Update task definition with new image and LOKI_HOST
+        if: github.event_name == 'push'
         env:
           ECR_REGISTRY: ${{ steps.ecrLogin.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
@@ -94,6 +98,7 @@ jobs:
       # ECS에 새 이미지로 배포 요청
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        if: github.event_name == 'push'
         with:
           task-definition: ./back/ecs-task-def.json
           cluster: my-ecs-cluster
@@ -105,7 +110,7 @@ jobs:
 
       # 배포 성공 시 Slack 알림
       - name: Slack Notify Success
-        if: success()
+        if: success() && github.event_name == 'push'
         run: |
           curl -X POST -H 'Content-type: application/json' \
           --data '{
@@ -126,7 +131,7 @@ jobs:
 
       # 실패 시 알림
       - name: Slack Notify Failure
-        if: failure()
+        if: failure() && github.event_name == 'push'
         run: |
           curl -X POST -H 'Content-type: application/json' \
           --data '{
