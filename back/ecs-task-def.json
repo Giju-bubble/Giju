@@ -13,7 +13,7 @@
   "containerDefinitions": [
     {
       "name": "log-router",
-      "image":"ghcr.io/grafana/loki/fluent-bit-plugin:latest",
+      "image":"grafana/fluent-bit-plugin-loki:latest",
       "essential": true,
       "firelensConfiguration": {
         "type": "fluentbit",
