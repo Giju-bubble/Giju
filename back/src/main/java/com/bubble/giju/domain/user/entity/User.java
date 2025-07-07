@@ -16,6 +16,7 @@ import java.util.UUID;
 @Entity(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 @Getter
 public class User {
     @Id
@@ -27,7 +28,7 @@ public class User {
     @Column(name = "login_id", unique = true)
     String loginId;
 
-    @Column(name = "password")
+    @Column(name = "password", length = 60)
     String password;
 
     @Column(name = "name")

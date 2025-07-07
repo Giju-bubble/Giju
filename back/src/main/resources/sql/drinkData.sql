@@ -1,20 +1,16 @@
-INSERT INTO categories (category_name)
-SELECT * FROM (VALUES
-                   ('탁주'),
-                   ('청주'),
-                   ('증류주'),
-                   ('약주'),
-                   ('과실주'),
-                   ('기타')
-              ) AS vals(category_name)
-WHERE NOT EXISTS (
-    SELECT 1 FROM categories WHERE categories.category_name = vals.category_name
-);
+INSERT IGNORE INTO categories (category_name)
+VALUES
+  ('탁주'),
+  ('청주'),
+  ('증류주'),
+  ('약주'),
+  ('과실주'),
+  ('기타');
 
 
 
 -- 전통주 데이터 INSERT
-INSERT INTO Drinks (drink_id, drink_name, drink_price, drink_stock, drink_alcohol_content, drink_volume, drink_is_delete, drink_region, category_id)
+INSERT IGNORE INTO drinks (drink_id, drink_name, drink_price, drink_stock, drink_alcohol_content, drink_volume, drink_is_delete, drink_region, category_id)
 VALUES
 -- 탁주 (막걸리) 20개
 (1, '느린마을 막걸리', 3500, 150, 6.0, 750, FALSE, '경기도', 1),
@@ -148,4 +144,5 @@ VALUES
 (119, '오가피리큐르', 22000, 40, 14.0, 375, FALSE, '강원도', 6),
 (120, '도라지리큐르', 15000, 65, 9.0, 375, FALSE, '강원도', 6);
 
-ALTER TABLE Drinks ALTER COLUMN drink_id RESTART WITH 121;
+-- ALTER TABLE Drinks ALTER COLUMN drink_id RESTART WITH 121;
+ALTER TABLE drinks AUTO_INCREMENT = 121;
