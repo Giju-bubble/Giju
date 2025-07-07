@@ -1,0 +1,33 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+#   rule.yml 보류
+
+scrape_configs:
+  # ECS 서비스 모니터링
+  - job_name: 'ecs-service'
+    metrics_path: '/actuator/prometheus'
+    scheme: https
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+      - targets: ['giju-alb-2143488122.ap-northeast-2.elb.amazonaws.com:443']
+
+  # Prometheus 자체 모니터링
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter 모니터링
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['3.38.27.145:9100']
+
+  # cAdvisor 모니터링
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['3.38.27.145:8081']

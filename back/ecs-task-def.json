@@ -1,0 +1,86 @@
+{
+  "family": "giju-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["EC2"],
+  "cpu": "384",
+  "memory": "896",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "executionRoleArn": "arn:aws:iam::104741737135:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::104741737135:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "log-router",
+      "image":"grafana/fluent-bit-plugin-loki:latest",
+      "essential": true,
+      "firelensConfiguration": {
+        "type": "fluentbit",
+        "options": {
+          "enable-ecs-log-metadata": "true"
+        }
+      },
+      "memoryReservation": 64,
+      "environment": [
+        {
+          "name": "LOKI_HOST",
+          "value": "${LOKI_HOST}"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "json-file",
+        "options": {
+          "max-size": "10m",
+          "max-file": "3"
+        }
+      }
+    },
+    {
+      "name": "giju-container",
+      "image": "104741737135.dkr.ecr.ap-northeast-2.amazonaws.com/giju:latest",
+      "essential": true,
+      "cpu": 300,
+      "memoryReservation": 768,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "SERVER_PORT", "value": "8080" },
+        { "name": "SPRING_PROFILES_ACTIVE", "value": "prod" }
+      ],
+      "secrets": [
+        { "name": "CLIENT_ID", "valueFrom": "/app/giju/CLIENT_ID" },
+        { "name": "CLIENT_SECRET", "valueFrom": "/app/giju/CLIENT_SECRET" },
+        { "name": "DB_PASSWORD", "valueFrom": "/app/giju/DB_PASSWORD" },
+        { "name": "DB_URL", "valueFrom": "/app/giju/DB_URL" },
+        { "name": "DB_USERNAME", "valueFrom": "/app/giju/DB_USERNAME" },
+        { "name": "DNS_URL", "valueFrom": "/app/giju/DNS_URL" },
+        { "name": "JWT_SECRET", "valueFrom": "/app/giju/JWT_SECRET" },
+        { "name": "REDIRECT_URI", "valueFrom": "/app/giju/REDIRECT_URI" },
+        { "name": "S3STORAGE_ACCESS_KEY", "valueFrom": "/app/giju/S3STORAGE_ACCESS_KEY" },
+        { "name": "S3STORAGE_SECRET_KEY", "valueFrom": "/app/giju/S3STORAGE_SECRET_KEY" },
+        { "name": "TOSS_SECRET_KEY", "valueFrom": "/app/giju/TOSS_SECRET_KEY" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awsfirelens",
+        "options": {
+          "Name": "loki",
+          "Host": "${LOKI_HOST}",
+          "Port": "3100",
+          "labels": "job=giju-task,container=giju-container,environment=prod",
+          "line_format": "json"
+        }
+      },
+      "dependsOn": [
+        {
+          "containerName": "log-router",
+          "condition": "START"
+        }
+      ]
+    }
+  ]
+}

@@ -50,7 +50,9 @@ public class SecurityConfig {
                 "https://giju.vercel.app",
                 "https://giju-front.vercel.app",
                 "https://seonjun.store",
-                "http://seonjun.store")));
+                "http://seonjun.store",
+                "https://coffeesubscription.store"
+        )));
 
         // 허용할 HTTP 메서드 설정
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
@@ -98,7 +100,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/api/auth/**", "/oauth2/**", "/error",
                                 "/api/categories", "/api/rankings", "/api/payment/**", "/api/drink/**", "/api/drinks",
-                                "/toss/**", "/api/regions", "/api/reviews/drinks/**").permitAll()
+                                "/toss/**", "/api/regions", "/api/reviews/drinks/**", "/health", "/actuator/prometheus/**").permitAll()
                         .requestMatchers("/swagger-ui/**",
                                 "/api/swagger-config/**",
                                 "/h2-console/**",

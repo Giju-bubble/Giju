@@ -1,4 +1,4 @@
-package com.bubble.giju.global.runner;
+/*package com.bubble.giju.global.runner;
 
 import com.bubble.giju.domain.category.entity.Category;
 import com.bubble.giju.domain.category.repository.CategoryRepository;
@@ -53,3 +53,4 @@ public class DataInitializer implements CommandLineRunner {
 
     }
 }
+*/

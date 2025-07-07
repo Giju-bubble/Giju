@@ -1,4 +1,4 @@
-package com.bubble.giju.cart.service;
+package com.bubble.giju.domain.cart.service.impl;
 
 import com.bubble.giju.domain.cart.dto.request.AddToCartRequestDto;
 import com.bubble.giju.domain.cart.dto.request.UpdateQuantityRequestDto;
@@ -7,7 +7,6 @@ import com.bubble.giju.domain.cart.dto.response.CartListResponseDto;
 import com.bubble.giju.domain.cart.dto.response.CartResponseDto;
 import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.repository.CartRepository;
-import com.bubble.giju.domain.cart.service.serviceImpl.CartServiceImpl;
 import com.bubble.giju.domain.drink.entity.Drink;
 import com.bubble.giju.domain.drink.entity.DrinkImage;
 import com.bubble.giju.domain.drink.repository.DrinkImageRepository;
