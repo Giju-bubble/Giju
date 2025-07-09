@@ -1,4 +1,4 @@
-INSERT INTO Delivery_companies (delivery_company_id, delivery_company_name)
+INSERT IGNORE INTO Delivery_companies (delivery_company_id, delivery_company_name)
 VALUES
     (1, 'CJ대한통운'),
     (2, '우체국택배'),

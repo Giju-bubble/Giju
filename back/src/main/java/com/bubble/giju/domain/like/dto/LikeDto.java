@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 public class LikeDto {
 
     @AllArgsConstructor
-    @Builder
     @Getter
+    @Builder
     public static class LikeResponse {
         String userId;
         Long drinkId;

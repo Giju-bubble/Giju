@@ -16,6 +16,4 @@ public class DrinkUpdateRequestDto {
     private String region;
     @Schema(description = "카테고리 Id 변경")
     private int categoryId;
-
-
 }

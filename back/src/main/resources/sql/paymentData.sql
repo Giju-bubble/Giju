@@ -1,4 +1,4 @@
-INSERT INTO payment (payment_key, amount, payment_method, payment_status, approved_at, transaction_key, approve_no, receipt_url, cash_receipt_url, order_id)
+INSERT IGNORE INTO payment (payment_key, amount, payment_method, payment_status, approved_at, transaction_key, approve_no, receipt_url, cash_receipt_url, order_id)
 VALUES
 -- Order 1 (DELIVERED)
 ('payment_key_001_a1b2c3d4e5f6', 15500, '카드', 'DONE', '2024-12-10T14:35:00+09:00', 'txn_001_a1b2c3d4', 'APV_001_123456', 'https://receipt.toss.im/payment_001', NULL, 1),
@@ -142,4 +142,5 @@ VALUES
 ('payment_key_053_a3b4c5d6e7f8', 19000, '계좌이체', 'DONE', '2025-01-25T17:20:00+09:00', 'txn_053_a3b4c5d6', 'APV_053_345901', NULL, 'https://cashreceipt.toss.im/payment_053', 53);
 
 -- Auto-increment 값 재설정
-ALTER TABLE payment ALTER COLUMN payment_id RESTART WITH 51;
+-- ALTER TABLE payment ALTER COLUMN payment_id RESTART WITH 51;
+ALTER TABLE payment AUTO_INCREMENT = 51;

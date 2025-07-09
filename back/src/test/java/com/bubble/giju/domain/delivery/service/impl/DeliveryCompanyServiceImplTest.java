@@ -3,8 +3,6 @@ package com.bubble.giju.domain.delivery.service.impl;
 import com.bubble.giju.domain.delivery.dto.DeliveryCompanyUpdateRequestDto;
 import com.bubble.giju.domain.delivery.entity.DeliveryCompany;
 import com.bubble.giju.domain.delivery.repository.DeliveryCompanyRepository;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +26,6 @@ class DeliveryCompanyServiceImplTest {
     @InjectMocks
     private DeliveryCompanyServiceImpl deliveryCompanyService;
 
-    @DisplayName("택배 회사 전체 조회 성공 테스트")
     @Test
     void findAll_shouldReturnListOfDeliveryCompanyResponseDto() {
         // given
@@ -50,13 +47,11 @@ class DeliveryCompanyServiceImplTest {
         verify(deliveryCompanyRepository).findAll();
     }
 
-    @DisplayName("택배회사 정보 삭제 성공 테스트")
-    @Disabled
+
     @Test
     void deleteById() {
     }
 
-    @DisplayName("택배회사 정보 수정 성공 테스트")
     @Test
     void update() {
         // given

@@ -2,10 +2,11 @@
 cloud:
   aws:
     credentials:
-      access-key: ${S3STORAGE_ACCESS_KEY}     # 환경 변수로부터 읽음
-      secret-key: ${S3STORAGE_SECRET_KEY} # 환경 변수로부터 읽음
+      access-key: ${S3STORAGE_ACCESS_KEY:dummy-access}     # 환경 변수로부터 읽음
+      secret-key: ${S3STORAGE_SECRET_KEY:dummy-secret} # 환경 변수로부터 읽음
     region:
       static: ap-northeast-2 # 환경 변수 또는 기본값 :contentReference[oaicite:0]{index=0}
+    enabled: false
 
 # 2) S3 버킷 정보
 aws:
@@ -20,7 +21,7 @@ spring:
   profiles:
     active: local
     group:
-      "prod": "prod, oauth, swagger"
+      "prod": "prod, oauth, swagger, secret"
       "local": "local, oauth, swagger, secret"
   servlet:
     multipart:
@@ -47,8 +48,7 @@ order:
 toss:
   success_url: "/payment/success"
   fail_url: "/payment/fail"
-  secret-key: ${TOSS_SECRET_KEY:asdfasdfasdfasdf}
-#  secret-key: ${toss-secret:asdfasdfasdfasdf}
+  secret-key: ${TOSS_SECRET_KEY:dummykey}
 
 jwt:
   expirationtime:

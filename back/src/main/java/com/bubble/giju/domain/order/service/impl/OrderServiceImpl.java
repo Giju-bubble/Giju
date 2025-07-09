@@ -1,4 +1,4 @@
-package com.bubble.giju.domain.order.service.serviceImpl;
+package com.bubble.giju.domain.order.service.impl;
 
 import com.bubble.giju.domain.cart.entity.Cart;
 import com.bubble.giju.domain.cart.repository.CartRepository;
@@ -55,28 +55,37 @@ public class OrderServiceImpl implements OrderService {
     private String failUrl;
 
     @Value("${order.delivery-charge}")
-    private int deliveryCharge;
+    private int deliveryFee;
 
     @Value("${order.targetPrice}")
     private int targetPrice;
 
-
+    /**
+     * 장바구니 기반 주문을 생성
+     * - 사용자가 장바구니에서 상품들을 선택해 결제를 요청할 때 호출
+     * - 장바구니 항목 조회 → 주문 및 상세 주문 생성 → 주문-장바구니 매핑 저장 → 결제 응답 DTO 반환 흐름으로 동작
+     *
+     * @param cartItemIds 주문에 포함할 장바구니 항목 ID 목록
+     * @param principal 로그인한 사용자 정보
+     * @return OrderResponseDto 결제에 필요한 주문 정보 응답 객체
+     */
     @Transactional
     @Override
     public OrderResponseDto createOrder(List<Long> cartItemIds, CustomPrincipal principal) {
-        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
-                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
 
+        // 유저 조회
+        User user = getCurrentUser(principal);
 
+        // 카트아이템 조회 리스트
         List<Cart> cartItems = cartRepository.findAllById(cartItemIds);
 
         // 총 금액 계산
         int totalAmount = calculateTotalAmount(cartItems);
 
-        // 배달비
+        // 배달비 (3만원 이상 무료배송)
         int deliveryCharge = calculateDeliveryCharge(totalAmount);
 
-        // order 이름
+        // order 이름 생성 ("술이름 외 2건")
         String orderName = buildOrderName(cartItems);
 
         //customerkey 생성
@@ -111,11 +120,13 @@ public class OrderServiceImpl implements OrderService {
         // 주문 저장
         Order savedOrder = orderRepository.save(order);
 
+        // 결제 연동용 주문 ID 생성
         String tossOrderId = "ORDER_" + savedOrder.getId() + "_" + UUID.randomUUID();
 
         savedOrder.setTossOrderId(tossOrderId);
         orderRepository.save(savedOrder);
 
+        // 주문 - 장바구니 매핑 정보 저장
         List<OrderCartMapping> mappings = cartItems.stream()
                 .map(cart -> OrderCartMapping.builder()
                         .order(savedOrder)
@@ -153,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
     public DirectOrderResponseDto getDirectBuyInfo(Long drinkId, int quantity, CustomPrincipal customPrincipal) {
 
         // 사용자 조회
-        User user = userRepository.findById(UUID.fromString(customPrincipal.getUserId()))
+        userRepository.findById(UUID.fromString(customPrincipal.getUserId()))
                 .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
 
         // 전통주 상품 조회
@@ -274,16 +285,23 @@ public class OrderServiceImpl implements OrderService {
 
 
     private int calculateDeliveryCharge(int totalAmount) {
-        return totalAmount >= targetPrice ? 0 : deliveryCharge;
+        return totalAmount >= targetPrice ? 0 : deliveryFee;
     }
 
 
+    /**
+     * 로그인한 사용자의 주문 내역을 조회
+     * - 주문 상태가 완료, 배송 중, 배송 완료, 환불 관련 상태인 주문만 필터링
+     * - 각 주문에 대해 결제 정보와 주문 상세 항목을 포함한 응답 DTO 리스트를 반환
+     *
+     * @param principal 로그인한 사용자 정보
+     * @return 주문 내역 DTO 리스트
+     */
     @Transactional(readOnly = true)
     @Override
     public List<OrderHistoryResonseDto> getOrderHistory(CustomPrincipal principal) {
 
-        User user = userRepository.findById(UUID.fromString(principal.getUserId()))
-                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
+        User user = getCurrentUser(principal);
 
         // 유저의 주문 목록 중 성공/부분취소만 필터링
         List<Order> orders = orderRepository.findAllByUser(user).stream()
@@ -303,9 +321,11 @@ public class OrderServiceImpl implements OrderService {
         // 주문 정보를 DTO로 변환
         return orders.stream()
                 .map(order -> {
+                    // 결제 정보 조회
                     Payment payment = paymentRepository.findByOrder(order)
                             .orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
 
+                    // 주문 상세 항목을 DTO 리스트 반환
                     List<OrderItemDto> items = order.getOrderDetails().stream()
                             .map(detail -> OrderItemDto.builder()
                                     .drinkName(detail.getDrinkName())
@@ -328,7 +348,16 @@ public class OrderServiceImpl implements OrderService {
                 .toList();
     }
 
-
+    /**
+     * 사용자의 특정 주문 항목에 대해 환불을 요청
+     * - 요청자는 해당 주문의 소유자여야 하며
+     * - 주문 상태가 '배송 완료(DELIVERED)' 상태
+     * - 이미 환불 요청되었거나 취소된 항목은 요청 대상에서 제외
+     *
+     * @param requestDto 환불 요청 정보 (주문 ID, 주문 상세 ID 목록)
+     * @param principal 로그인한 사용자 정보
+     * @return 환불 요청 결과 응답 DTO (환불 요청된 상품 목록 포함)
+     */
     @Transactional
     public RefundResponseDto requestRefund(RefundRequestDto requestDto, CustomPrincipal principal) {
         UUID userId = UUID.fromString(principal.getUserId());
@@ -341,6 +370,7 @@ public class OrderServiceImpl implements OrderService {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
+        // 주문 상태가 배송 완료가 아닐 경우 환불 요청 불가
         if (order.getOrderStatus() != OrderStatus.DELIVERED) {
             throw new CustomException(ErrorCode.CANNOT_REFUND_THIS_ORDER);
         }
@@ -377,5 +407,10 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+    // 유저 찾기
+    public User getCurrentUser(CustomPrincipal principal) {
+        return userRepository.findById(UUID.fromString(principal.getUserId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.NON_EXISTENT_USER));
+    }
 
 }
