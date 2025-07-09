@@ -1,9 +1,11 @@
 package com.bubble.giju.domain.drink.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class DrinkUpdateRequestDto {
 
     @Schema(description = "술 가격")

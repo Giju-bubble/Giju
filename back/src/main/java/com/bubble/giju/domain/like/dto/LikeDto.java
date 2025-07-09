@@ -2,6 +2,7 @@ package com.bubble.giju.domain.like.dto;
 
 import com.bubble.giju.domain.like.entity.Like;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ public class LikeDto {
 
     @AllArgsConstructor
     @Getter
+    @Builder
     public static class LikeResponse {
         String userId;
         Long drinkId;

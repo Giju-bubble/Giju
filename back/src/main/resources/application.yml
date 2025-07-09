@@ -6,6 +6,7 @@ cloud:
       secret-key: ${S3STORAGE_SECRET_KEY:dummy-secret} # 환경 변수로부터 읽음
     region:
       static: ap-northeast-2 # 환경 변수 또는 기본값 :contentReference[oaicite:0]{index=0}
+    enabled: false
 
 # 2) S3 버킷 정보
 aws:
