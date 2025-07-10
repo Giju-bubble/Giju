@@ -87,37 +87,37 @@ public class PaymentServiceImpl implements PaymentService {
 
         paymentRepository.save(payment);
 
-
-        //추가 검증
-        if (!orderId.equals(tossResponse.getOrderId()) ||
-            order.getTotalAmount() != tossResponse.getTotalAmount()) {
-
-            //결제 취소
-            TossCancelResponseDto cancelResponse = tossClientImpl.cancelPayment(
-                    tossResponse.getPaymentKey(),
-                    CANCEL_REASON,
-                    tossResponse.getTotalAmount()
-            );
-
-            updateCanceledPayment(payment, cancelResponse);
-
-            paymentCancelInfoRepository.save(PaymentCancelInfo.builder()
-                    .cancelReason(CANCEL_REASON)
-                    .payment(payment)
-                    .transactionKey(cancelResponse.getLatestCancel().getTransactionKey())
-                    .canceledAt(cancelResponse.getLatestCancel().getCanceledAt())
-                    .receiptUrl(cancelResponse.getReceipt() != null ? cancelResponse.getReceipt().getUrl() : null)
-                    .cancelAmount(cancelResponse.getLatestCancel().getCancelAmount())
-                    .cancelStatus(cancelResponse.getLatestCancel().getCancelStatus())
-                    .cashReceiptUrl(cancelResponse.getCashReceipt() != null ? cancelResponse.getCashReceipt().getReceiptUrl() : null)
-                    .isFullCancel(true)
-                    .build());
-
-            order.updateStatus(OrderStatus.FAILED);
-            orderRepository.save(order);
-
-            throw new CustomException(ErrorCode.INVALID_PAYMENT_VERIFICATION);
-        }
+//
+//        //추가 검증
+//        if (!orderId.equals(tossResponse.getOrderId()) ||
+//            order.getTotalAmount() != tossResponse.getTotalAmount()) {
+//
+//            //결제 취소
+//            TossCancelResponseDto cancelResponse = tossClientImpl.cancelPayment(
+//                    tossResponse.getPaymentKey(),
+//                    CANCEL_REASON,
+//                    tossResponse.getTotalAmount()
+//            );
+//
+//            updateCanceledPayment(payment, cancelResponse);
+//
+//            paymentCancelInfoRepository.save(PaymentCancelInfo.builder()
+//                    .cancelReason(CANCEL_REASON)
+//                    .payment(payment)
+//                    .transactionKey(cancelResponse.getLatestCancel().getTransactionKey())
+//                    .canceledAt(cancelResponse.getLatestCancel().getCanceledAt())
+//                    .receiptUrl(cancelResponse.getReceipt() != null ? cancelResponse.getReceipt().getUrl() : null)
+//                    .cancelAmount(cancelResponse.getLatestCancel().getCancelAmount())
+//                    .cancelStatus(cancelResponse.getLatestCancel().getCancelStatus())
+//                    .cashReceiptUrl(cancelResponse.getCashReceipt() != null ? cancelResponse.getCashReceipt().getReceiptUrl() : null)
+//                    .isFullCancel(true)
+//                    .build());
+//
+//            order.updateStatus(OrderStatus.FAILED);
+//            orderRepository.save(order);
+//
+//            throw new CustomException(ErrorCode.INVALID_PAYMENT_VERIFICATION);
+//        }
 
 
         // Order주문 상태 변경
@@ -262,8 +262,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .map(OrderCartMapping::getCart)
                 .toList();
 
-        cartRepository.deleteAll(cartsToDelete);
         orderCartMappingRepository.deleteByOrder(order);
+        cartRepository.deleteAll(cartsToDelete);
     }
 
 
